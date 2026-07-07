@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heni Way</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           CHARTE GRAPHIQUE ET CORRECTIONS BOOTSTRAP
+           ========================================================================== */
+        :root {
+            --bleu-ocean: #006699;
+            --bleu-sombre: #003366;
+            --vert-tropical: #2E8B57;
+            --jaune-soleil: #FFD700;
+            --blanc: #FFFFFF;
+            --gris-clair: #F9F9F9;
+            --gris-texte: #555555;
+            --noir: #222222;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--gris-texte);
+            overflow-x: hidden;
+        }
+
+        /* Titres de section personalisés */
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--bleu-sombre);
+            font-weight: 700;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--vert-tropical);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Boutons personnalisés basés sur tes styles */
+        .btn-custom-accent {
+            background-color: var(--jaune-soleil);
+            color: var(--bleu-sombre);
+            font-weight: 600;
+            border-radius: 30px;
+            padding: 10px 28px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-custom-accent:hover {
+            background-color: var(--blanc);
+            color: var(--bleu-sombre);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        .btn-custom-outline {
+            background-color: transparent;
+            color: var(--blanc);
+            font-weight: 600;
+            border-radius: 30px;
+            padding: 10px 28px;
+            border: 2px solid var(--blanc);
+            transition: all 0.3s ease;
+        }
+        .btn-custom-outline:hover {
+            background-color: var(--blanc);
+            color: var(--bleu-sombre);
+            transform: translateY(-3px);
+        }
+        .btn-custom-primary {
+            background-color: var(--bleu-ocean);
+            color: var(--blanc);
+            font-weight: 600;
+            border-radius: 30px;
+            padding: 10px 25px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-custom-primary:hover {
+            background-color: var(--bleu-sombre);
+            color: var(--blanc);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 153, 0.3);
+        }
+
+        /* Barre de navigation */
+        .navbar {
+            transition: all 0.3s ease;
+            padding: 20px 0;
+        }
+        .navbar.scrolled {
+            background-color: var(--blanc) !important;
+            padding: 10px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--blanc);
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled .navbar-brand {
+            color: var(--bleu-sombre) !important;
+        }
+        .nav-link {
+            color: var(--blanc) !important;
+            font-weight: 500;
+            margin-right: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled .nav-link {
+            color: var(--noir) !important;
+        }
+        .navbar.scrolled .nav-link:hover, .nav-link.active {
+            color: var(--bleu-ocean) !important;
+        }
+
+        /* Section Hero */
+        .hero-section {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.35)), 
+                        url('../image/Carte.jpg') no-repeat center center/cover;
+            color: var(--blanc);
+        }
+
+        /* Cartes & Effets Survol (Axes & Offres) */
+        .zoom-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .zoom-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .img-hover-container {
+            overflow: hidden;
+            height: 220px;
+        }
+        .img-hover-container img {
+            transition: transform 0.5s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .zoom-card:hover .img-hover-container img {
+            transform: scale(1.1);
+        }
+
+        /* Icônes de Pourquoi Choisir */
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(46, 139, 87, 0.1);
+            color: var(--vert-tropical);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 20px;
+            transition: all 0.3s ease;
+        }
+        .feature-box:hover .feature-icon {
+            background-color: var(--bleu-ocean);
+            color: var(--blanc);
+        }
+
+        /* Badges de Cartes */
+        .circuit-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--vert-tropical);
+            color: var(--blanc);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            z-index: 10;
+        }
+
+        /* Galerie d'images overlay */
+        .galerie-item {
+            position: relative;
+            height: 260px;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        .galerie-item img {
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .galerie-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0, 51, 102, 0.85), rgba(0,0,0,0.1));
+            display: flex;
+            align-items: flex-end;
+            padding: 25px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .galerie-item:hover img { transform: scale(1.15); }
+        .galerie-item:hover .galerie-overlay { opacity: 1; }
+
+        /* ==========================================================================
+           SLIDER DE FORMULAIRES COULISSANT (CORRIGÉ ET RESPONSIVE)
+           ========================================================================== */
+        .contact-wrapper {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            background: var(--blanc);
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+        }
+        .form-slider {
+            display: flex;
+            width: 200%;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .contact-form {
+            flex: 0 0 50%;
+            width: 50%;
+            padding: 40px;
+        }
+        .contact-wrapper.slide-active .form-slider {
+            transform: translateX(-50%);
+        }
+        .form-toggle-link a {
+            color: var(--bleu-ocean);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .form-toggle-link a:hover { text-decoration: underline; }
+
+        /* Pied de page */
+        .footer {
+            background-color: var(--bleu-sombre);
+            color: #DDDDDD;
+        }
+        .social-icon {
+            width: 40px; height: 40px;
+            background-color: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--blanc);
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            background-color: var(--jaune-soleil);
+            color: var(--bleu-sombre);
+            transform: translateY(-3px);
+        }
+
+        /* Animations de défilement (Scroll Reveal) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRE DE NAVIGATION (BOOTSTRAP NAVBAR) -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="header">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#accueil">
+                <img src="../image/Logo.png" alt="Logo Heni Way" class="rounded-circle" style="width: 50px; height: 50px; object-fit: contain;">
+                <span>Heni Way</span>
+            </a>
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center mt-3 mt-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#accueil">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#destinations">Axes de transport</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#circuits">Offres</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#apropos">À propos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#galerie">Galerie</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item mt-2 mt-lg-0"><a class="btn-custom-accent d-inline-block text-decoration-none" href="#contact">Réserver un transport</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SECTION HERO -->
+    <section class="hero-section d-flex align-items-center justify-content-center text-center" id="accueil">
+        <div class="container px-4">
+            <h1 class="display-4 fw-bold mb-3 text-shadow" style="max-width: 850px; margin: 0 auto;">Vos déplacements en toute sérénité à Madagascar avec Heni Way</h1>
+            <p class="lead mb-4 fw-light" style="max-width: 650px; margin: 0 auto;">Des solutions logistiques de transport fiables, ponctuelles et adaptées à vos besoins locaux.</p>
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-2">
+                <a href="#circuits" class="btn-custom-accent text-decoration-none">Découvrir nos solutions</a>
+                <a href="#contact" class="btn-custom-outline text-decoration-none">Nous contacter</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION AXES DE TRANSPORT -->
+    <section class="py-5 reveal" id="destinations">
+        <div class="container py-4">
+            <h2 class="section-title text-center">Axes de Transport Principaux</h2>
+            <p class="text-center text-muted mb-5 mx-auto" style="max-width: 600px;">Découvrez les liaisons régionales et trajets clés que nous couvrons régulièrement.</p>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="zoom-card h-100 bg-white">
+                        <div class="img-hover-container"><img src="../image/Norde.jpg" alt="Axe Nord"></div>
+                        <div class="p-4">
+                            <h3 class="h5 fw-bold text-dark">Liaisons Axe Nord</h3>
+                            <p class="small text-muted mb-0">Des trajets réguliers et sécurisés reliant les grands centres urbains et pôles logistiques septentrionaux.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="zoom-card h-100 bg-white">
+                        <div class="img-hover-container"><img src="../image/Ouest.webp" alt="Axe Ouest"></div>
+                        <div class="p-4">
+                            <h3 class="h5 fw-bold text-dark">Liaisons Axe Ouest</h3>
+                            <p class="small text-muted mb-0">Transferts planifiés adaptés aux infrastructures et contraintes routières de la région Ouest.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="zoom-card h-100 bg-white">
+                        <div class="img-hover-container"><img src="../image/RN7.jpg" alt="Axe Sud"></div>
+                        <div class="p-4">
+                            <h3 class="h5 fw-bold text-dark">Liaisons Axe Sud</h3>
+                            <p class="small text-muted mb-0">Navettes et acheminements point à point assurés sur la route du Sud avec une grande régularité.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="zoom-card h-100 bg-white">
+                        <div class="img-hover-container"><img src="../image/Est.jpg" alt="Axe Est"></div>
+                        <div class="p-4">
+                            <h3 class="h5 fw-bold text-dark">Liaisons Axe Est</h3>
+                            <p class="small text-muted mb-0">Trajets réguliers assurant la connectivité routière vers les régions orientales et les zones d'activité économique de la côte Est.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION POURQUOI CHOISIR -->
+    <section class="py-5 bg-light reveal" id="apropos">
+        <div class="container py-4">
+            <h2 class="section-title text-center">Pourquoi Choisir Heni Way ?</h2>
+            <p class="text-center text-muted mb-5 mx-auto" style="max-width: 600px;">Une expertise reconnue dans la gestion de vos déplacements, combinant rigueur logistique et confort.</p>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box bg-white p-4 text-center rounded shadow-sm h-100 transition-smooth">
+                        <div class="feature-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h3 class="h5 fw-bold text-dark">Conducteurs Certifiés</h3>
+                        <p class="small text-muted mb-0">Des chauffeurs expérimentés ayant une parfaite connaissance des axes routiers et formés à la conduite sécurisée.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box bg-white p-4 text-center rounded shadow-sm h-100 transition-smooth">
+                        <div class="feature-icon"><i class="fa-solid fa-sliders"></i></div>
+                        <h3 class="h5 fw-bold text-dark">Gestion Flexibles</h3>
+                        <p class="small text-muted mb-0">Des trajets paramétrés et ajustés selon vos horaires, contraintes de planning et impératifs professionnels.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box bg-white p-4 text-center rounded shadow-sm h-100 transition-smooth">
+                        <div class="feature-icon"><i class="fa-solid fa-tags"></i></div>
+                        <h3 class="h5 fw-bold text-dark">Tarifs Transparents</h3>
+                        <p class="small text-muted mb-0">Des formules de tarification claires et compétitives, parfaitement adaptées aux budgets de fonctionnement.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box bg-white p-4 text-center rounded shadow-sm h-100 transition-smooth">
+                        <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+                        <h3 class="h5 fw-bold text-dark">Support 24/7</h3>
+                        <p class="small text-muted mb-0">Une cellule logistique à votre écoute en permanence pour suivre, coordonner et sécuriser chaque déplacement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION OFFRES -->
+    <section class="py-5 reveal" id="circuits">
+        <div class="container py-4">
+            <h2 class="section-title text-center">Nos Offres de Transport</h2>
+            <p class="text-center text-muted mb-5 mx-auto" style="max-width: 600px;">Des solutions adaptées pour assurer la mobilityé de vos équipes ou vos trajets privés.</p>
+            
+            <div class="row g-4">
+                <!-- OFFRE 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="zoom-card h-100 bg-white position-relative d-flex flex-column">
+                        <span class="circuit-badge">Public</span>
+                        <div class="position-relative" style="height: 250px;">
+                            <img src="../image/Public.jpg" class="w-100 h-100 object-fit-cover" alt="Navette Public">
+                        </div>
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <div class="text-primary small fw-semibold mb-2"><i class="fa-regular fa-clock"></i> Ponctualité stricte</div>
+                            <h3 class="h4 fw-bold text-dark mb-3">Transferts public</h3>
+                            <p class="small text-muted flex-grow-1">Une solution de transport accessible à tous pour vos trajets quotidiens et vos déplacements réguliers. Un service planifié et optimisé pour garantir des horaires fixes.</p>
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3">
+                                <span class="fw-bold fs-5 text-success">Plus d'info</span>
+                                <a href="#contact" class="btn-custom-primary text-decoration-none">Réserver</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- OFFRE 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="zoom-card h-100 bg-white position-relative d-flex flex-column">
+                        <span class="circuit-badge">Spécial</span>
+                        <div class="position-relative" style="height: 250px;">
+                            <img src="../image/special.jpg" class="w-100 h-100 object-fit-cover" alt="Transport Spécialisé">
+                        </div>
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <div class="text-primary small fw-semibold mb-2"><i class="fa-regular fa-clock"></i> Trajets sur Mesure</div>
+                            <h3 class="h4 fw-bold text-dark mb-3">Transport spécialisé</h3>
+                            <p class="small text-muted flex-grow-1">Des solutions adaptées pour vos demandes spécifiques : déplacements de séminaires, transports personnalisés. Une organisation rigoureuse pour répondre aux exigences.</p>
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3">
+                                <span class="fw-bold fs-5 text-success">Contrat</span>
+                                <a href="#contact" class="btn-custom-primary text-decoration-none">Réserver</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- OFFRE 3 -->
+                <div class="col-lg-4 col-md-6 mx-auto">
+                    <div class="zoom-card h-100 bg-white position-relative d-flex flex-column">
+                        <span class="circuit-badge">Privé</span>
+                        <div class="position-relative" style="height: 250px;">
+                            <img src="../image/Prive.jpg" class="w-100 h-100 object-fit-cover" alt="Mise à disposition">
+                        </div>
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between text-primary small fw-semibold mb-2">
+                                <span><i class="fa-regular fa-clock"></i> Flexibilité totale</span>
+                                <span><i class="fa-solid fa-star text-warning"></i> Premium</span>
+                            </div>
+                            <h3 class="h4 fw-bold text-dark mb-3">Mise à Disposition</h3>
+                            <p class="small text-muted flex-grow-1">Location de véhicule avec chauffeur privé à la journée ou pour des missions spécifiques, offrant une réactivité complète pour vos rendez-vous successifs.</p>
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3">
+                                <span class="fw-bold fs-5 text-success">Contrat</span>
+                                <a href="#contact" class="btn-custom-primary text-decoration-none">Réserver</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION GALERIE -->
+    <section class="py-5 bg-light reveal" id="galerie">
+        <div class="container py-4">
+            <h2 class="section-title text-center">Galerie Opérationnelle</h2>
+            <p class="text-center text-muted mb-5 mx-auto" style="max-width: 600px;">Découvrez en images le suivi de nos trajets, la rigueur logistique et notre organisation sur le terrain.</p>
+            
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-4"><div class="galerie-item shadow-sm"><img src="../image/M1.jpg" class="w-100 h-100 object-fit-cover" alt="Logistique"><div class="galerie-overlay"><h4 class="text-white h5 fw-semibold">Gestion Logistique</h4></div></div></div>
+                <div class="col-md-6 col-lg-4"><div class="galerie-item shadow-sm"><img src="../image/reseau.jpg" class="w-100 h-100 object-fit-cover" alt="Axes"><div class="galerie-overlay"><h4 class="text-white h5 fw-semibold">Axes Routiers</h4></div></div></div>
+                <div class="col-md-6 col-lg-4"><div class="galerie-item shadow-sm"><img src="../image/urbaine.jpg" class="w-100 h-100 object-fit-cover" alt="Urbain"><div class="galerie-overlay"><h4 class="text-white h5 fw-semibold">Trajets Urbains</h4></div></div></div>
+                <div class="col-md-6 col-lg-4"><div class="galerie-item shadow-sm"><img src="../image/navette.jpg" class="w-100 h-100 object-fit-cover" alt="Corporate"><div class="galerie-overlay"><h4 class="text-white h5 fw-semibold">Transport Corporatif</h4></div></div></div>
+                <div class="col-md-6 col-lg-4"><div class="galerie-item shadow-sm"><img src="../image/flotte.jpg" class="w-100 h-100 object-fit-cover" alt="Flotte"><div class="galerie-overlay"><h4 class="text-white h5 fw-semibold">Suivi de Flotte</h4></div></div></div>
+                <div class="col-md-6 col-lg-4"><div class="galerie-item shadow-sm"><img src="../image/securite.avif" class="w-100 h-100 object-fit-cover" alt="Sécurité"><div class="galerie-overlay"><h4 class="text-white h5 fw-semibold">Sécurité & Confort</h4></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION CONTACT AVEC FORMULAIRE COULISSANT JS (CONNEXION & INSCRIPTION) -->
+    <section class="py-5 bg-light reveal" id="contact">
+        <div class="container py-4" style="max-width: 850px;">
+            <h2 class="section-title text-center" id="contact-title">Planifiez votre Déplacement</h2>
+            <p class="text-center text-muted mb-5 mx-auto" id="contact-subtitle">Renseignez les détails de votre besoin de transport et nos équipes logistiques vous soumettront une offre personnalisée.</p>
+            
+            <div class="contact-wrapper">
+                <div class="form-slider">
+                    <form class="contact-form" id="travel-login-form">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="login-name" class="form-label fw-medium text-dark small">Nom Complet</label>
+                                <input type="text" class="form-content form-control p-3 bg-light" id="login-name" placeholder="Ex: Société Logistique ou Jean Marc" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="login-email" class="form-label fw-medium text-dark small">Adresse Email</label>
+                                <input type="email" class="form-content form-control p-3 bg-light" id="login-email" placeholder="Ex: contact@votre-entreprise.mg" required>
+                            </div>
+                        </div>
+                        
+                        <!-- CHAMP MOT DE PASSE AVEC ICÔNE MODIFIÉ -->
+                        <!-- CHAMP MOT DE PASSE SÉCURISÉ SANS BOUTON -->
+                        <div class="mb-4">
+                            <label for="login-password" class="form-label fw-medium text-dark small">Mot de passe</label>
+                            <div class="input-group">
+                                <input type="password" class="form-content form-control p-3 bg-light border-end-0" id="login-password" placeholder="••••••••" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" required>
+                                
+                                <!-- Utilisation d'un span avec un curseur pointer pour simuler le clic sans interaction de formulaire -->
+                                <span class="input-group-text btn-light border border-start-0 px-3" id="toggle-password-visibility" style="border-top-left-radius: 0; border-bottom-left-radius: 0; background-color: #f8f9fa; border-color: #dee2e6; cursor: pointer;">
+                                    <i class="fa-solid fa-eye text-muted" id="toggle-password-icon"></i>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-custom-primary w-100 p-3 fs-6">Se connecter</button>
+                        
+                        <div class="form-toggle-link text-center mt-4 small">
+                            <p class="mb-0 text-muted">Nouveau sur Heni Way ? <a href="#" id="go-to-register">Créer un compte</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer pt-5 pb-3">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-5">
+                    <div class="h2 fw-bold text-white mb-3">Heni Way</div>
+                    <p class="small text-white-50 lh-lg mb-4" style="max-width: 400px;">Votre partenaire logistique de référence pour des déplacements fiables, sûrs et parfaitement synchronisés à travers Madagascar.</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="social-icon text-decoration-none"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon text-decoration-none"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-icon text-decoration-none"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="social-icon text-decoration-none"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <h3 class="h5 text-white mb-3 position-relative pb-2" style="border-bottom: 2px solid var(--vert-tropical); width: fit-content;">Liens Utiles</h3>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 pt-2">
+                        <li><a href="#accueil" class="text-white-50 text-decoration-none hover-link">Accueil</a></li>
+                        <li><a href="#destinations" class="text-white-50 text-decoration-none hover-link">Axes de transport</a></li>
+                        <li><a href="#circuits" class="text-white-50 text-decoration-none hover-link">Offres</a></li>
+                        <li><a href="#apropos" class="text-white-50 text-decoration-none hover-link">À propos</a></li>
+                        <li><a href="#galerie" class="text-white-50 text-decoration-none hover-link">Galerie</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-6 col-lg-4">
+                    <h3 class="h5 text-white mb-3 position-relative pb-2" style="border-bottom: 2px solid var(--vert-tropical); width: fit-content;">Contact & Support</h3>
+                    <ul class="list-unstyled small d-flex flex-column gap-3 pt-2 text-white-50">
+                        <li class="d-flex align-items-center gap-2"><i class="fa-solid fa-location-dot text-success"></i> Gare Ambohimanarina, Antananarivo, Madagascar</li>
+                        <li class="d-flex align-items-center gap-2"><i class="fa-solid fa-phone text-success"></i> +261 34 18 999 70</li>
+                        <li class="d-flex align-items-center gap-2"><i class="fa-solid fa-envelope text-success"></i>Henintsoarazakarimanana@Gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-top border-secondary pt-4 text-center">
+                <p class="small text-white-50 mb-0">&copy; 2026 Heni Way. Tous droits réservés. Solutions logistiques de déplacement local.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3 JS Bundle (Contient Popper.js utile pour la navbar mobile) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- 1. BARRE DE NAVIGATION MODIFIÉE AU SCROLL ---
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            updateActiveLink();
+        });
+
+        // --- 2. FERMETURE AUTO DU MENU MOBILE APRES CLIC ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const menuCollapse = document.getElementById('navbarNav');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const bsCollapse = bootstrap.Collapse.getInstance(menuCollapse);
+                if (bsCollapse) { bsCollapse.hide(); }
+            });
+        });
+
+        // --- 3. LIENS DE NAVIGATION INTERACTIFS (ACTIVE CLASS) ---
+        const sections = document.querySelectorAll('section[id]');
+        function updateActiveLink() {
+            const scrollY = window.pageYOffset;
+            sections.forEach(current => {
+                const sectionHeight = current.offsetHeight;
+                const sectionTop = current.offsetTop - 120;
+                const sectionId = current.getAttribute('id');
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    document.querySelector('.navbar-nav a[href*=' + sectionId + ']')?.classList.add('active');
+                } else {
+                    document.querySelector('.navbar-nav a[href*=' + sectionId + ']')?.classList.remove('active');
+                }
+            });
+        }
+
+        // --- 4. ANIMATION REVEAL AU DEFILEMENT ---
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // --- GESTION DU FORMULAIRE DE CONNEXION ---
+        const togglePasswordSpan = document.getElementById('toggle-password-visibility');
+        const passwordInput = document.getElementById('login-password');
+        const passwordIcon = document.getElementById('toggle-password-icon');
+
+        // On active la logique de l'œil uniquement si les éléments sont bien présents dans la page
+        if (togglePasswordSpan && passwordInput && passwordIcon) {
+            togglePasswordSpan.addEventListener('click', () => {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    passwordIcon.classList.remove('fa-eye');
+                    passwordIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        // Soumission du formulaire
+        const loginForm = document.getElementById('travel-login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('login-name').value;
+                alert(`Ravi de vous revoir, ${name} ! Connexion réussie à votre espace Heni Way.`);
+                loginForm.reset();
+                
+                // Remet le champ en mode masqué par défaut après soumission
+                if (passwordInput) passwordInput.type = 'password';
+                if (passwordIcon) {
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heni Way</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           CHARTE GRAPHIQUE ADAPTATIVE (SANS FOND COCKPIT)
+           ========================================================================== */
+:root, [data-bs-theme="dark"] {
+            --bleu-ocean: #6C9BCF;  
+            --vert-neon: #1B9C85;
+            --rouge-neon: #FF0060;
+            --text-main: #E6EDF3;
+            --glass-card: rgba(22, 27, 34, 0.8);
+            --glass-border: rgba(48, 54, 61, 0.8);
+            --bg-gradient: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            --input-bg: rgba(1, 4, 9, 0.5);
+        }
+
+        [data-bs-theme="light"] {
+            --bleu-ocean: #4A7BB0;  
+            --vert-neon: #198754;
+            --rouge-neon: #dc3545;
+            --text-main: #212529;
+            --glass-card: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            --input-bg: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+            margin: 0;
+            padding-top: 70px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ==========================================================================
+           NAVBAR HORIZONTALE
+           ========================================================================== */
+        .custom-navbar {
+            background: rgba(10, 28, 51, 0.5) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 0;
+            z-index: 1050;
+        }
+
+        [data-bs-theme="light"] .custom-navbar {
+            background: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .navbar-brand span {
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
+
+        .custom-nav-link {
+            color: var(--text-main) !important;
+            opacity: 0.7;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 8px 18px !important;
+            border-radius: 20px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .custom-nav-item.active .custom-nav-link,
+        .custom-nav-link:hover {
+            opacity: 1;
+            background: rgba(108, 155, 207, 0.15);
+            color: var(--text-main) !important;
+        }
+
+        .nav-link-logout {
+            color: var(--rouge-neon) !important;
+            background: rgba(255, 0, 96, 0.1);
+            opacity: 1;
+        }
+        .nav-link-logout:hover {
+            background: var(--rouge-neon) !important;
+            color: #fff !important;
+        }
+
+        /* --- TOGGLE DARK MODE --- */
+        .dark-mode-toggle {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            width: 3.2rem;
+            height: 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px;
+            position: relative;
+        }
+
+        .dark-mode-toggle i {
+            font-size: 0.85rem;
+            width: 50%;
+            text-align: center;
+            z-index: 2;
+            color: var(--text-main);
+        }
+
+        .dark-mode-toggle::after {
+            content: '';
+            position: absolute;
+            width: 1.4rem;
+            height: 1.4rem;
+            background: var(--bleu-ocean);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        [data-bs-theme="dark"] .dark-mode-toggle::after {
+            transform: translateX(1.4rem);
+        }
+
+        /* ==========================================================================
+           COMPOSANTS GLASSMORPHISM CLEAN
+           ========================================================================== */
+        .main-display {
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-panel {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .hud-widget {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .widget-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: rgba(108, 155, 207, 0.15);
+            color: var(--bleu-ocean);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .search-bar-input {
+            background: var(--input-bg) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: var(--text-main) !important;
+        }
+        .search-bar-input::placeholder {
+            color: var(--text-main);
+            opacity: 0.5;
+        }
+
+        .ticket-active-card {
+            background: rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--bleu-ocean);
+            border-radius: 0 16px 16px 0;
+            transition: all 0.2s ease;
+        }
+        [data-bs-theme="light"] .ticket-active-card {
+            background: rgba(0, 0, 0, 0.03);
+        }
+        .ticket-active-card:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR SUPÉRIEURE HORIZONTALE -->
+    <nav class="navbar navbar-expand-lg custom-navbar fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                <img src="../image/Logo.png" alt="Logo Heni Way" style="width: 2.5rem; height: 2.5rem; border-radius: 50%; object-fit: contain;" onerror="this.style.display='none';">
+                <span>Heni<span class="text-danger">Way</span></span>
+            </a>
+            
+            <div class="d-flex align-items-center gap-3 d-lg-none ms-auto me-2">
+                <!-- Dark Mode Mobile -->
+                <div class="dark-mode-toggle" id="themeToggleMobile">
+                    <i class="fa-solid fa-sun"></i>
+                    <i class="fa-solid fa-moon"></i>
+                </div>
+            </div>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fa-solid fa-bars" style="color: var(--text-main)"></i>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-2 align-items-lg-center">
+                    <!-- Réservation -->
+                    <li class="nav-item custom-nav-item active" data-screen="screenReservation">
+                        <span class="nav-link custom-nav-link"><i class="fa-solid fa-ticket"></i> Réservation</span>
+                    </li>
+                    <!-- Historique -->
+                    <li class="nav-item custom-nav-item" data-screen="screenHistorique">
+                        <span class="nav-link custom-nav-link"><i class="fa-solid fa-clock-rotate-left"></i> Historique</span>
+                    </li>
+                    <!-- Commutateur Thème Bureau -->
+                    <li class="nav-item d-none d-lg-block mx-2">
+                        <div class="dark-mode-toggle" id="themeToggleDesktop">
+                            <i class="fa-solid fa-sun"></i>
+                            <i class="fa-solid fa-moon"></i>
+                        </div>
+                    </li>
+                    <!-- Déconnexion -->
+                    <li class="nav-item custom-nav-item" data-screen="screenDeconnexion">
+                        <span class="nav-link custom-nav-link nav-link-logout"><i class="fa-solid fa-power-off"></i> Déconnexion</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTAINER CENTRAL SANS BACKDROP AUTOMOBILE -->
+    <div class="container main-display my-4">
+        
+        <!-- ÉCRAN : RÉSERVATION -->
+        <main id="screenReservation" class="app-screen" style="display: block;">
+            <div class="row g-4">
+                <!-- Panneau Voyageur Gauche -->
+                <div class="col-lg-4">
+                    <div class="glass-panel d-flex flex-column gap-3">
+                        <div>
+                            <h4 class="fw-bold m-0" style="font-size: 1.25rem;">Bonjour, Henintsoa 👋</h4>
+                            <small class="opacity-60">Prêt pour votre prochain départ ?</small>
+                        </div>
+                        
+                        <div class="p-3 border-start border-warning border-3 rounded-end-4 rounded-start-4 d-flex align-items-center gap-3" style="background: rgba(var(--bs-warning-rgb), 0.08); border: 1px solid var(--glass-border);">
+                            <div class="spinner-border text-warning flex-shrink-0" role="status" style="width: 1.8rem; height: 1.8rem; border-width: 0.22em;">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                            
+                            <div class="w-100">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-warning-emphasis fw-semibold text-uppercase opacity-75" style="font-size: 0.7rem; letter-spacing: 0.5px;">Réservation en cours</small>
+                                    <button type="button" class="btn btn-sm btn-link text-danger p-1 border border-danger-subtle text-decoration-none p-0 fw-medium" onclick="afficherPopUpAnnulation()" style="font-size: 0.75rem;">
+                                        <i class="fa-solid fa-xmark me-1"></i>Annuler
+                                    </button>                               
+                                </div>
+                                <span class="fw-bold d-block mt-1 " style="font-size: 0.95rem;">Antananarivo ➔ Toamasina</span>
+                                <small class="text-secondary small d-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                                    <i class="fa-regular fa-clock"></i> En attente du chauffeur
+                                </small>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Section Principale Droite -->
+                <!-- Section Principale Droite -->
+                <div class="col-lg-8">
+                    <div class="glass-panel d-flex flex-column gap-4">
+                        
+                        <!-- Recherche simplifiée (Input unique) -->
+                        <div class="p-3 rounded-4" style="background: rgba(0,0,0,0.05); border: 1px solid var(--glass-border);">
+                            <form id="searchTripForm">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-0 opacity-70"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                    <input type="text" class="form-control search-bar-input rounded-3" placeholder="Rechercher un trajet, une destination, un axe...">
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Navigation Interne (Filtres de publication) -->
+                        <!-- Navigation Interne -->
+                        <ul class="nav nav-pills gap-2 p-1 rounded-4" style="background: rgba(0, 0, 0, 0.15); border: 1px solid var(--glass-border);">
+                            <li class="nav-item flex-fill text-center">
+                                <button class="nav-link active w-100 rounded-3 small fw-medium text-reset" data-target="PubPublic">Public</button>
+                            </li>
+                            <li class="nav-item flex-fill text-center">
+                                <button class="nav-link w-100 rounded-3 small fw-medium text-reset" data-target="PubSpecial">Spécial</button>
+                            </li>
+                            <li class="nav-item flex-fill text-center">
+                                <button class="nav-link w-100 rounded-3 small fw-medium text-reset" data-target="PubPrive">Privé</button>
+                            </li>
+                        </ul>
+
+                        <!-- En-tête de section -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold m-0" style="font-size: 1rem; opacity: 0.85;">Offres de voyage disponibles</h5>
+                            <span class="badge rounded-pill px-3 py-1 text-white" style="background: var(--bleu-ocean);">Actif</span>
+                        </div>
+
+                        <!-- Publication de voyage / Ticket actif -->
+                        <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubPublic" style="display:block">
+                            <!-- Gauche : Infos Véhicule -->
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                                <div>
+                                    <h6 class="m-0 fw-bold">Mercedes Sprinter</h6>
+                                    <small class="opacity-60">Immatriculation : 1245 TAB</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Centre : Trajet, Date & Places Restantes -->
+                            <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                                <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span>
+                                <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small>
+                                <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
+                            </div>
+
+                            <!-- Droite : Uniquement le bouton Ajouter -->
+                            <div class="d-flex align-items-center">
+                                <button onclick="ouvrirModalSieges()" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                                    <i class="fa-solid fa-plus me-1"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubSpecial" style="display:none !important">
+                            <!-- Gauche : Infos Véhicule -->
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                                <div>
+                                    <h6 class="m-0 fw-bold">Mercedes Sprinter</h6>
+                                    <small class="opacity-60">Immatriculation : 1245 TAB</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Centre : Trajet, Date & Places Restantes -->
+                            <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                                <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span>
+                                <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small>
+                                <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
+                            </div>
+
+                            <!-- Droite : Uniquement le bouton Ajouter -->
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm px-4 py-2 rounded-3 fw-medium" style="background-color: var(--vert-neon);">
+                                    <i class="fa-solid fa-plus me-1"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubPrive" style="display:none !important">
+                            <!-- Gauche : Infos Véhicule -->
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                                <div>
+                                    <h6 class="m-0 fw-bold">Mercedes Sprinter</h6>
+                                    <small class="opacity-60">Immatriculation : 1245 TAB</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Centre : Trajet, Date & Places Restantes -->
+                            <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                                <!-- <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span> -->
+                                <!-- <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small> -->
+                                <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
+                            </div>
+
+                            <!-- Droite : Uniquement le bouton Ajouter -->
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm px-4 py-2 rounded-3 fw-medium" style="background-color: var(--vert-neon);">
+                                    <i class="fa-solid fa-plus me-1"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- ÉCRAN : HISTORIQUE -->
+        <main id="screenHistorique" class="app-screen" style="display: none;">
+            <div class="glass-panel">
+                <h5 class="fw-bold mb-4" style="font-size: 1.1rem; opacity: 0.85;"><i class="fa-solid fa-clock-rotate-left me-2 text-info"></i>Historique global de vos déplacements</h5>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 text-nowrap" style="--bs-table-bg: transparent; --bs-table-color: var(--text-main);">
+                        <thead class="opacity-60 small">
+                            <tr>
+                                <th class="border-secondary">Véhicule</th>
+                                <th class="border-secondary">Trajet / Axe</th>
+                                <th class="border-secondary">Date d'embarquement</th>
+                                <th class="border-secondary text-end">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-0">
+                            <tr class="opacity-75">
+                                <td class="py-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fa-solid fa-bus opacity-50"></i>
+                                        <div>
+                                            <span class="d-block fw-semibold small">Toyota Hiace</span>
+                                            <small class="opacity-50" style="font-size: 0.75rem;">7896 TAA</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="small">Antananarivo ➔ Toamasina</td>
+                                <td class="small opacity-70">15 Juin 2026</td>
+                                <td class="text-end"><span class="badge bg-secondary-subtle text-secondary rounded-pill px-3">Terminé</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- ÉCRAN : DÉCONNEXION -->
+        <main id="screenDeconnexion" class="app-screen col-md-6 mx-auto" style="display: none;">
+            <div class="glass-panel text-center p-4">
+                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4 text-danger" style="background: rgba(255,0,96,0.15); width: 4.5rem; height: 4.5rem;">
+                    <i class="fa-solid fa-circle-exclamation fs-2"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Interruption de Session</h4>
+                <p class="opacity-60 small mb-4">Voulez-vous vraiment quitter votre espace HeniWay Voyageur ?</p>
+                
+                <div class="d-flex flex-column gap-2">
+                    <button class="btn btn-danger w-100 rounded-3 py-2 fw-semibold" onclick="window.location.href='login.html'">Confirmer la déconnexion</button>
+                    <button class="btn btn-outline-secondary text-secondary-subtle border-secondary-subtle w-100 rounded-3" id="cancelLogoutBtn">Annuler</button>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- popup -->
+
+    <div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-labelledby="confirmCancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow rounded-4 text-center bg-dark" style="background: var(--glass-card) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border) !important;">
+                <div class="modal-header border-0 pb-0 justify-content-end">
+                    <button type="button" class="btn-close opacity-50" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0 px-4 pb-4">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="background: rgba(255, 0, 96, 0.15); width: 4rem; height: 4rem; color: var(--rouge-neon);">
+                        <i class="fa-solid fa-circle-exclamation fs-2"></i>
+                    </div>
+                    
+                    <h5 class="fw-bold mb-2" id="confirmCancelModalLabel" style="font-size: 1.1rem;">Annuler la réservation ?</h5>
+                    <p class="opacity-60 small mb-4">Cette action est irréversible. Êtes-vous sûr de vouloir annuler votre trajet en cours ?</p>
+                    
+                    <div class="d-flex flex-column gap-2">
+                        <button type="button" class="btn w-100 rounded-3 py-2 fw-semibold" style="background-color: var(--rouge-neon); border: none;">
+                            Confirmer l'annulation
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary text-secondary-subtle border-secondary-subtle w-100 rounded-3 py-2 small" data-bs-dismiss="modal">
+                            Garder ma réservation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="modal fade" id="seatSelectionModal" tabindex="-1" aria-labelledby="seatSelectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow rounded-4" style="background: var(--glass-card) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border) !important;">
+            
+            <div class="modal-header border-0 pb-0 justify-content-between px-4 pt-1">
+                <div>
+                    <h5 class="fw-bold m-0 pt-3" id="seatSelectionModalLabel" style="font-size: 1.1rem;">Choisir votre place</h5>
+                    <small class="opacity-60">Sélectionnez un siège libre à bord du véhicule</small>
+                </div>
+                <button type="button" class="btn-close btn-close opacity-50" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+<!-- Plan intérieur du véhicule (Configuration 27 places alignée) -->
+<div class="mx-auto p-3 rounded-4 border border-secondary-subtle" style="max-width: 300px; background: rgba(0,0,0,0.2); margin-top: 20px;">
+    <!-- Avant du véhicule -->
+    <div class="text-center border-bottom border-secondary-subtle pb-2 mb-3">
+        <small class="opacity-50 fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">Avant du véhicule</small>
+    </div>
+
+    <!-- Rangée 1 : Chauffeur + Couloir + 2 places (01 et 02) à droite -->
+    <div class="d-flex align-items-center mb-2">
+        <!-- Chauffeur fixe à gauche (Position 1) -->
+        <div class="d-flex justify-content-center" style="width: 20%;">
+            <div class="d-flex flex-column align-items-center justify-content-center border border-secondary-subtle rounded-3 text-muted" style="width: 45px; height: 45px; background: rgba(255,255,255,0.02); cursor: not-allowed;" title="Chauffeur">
+                <i class="fa-solid fa-id-card-clip" style="font-size: 0.9rem;"></i>
+                <span style="font-size: 0.55rem; font-weight: 600;">Volant</span>
+            </div>
+        </div>
+        <!-- Position 2 (Vide) -->
+        <div style="width: 20%;"></div>
+        <!-- Position 3 (Couloir central) -->
+        <div style="width: 20%;"></div>
+        <!-- Sièges 1 et 2 à droite (Positions 4 et 5) -->
+        <div class="d-flex justify-content-center" style="width: 20%;" id="slot-siege-1"></div>
+        <div class="d-flex justify-content-center" style="width: 20%;" id="slot-siege-2"></div>
+    </div>
+
+    <!-- Les autres rangées du milieu et du fond injectées ici -->
+    <div id="sprinterBodyRows" class="d-flex flex-column gap-2"></div>
+</div>
+<div class="text-center mt-4">
+    <!-- L'ID ici doit être strictement "btnValiderSiege" -->
+    <button id="btnValiderSiege" class="btn btn-sm px-4 py-2 rounded-3 fw-medium w-100" style="background-color: var(--vert-neon);" disabled>
+        Confirmer les sièges <span id="selectedSeatNumber" class="badge bg-dark ms-1">-</span>
+    </button>
+</div>
+
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Logique de changement de thème (Dark/Light)
+            const toggles = [document.getElementById('themeToggleDesktop'), document.getElementById('themeToggleMobile')];
+            toggles.forEach(toggle => {
+                if(toggle) {
+                    toggle.addEventListener('click', () => {
+                        const activeTheme = document.documentElement.getAttribute('data-bs-theme');
+                        const targetTheme = activeTheme === 'dark' ? 'light' : 'dark';
+                        document.documentElement.setAttribute('data-bs-theme', targetTheme);
+                    });
+                }
+            });
+
+            // Logique de navigation SPA (Changement d'écran)
+            const navItems = document.querySelectorAll('.custom-nav-item');
+            const screens = document.querySelectorAll('.app-screen');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const targetScreen = this.getAttribute('data-screen');
+                    
+                    if (targetScreen !== 'screenDeconnexion') {
+                        navItems.forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+
+                    const navbarCollapse = document.getElementById('navbarNav');
+                    if(navbarCollapse.classList.contains('show')) {
+                        bootstrap.Collapse.getInstance(navbarCollapse).hide();
+                    }
+
+                    screens.forEach(screen => {
+                        screen.style.display = screen.id === targetScreen ? 'block' : 'none';
+                    });
+                });
+            });
+
+            // Bouton Annuler Déconnexion
+            const cancelBtn = document.getElementById('cancelLogoutBtn');
+            if(cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    const homeTab = document.querySelector('[data-screen="screenReservation"]');
+                    if(homeTab) homeTab.click();
+                });
+            }
+        });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. On sélectionne tous les boutons d'onglets possédant l'attribut data-target
+    const tabButtons = document.querySelectorAll('.nav-pills [data-target]');
+    
+    // 2. On regroupe les éléments de publication par leur ID
+    const sections = {
+        PubPublic: document.getElementById('PubPublic'),
+        PubSpecial: document.getElementById('PubSpecial'),
+        PubPrive: document.getElementById('PubPrive')
+    };
+
+    // 3. Fonction pour basculer les affichages et la classe active
+    function togglePublications(targetId) {
+        // Gérer l'affichage des div de statut (flex pour garder le style Bootstrap)
+        Object.keys(sections).forEach(id => {
+            if (sections[id]) {
+                if (id === targetId) {
+                    sections[id].style.setProperty('display', 'flex', 'important');
+                } else {
+                    sections[id].style.setProperty('display', 'none', 'important');
+                }
+            }
+        });
+
+        // Gérer le style actif sur les boutons
+        tabButtons.forEach(btn => {
+            if (btn.getAttribute('data-target') === targetId) {
+                btn.classList.add('active');
+                // S'assure que la couleur d'arrière-plan personnalisée reste appliquée
+                btn.style.setProperty('--bs-nav-pills-link-active-bg', 'var(--bleu-ocean)');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // 4. Ajouter l'écouteur d'événement de clic sur chaque bouton
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = button.getAttribute('data-target');
+            togglePublications(targetId);
+        });
+    });
+});
+
+// Fonction pour ouvrir la pop-up de confirmation d'annulation
+function afficherPopUpAnnulation() {
+    // 1. On récupère l'élément HTML de la modale par son ID
+    const modaleElement = document.getElementById('confirmCancelModal');
+    
+    if (modaleElement) {
+        // 2. On crée ou récupère l'instance de la modale Bootstrap
+        const maModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
+        
+        // 3. On l'affiche à l'écran
+        maModale.show();
+    }
+}
+
+
+// Données simulées (statut 1 = déjà pris dans ta base de données, 0 = disponible)
+const donneesSiegesExemple = [
+    { numero: 1, statut: 1 }, { numero: 2, statut: 0 }, { numero: 3, statut: 0 }, { numero: 4, statut: 1 },
+    { numero: 5, statut: 0 }, { numero: 6, statut: 0 }, { numero: 7, statut: 1 }, { numero: 8, statut: 0 },
+    { numero: 9, statut: 0 }, { numero: 10, statut: 0 }, { numero: 11, statut: 0 }, { numero: 12, statut: 0 },
+    { numero: 13, statut: 1 }, { numero: 14, statut: 0 }, { numero: 15, statut: 0 }, { numero: 16, statut: 0 },
+    { numero: 17, statut: 1 }, { numero: 18, statut: 0 }, { numero: 19, statut: 0 }, { numero: 20, statut: 0 },
+    { numero: 21, statut: 1 }, { numero: 22, statut: 0 }, { numero: 23, statut: 0 }, { numero: 24, statut: 0 },
+    { numero: 25, statut: 1 }, { numero: 26, statut: 0 }, { numero: 27, statut: 0 }
+];
+
+let siegeSelectionneActuel = null;
+
+// Fonction appelée pour charger les données et ouvrir la pop-up
+function ouvrirModalSieges() {
+    const modaleElement = document.getElementById('seatSelectionModal');
+    if (modaleElement) {
+        // Génère la disposition des chaises
+        genererPlanDesSieges(donneesSiegesExemple);
+        
+        // Affiche la pop-up à l'écran via l'API Bootstrap
+        const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
+        instanceModale.show();
+    }
+}
+
+// Tableau pour stocker les numéros des sièges sélectionnés par le passager
+let siegesSelectionnesActuels = [];
+
+function genererPlanDesSieges(listeSieges) {
+    const slot1 = document.getElementById('slot-siege-1');
+    const slot2 = document.getElementById('slot-siege-2');
+    const bodyRows = document.getElementById('sprinterBodyRows');
+    const btnValider = document.getElementById('btnValiderSiege');
+    const badgeNumero = document.getElementById('selectedSeatNumber');
+    
+    // Nettoyage complet
+    slot1.innerHTML = '';
+    slot2.innerHTML = '';
+    bodyRows.innerHTML = '';
+    siegesSelectionnesActuels = [];
+    btnValider.disabled = true;
+    badgeNumero.textContent = '-';
+
+    // Fonction interne pour fabriquer le bouton d'un siège
+    function creerBoutonSiege(siege) {
+        const btnSiege = document.createElement('button');
+        btnSiege.type = 'button';
+        btnSiege.className = 'btn d-flex flex-column align-items-center justify-content-center p-1 rounded-3';
+        btnSiege.style.width = '45px';
+        btnSiege.style.height = '45px';
+        btnSiege.style.transition = 'all 0.2s';
+        
+        btnSiege.innerHTML = `
+            <i class="fa-solid fa-chair" style="font-size: 0.9rem;"></i>
+            <span style="font-size: 0.6rem; font-weight: 600; margin-top: 1px;">${siege.numero.toString().padStart(2, '0')}</span>
+        `;
+
+        if (siege.statut === 1) {
+            btnSiege.disabled = true; 
+            btnSiege.classList.add('btn-danger', 'opacity-25');
+            btnSiege.style.cursor = 'not-allowed';
+        } else {
+            btnSiege.classList.add('btn-outline-secondary', 'text-white-50');
+
+            btnSiege.addEventListener('click', () => {
+                const index = siegesSelectionnesActuels.indexOf(siege.numero);
+                if (index > -1) {
+                    siegesSelectionnesActuels.splice(index, 1);
+                    btnSiege.style.background = '';
+                    btnSiege.classList.remove('text-dark');
+                } else {
+                    siegesSelectionnesActuels.push(siege.numero);
+                    btnSiege.style.background = 'var(--bleu-ocean)';
+                    btnSiege.classList.add('text-dark');
+                }
+
+                siegesSelectionnesActuels.sort((a, b) => a - b);
+
+                if (siegesSelectionnesActuels.length > 0) {
+                    badgeNumero.textContent = siegesSelectionnesActuels.map(n => n.toString().padStart(2, '0')).join(', ');
+                    btnValider.disabled = false;
+                } else {
+                    badgeNumero.textContent = '-';
+                    btnValider.disabled = true;
+                }
+            });
+        }
+        return btnSiege;
+    }
+
+    // 1. Placement des sièges de l'avant (01 et 02)
+    const s1 = listeSieges.find(s => s.numero === 1);
+    const s2 = listeSieges.find(s => s.numero === 2);
+    if(s1) slot1.appendChild(creerBoutonSiege(s1));
+    if(s2) slot2.appendChild(creerBoutonSiege(s2));
+
+    // 2. Génération des rangées du milieu (Sièges 03 à 22)
+    // Structure stricte : [Siège] [Siège] [Couloir] [Siège] [Siège] -> chacun fait 20%
+    let indexSiege = 3;
+    while (indexSiege <= 22) {
+        const row = document.createElement('div');
+        row.className = 'd-flex align-items-center';
+
+        // 2 places à gauche
+        for (let i = 0; i < 2; i++) {
+            const col = document.createElement('div');
+            col.style.width = '20%';
+            col.className = 'd-flex justify-content-center';
+            const s = listeSieges.find(s => s.numero === indexSiege);
+            if (s) col.appendChild(creerBoutonSiege(s));
+            row.appendChild(col);
+            indexSiege++;
+        }
+
+        // Couloir central (Milieu)
+        const couloir = document.createElement('div');
+        couloir.style.width = '20%';
+        row.appendChild(couloir);
+
+        // 2 places à droite
+        for (let i = 0; i < 2; i++) {
+            if (indexSiege <= 22) {
+                const col = document.createElement('div');
+                col.style.width = '20%';
+                col.className = 'd-flex justify-content-center';
+                const s = listeSieges.find(s => s.numero === indexSiege);
+                if (s) col.appendChild(creerBoutonSiege(s));
+                row.appendChild(col);
+                indexSiege++;
+            }
+        }
+        bodyRows.appendChild(row);
+    }
+
+    // 3. Dernière rangée du fond : Banquette complète de 5 places (Sièges 23 à 27)
+    const lastRow = document.createElement('div');
+    lastRow.className = 'd-flex align-items-center mt-1';
+    
+    for (let n = 23; n <= 27; n++) {
+        const col = document.createElement('div');
+        col.style.width = '20%';
+        col.className = 'd-flex justify-content-center';
+        const s = listeSieges.find(s => s.numero === n);
+        if (s) col.appendChild(creerBoutonSiege(s));
+        lastRow.appendChild(col);
+    }
+    bodyRows.appendChild(lastRow);
+}
+</script>
+</body>
+</html>

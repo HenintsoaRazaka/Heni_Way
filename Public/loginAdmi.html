@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heni Way</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           CHARTE GRAPHIQUE & THÈME DE VOYAGE ROUTIER
+           ========================================================================== */
+        :root {
+            --bleu-sombre: #003366; /* Couleur officielle Heni Way */
+            --bleu-ocean: #006699;  /* Couleur officielle Heni Way */
+            --jaune-soleil: #FFD700; /* Touche d'accent voyage */
+            --blanc: #FFFFFF;
+            --input-bg: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Dégradé évoquant un horizon de voyage lointain */
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.35)), 
+                        url('../image/Nosy\ Iranja.jpg') no-repeat center center/cover;            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- BOITE DE CONNEXION --- */
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+            text-align: center;
+            z-index: 10;
+            /* Léger effet de flou derrière la boîte pour détacher du fond */
+            background: rgba(0, 51, 102, 0.15);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Conteneur du logo */
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px auto;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            padding: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .login-title {
+            color: var(--blanc);
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+        .login-subtitle {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        /* Inputs au format Pilule */
+        .input-group-pill {
+            background-color: var(--input-bg);
+            border-radius: 30px;
+            padding: 2px 5px;
+            margin-bottom: 22px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .input-group-pill:focus-within {
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+
+        .form-control-pill {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 13px 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #021124 !important;
+            text-align: center;
+        }
+        .form-control-pill::placeholder {
+            color: #999999;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+        }
+
+        /* Zone réactive de l'œil sans bouton */
+        .eye-span-pill {
+            background: transparent !important;
+            border: none !important;
+            cursor: pointer;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .eye-span-pill i {
+            color: #999999;
+            transition: color 0.2s;
+        }
+        .eye-span-pill:hover i {
+            color: var(--bleu-sombre);
+        }
+
+        /* Bouton Outline style modèle original */
+        .btn-login-outline {
+            background: transparent;
+            color: var(--blanc);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 12px 55px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.88rem;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        .btn-login-outline:hover {
+            background-color: var(--blanc);
+            color: var(--bleu-sombre);
+            border-color: var(--blanc);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BOITE DE CONNEXION -->
+    <div class="login-box">
+        
+        <!-- CHEMIN DE TON LOGO ORIGINAL -->
+        <div class="logo-container">
+            <img src="../image/Logo.png" alt="Logo Heni Way" class="logo-img" onerror="this.style.opacity='0';">
+        </div>
+
+        <h1 class="login-title">Connexion</h1>
+        <p class="login-subtitle">Bienvenue</p>
+
+        <!-- FORMULAIRE -->
+        <form id="vector-login-form">
+            
+            <!-- IDENTIFIANT -->
+            <div class="input-group-pill">
+                <input type="text" class="form-control form-control-pill" id="login-username" placeholder="Nom d'utilisateur" required autocomplete="off">
+            </div>
+
+            <!-- MOT DE PASSE -->
+            <div class="input-group-pill d-flex">
+                <input type="password" class="form-control form-control-pill flex-grow-1" id="login-password" placeholder="Mot de passe" required>
+                <span class="eye-span-pill" id="toggle-password-visibility">
+                    <i class="fa-solid fa-eye" id="toggle-password-icon"></i>
+                </span>
+            </div>
+
+            <!-- BOUTON -->
+            <button type="submit" class="btn btn-login-outline">Se connecter</button>
+
+        </form>
+    </div>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- LOGIQUE DE L'ŒIL ---
+        const togglePasswordSpan = document.getElementById('toggle-password-visibility');
+        const passwordInput = document.getElementById('login-password');
+        const passwordIcon = document.getElementById('toggle-password-icon');
+
+        if (togglePasswordSpan && passwordInput && passwordIcon) {
+            togglePasswordSpan.addEventListener('click', () => {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    passwordIcon.classList.remove('fa-eye');
+                    passwordIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        // --- ENVOI FORMULAIRE ---
+        const loginForm = document.getElementById('vector-login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const user = document.getElementById('login-username').value;
+                alert(`Ravi de vous revoir, ${user} ! Connexion réussie.`);
+                loginForm.reset();
+                
+                if (passwordInput) passwordInput.type = 'password';
+                if (passwordIcon) {
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
