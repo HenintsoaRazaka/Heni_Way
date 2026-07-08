@@ -5,19 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heni Way</title>
     
-    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
-        /* ==========================================================================
-           CHARTE GRAPHIQUE HENI WAY (Reprise d'Accueil_4.html)
-           ========================================================================== */
         :root {
             --bleu-ocean: #006699;
             --bleu-sombre: #003366;
@@ -32,12 +26,11 @@
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.35)), 
-                        url('../image/Carte.jpg') no-repeat center center/cover;
+                        url('https://jzyunzjhjamoosctqoor.supabase.co/storage/v1/object/public/Image_Heni-Way/Carte.jpg') no-repeat center center/cover;
             color: var(--gris-texte);
             min-height: 100vh;
         }
 
-        /* Conteneur principal de la carte d'inscription */
         .register-container {
             max-width: 1000px;
             background: var(--blanc);
@@ -46,10 +39,9 @@
             overflow: hidden;
         }
 
-        /* Partie gauche : Visuelle / Identité */
         .register-visual {
             background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 102, 153, 0.7)), 
-                        url('Carte.jpg') no-repeat center center/cover;
+                        url('https://jzyunzjhjamoosctqoor.supabase.co/storage/v1/object/public/Image_Heni-Way/Carte.jpg') no-repeat center center/cover;
             color: var(--blanc);
             display: flex;
             flex-direction: column;
@@ -59,7 +51,6 @@
             text-align: center;
         }
 
-        /* Traitement de ton logo unique */
         .logo-img {
             width: 80px;
             height: 80px;
@@ -84,7 +75,6 @@
             margin-bottom: 20px;
         }
 
-        /* Formulaire à droite */
         .register-form-wrapper {
             padding: 20px 40px;
         }
@@ -94,7 +84,6 @@
             font-weight: 700;
         }
 
-        /* Inputs personnalisés et stylisés */
         .form-control-custom {
             padding: 12px 18px;
             background-color: #FAFAFA;
@@ -118,7 +107,6 @@
             margin-bottom: 6px;
         }
 
-        /* Bouton d'action principal (Jaune Soleil / Accent) */
         .btn-register-submit {
             background-color: var(--jaune-soleil);
             color: var(--bleu-sombre);
@@ -136,7 +124,6 @@
             box-shadow: 0 5px 15px rgba(0, 102, 153, 0.2);
         }
 
-        /* Pied de formulaire alternatif */
         .toggle-login-link a {
             color: var(--bleu-ocean);
             font-weight: 600;
@@ -147,7 +134,6 @@
             text-decoration: underline;
         }
 
-        /* Ajustements d'accessibilité ou responsive sur mobile */
         @media (max-width: 767.98px) {
             .register-visual {
                 padding: 40px 20px;
@@ -164,9 +150,8 @@
         <div class="register-container mx-auto">
             <div class="row g-0">
                 
-                <!-- COLONNE GAUCHE : L'IDENTITÉ VISUELLE -->
                 <div class="col-md-5 register-visual text-white">
-                    <img src="../image/Logo.png" alt="Logo Heni Way" class="logo-img">
+                    <img src="https://jzyunzjhjamoosctqoor.supabase.co/storage/v1/object/public/Image_Heni-Way/Logo.png" alt="Logo Heni Way" class="logo-img">
                     <h2 class="brand-name">Heni Way</h2>
                     <div class="divider-line"></div>
                     <p class="lead fs-6 fw-light px-lg-3">
@@ -174,7 +159,6 @@
                     </p>
                 </div>
 
-                <!-- COLONNE DROITE : LE FORMULAIRE BOOTSTRAP -->
                 <div class="col-md-7 register-form-wrapper">
                     <div class="mb-4">
                         <h1 class="h3 form-title mb-2">Créer un compte</h1>
@@ -182,15 +166,13 @@
 
                     <form id="standalone-register-form">
                         
-                        <!-- LIGNE 1 : NOM COMPLET -->
                         <div class="mb-3">
-                            <label for="reg-fullname" class="form-label-custom">Nom Complet / Raison Sociale</label>
+                            <label for="reg-fullname" class="form-label-custom">Nom Complet</label>
                             <div class="position-relative">
-                                <input type="text" class="form-control form-control-custom w-100" id="reg-fullname" placeholder="Ex: Henintsoa Lovatiana ou Nom d'Entreprise" required>
+                                <input type="text" class="form-control form-control-custom w-100" id="reg-fullname" placeholder="Ex: Razakarimanana Henintsoa Lovatiana" required>
                             </div>
                         </div>
 
-                        <!-- LIGNE 2 : PSEUDO & TÉLÉPHONE (Côte à côte sur tablette/PC) -->
                         <div class="row g-3 mb-3">
                             <div class="col-sm-6">
                                 <label for="reg-username" class="form-label-custom">Pseudo d'utilisateur</label>
@@ -202,24 +184,20 @@
                             </div>
                         </div>
 
-                        <!-- LIGNE 3 : ADRESSE EMAIL -->
                         <div class="mb-3">
                             <label for="reg-useremail" class="form-label-custom">Adresse Email</label>
-                            <input type="email" class="form-control form-control-custom w-100" id="reg-useremail" placeholder="Ex: contact@heniway.mg" required>
+                            <input type="email" class="form-control form-control-custom w-100" id="reg-useremail" placeholder="Ex: contact@Gmail.com" required>
                         </div>
 
-                        <!-- LIGNE 4 : MOT DE PASSE -->
                         <div class="mb-4">
                             <label for="reg-password" class="form-label-custom">Mot de passe</label>
                             <input type="password" class="form-control form-control-custom w-100" id="reg-password" placeholder="••••••••" required>
                         </div>
 
-                        <!-- BOUTON DE SOUMISSION -->
                         <button type="submit" class="btn-register-submit w-100 fs-6 shadow-sm mb-4">Finaliser mon inscription</button>
 
-                        <!-- LIEN DE BASCULE VERS LA PAGE DE CONNEXION -->
                         <div class="toggle-login-link text-center small text-muted">
-                            Vous possédez déjà un compte ? <a href="index.html#contact">Connectez-vous ici</a>
+                            Vous possédez déjà un compte ? <a href="/#contact">Connectez-vous ici</a>
                         </div>
                     </form>
                 </div>
@@ -228,28 +206,22 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        // Gestion de la soumission du formulaire d'inscription autonome
         const standaloneForm = document.getElementById('standalone-register-form');
 
         standaloneForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Récupération des champs saisis
             const pseudo = document.getElementById('reg-username').value;
             const email = document.getElementById('reg-useremail').value;
 
-            // Alerte de succès personnalisée
             alert(`Félicitations ${pseudo} !\nVotre compte Heni Way a été créé avec succès avec l'adresse : ${email}.\nVous allez être redirigé.`);
             
             standaloneForm.reset();
             
-            // Exemple de redirection vers la section de contact/connexion de l'accueil
             window.location.href = "index.html#contact";
         });
-    </script>
+    </script>   
 </body>
 </html>
