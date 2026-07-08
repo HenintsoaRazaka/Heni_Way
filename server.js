@@ -13,3 +13,9 @@ app.get("/", (req, res)=>{
     const fichier=path.join(__dirname, 'Public', 'Accueil.html');
     res.sendFile(fichier);
 });
+
+app.get("/Ins", (req, res)=>{
+    const fichier=path.join(__dirname, 'Public', 'Login.html');
+    res.sendFile(fichier);
+});
+
