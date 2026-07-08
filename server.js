@@ -1,0 +1,15 @@
+const express=require('express');
+const app=express();
+const http=require('http');
+const path=require('path');
+module.exports = app;
+
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+
+app.use(express.static('Public'));
+
+app.get("/", (req, res)=>{
+    const fichier=path.join(__dirname, 'Public', 'Accueil.html');
+    res.sendFile(fichier);
+});
