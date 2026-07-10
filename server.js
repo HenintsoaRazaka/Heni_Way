@@ -20,4 +20,9 @@ app.get("/Ins", (req, res)=>{
     res.sendFile(fichier);
 });
 
+app.get("/Passagers", (req, res)=>{
+    const fichier=path.join(__dirname, 'Public', 'Passagers.html');
+    res.sendFile(fichier);
+});
+
 app.use('/api/auth', authRoutes);
