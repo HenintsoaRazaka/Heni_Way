@@ -1,5 +1,4 @@
-// src/controllers/authController.js
-const authModel = require('../models/authModel'); // On importe ton modèle
+const authModel = require('../models/authModel');
 
 const authController = {
     inscription: async (req, res) => {
