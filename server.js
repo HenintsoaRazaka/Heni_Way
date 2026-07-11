@@ -20,7 +20,7 @@ app.get("/Ins", (req, res)=>{
     res.sendFile(fichier);
 });
 
-app.get("/Passagers", (req, res)=>{
+app.get("/Heni-Way/Passager", (req, res)=>{
     const fichier=path.join(__dirname, 'Public', 'Passagers.html');
     res.sendFile(fichier);
 });
