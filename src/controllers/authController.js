@@ -12,7 +12,7 @@ const authController = {
             const dataEmail = await response.json();
             console.log("Données de l'API Abstract:", dataEmail);
 
-            if (!dataEmail.email_deliverability || dataEmail.email_deliverability.status === "undeliverable") {
+            if (dataEmail.email_deliverability.status === "undeliverable") {
                 return res.status(400).json({
                     type: "INVALID_EMAIL"
                 });
