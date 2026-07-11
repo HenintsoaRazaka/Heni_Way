@@ -14,7 +14,7 @@ const authController = {
             if (!dataEmail.deliverability || dataEmail.deliverability === "undeliverable") {
                 return res.status(400).json({
                     succes: false,
-                    message: "Désolé, cette adresse e-mail n'existe pas dans la réalité."
+                    type: "INVALID_EMAIL"
                 });
             }
 
