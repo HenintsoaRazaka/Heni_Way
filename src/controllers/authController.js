@@ -13,7 +13,6 @@ const authController = {
 
             if (!dataEmail.email_deliverability || dataEmail.email_deliverability.status === "undeliverable") {
                 return res.status(400).json({
-                    succes: false,
                     type: "INVALID_EMAIL"
                 });
             }
@@ -22,7 +21,7 @@ const authController = {
 
             return res.status(201).json({
                 succes: true,
-                message: "Compte créé avec succès ! Veuillez vérifier votre boîte email pour confirmer l'inscription.",
+                message: "Validé.",
                 donnees: utilisateur
             });
 
