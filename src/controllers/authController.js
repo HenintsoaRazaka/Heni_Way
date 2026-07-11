@@ -20,8 +20,7 @@ const authController = {
             const utilisateur = await authModel.inscription(email, password, infosPassagers);
 
             return res.status(201).json({
-                succes: true,
-                message: "Validé.",
+                message: "Valider.",
                 donnees: utilisateur
             });
 
