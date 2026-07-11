@@ -12,7 +12,7 @@ const authController = {
             const dataEmail = await response.json();
 
             if (dataEmail.email_deliverability.status === "undeliverable") {
-                return res.status(400).json({
+                return res.json({
                     type: "INVALID_EMAIL"
                 });
             }
