@@ -1,6 +1,4 @@
 const authModel = require('../models/authModel');
-import dotenv from 'dotenv';
-dotenv.config();
 
 const authController = {
     inscription: async (req, res) => {
@@ -13,7 +11,7 @@ const authController = {
             const response = await fetch(abstractUrl);
             const dataEmail = await response.json();
 
-            if (!dataEmail.email_deliverability || dataEmail.email_deliverability.status === "undeliverable") {
+            if (dataEmail.email_deliverability.status === "undeliverable") {
                 return res.status(400).json({
                     type: "INVALID_EMAIL"
                 });
