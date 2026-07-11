@@ -248,15 +248,6 @@
             const form = event.target;
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
-            const abstractUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${process.env.ABSTRACT_API_KEY}&email=${data.email}`;
-            const response = await fetch(abstractUrl);
-            const   dataEmail = await response.json();
-
-            if (!data.email_deliverability || data.email_deliverability.status === "undeliverable") {
-                const emailErrorModal = new bootstrap.Modal(document.getElementById('EmailError'));
-                emailErrorModal.show();
-                return;
-            }
 
             try {
                 const response = await fetch(form.action, {
@@ -267,13 +258,19 @@
                     body: JSON.stringify(data)
                 });
 
+                const result = await response.json();
+
                 if (response.ok) {
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                     successModal.show();
                     form.reset();
                 } else {
-                    const errorData = await response.json();
-                    alert(`Erreur: ${errorData.message || 'Une erreur est survenue.'}`);
+                    if (result.type === 'INVALID_EMAIL') {
+                        const emailErrorModal = new bootstrap.Modal(document.getElementById('EmailError'));
+                        emailErrorModal.show();
+                    } else {
+                        alert(`Erreur: ${result.message || 'Une erreur est survenue.'}`);
+                    }
                 }
             } catch (error) {
                 console.error('Erreur lors de l\'inscription:', error);
