@@ -21,7 +21,7 @@ app.get("/Ins", (req, res)=>{
 });
 
 app.get("/Heni-Way/Passager", (req, res)=>{
-    const fichier=path.join(__dirname, 'Public', 'Passagers.html');
+    const fichier=path.join(__dirname, 'Public', 'Passager.html');
     res.sendFile(fichier);
 });
 
