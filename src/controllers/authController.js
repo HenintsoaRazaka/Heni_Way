@@ -1,4 +1,4 @@
-const authModel = require('./models/authModel');
+const authModel = require('../models/authModel');
 
 const authController = {
     inscription: async (req, res) => {
