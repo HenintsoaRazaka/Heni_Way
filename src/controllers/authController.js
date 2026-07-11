@@ -10,6 +10,7 @@ const authController = {
             const abstractUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${abstractApiKey}&email=${email}`;
             const response = await fetch(abstractUrl);
             const dataEmail = await response.json();
+            console.log("Données de l'API Abstract:", dataEmail);
 
             if (!dataEmail.email_deliverability || dataEmail.email_deliverability.status === "undeliverable") {
                 return res.status(400).json({
