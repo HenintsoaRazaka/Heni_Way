@@ -2,7 +2,7 @@ const express=require('express');
 const app=express();
 const http=require('http');
 const path=require('path');
-const authRoutes = require('src/routes/authRoutes');
+const authRoutes = require('/src/routes/authRoutes');
 module.exports = app;
 
 app.use(express.urlencoded({extended:true}));
