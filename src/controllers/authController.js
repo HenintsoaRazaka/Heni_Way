@@ -1,4 +1,6 @@
 const authModel = require('../models/authModel');
+import dotenv from 'dotenv';
+dotenv.config();
 
 const authController = {
     inscription: async (req, res) => {
