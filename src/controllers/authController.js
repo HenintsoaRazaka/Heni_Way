@@ -11,7 +11,7 @@ const authController = {
             const response = await fetch(abstractUrl);
             const dataEmail = await response.json();
 
-            if (!dataEmail.deliverability || dataEmail.deliverability === "undeliverable") {
+            if (!dataEmail.email_deliverability || dataEmail.email_deliverability.status === "undeliverable") {
                 return res.status(400).json({
                     succes: false,
                     type: "INVALID_EMAIL"
