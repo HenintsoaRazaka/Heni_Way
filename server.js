@@ -25,4 +25,32 @@ app.get("/Heni-Way/Passager", (req, res)=>{
     res.sendFile(fichier);
 });
 
+app.get("/Heni-Way/Administrateur", (req, res)=>{
+    const fichier=path.join(__dirname, 'Public', 'loginAdmi.html');
+    res.sendFile(fichier);
+});
+
+const { supabaseAdmin } = require('../config/supabase');
+
+router.get('/setup-admin-secret-777', async (req, res) => {
+    try {
+        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+            email: "admin@heniway.app",
+            password: "UnMotDePasseTresSecurise123!",
+            email_confirm: true,
+            app_metadata: { role: 'admin' }
+        });
+
+        if (authError) throw authError;
+
+        await supabaseAdmin.from('Administrateur').insert([
+            { identifiant: authData.user.id, Nom: "Henintsoa" }
+        ]);
+
+        res.status(200).json({ succes: true, message: "Admin créé avec succès !" });
+    } catch (error) {
+        res.status(500).json({ succes: false, error: error.message });
+    }
+});
+
 app.use('/api/auth', authRoutes);

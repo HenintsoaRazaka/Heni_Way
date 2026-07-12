@@ -5,32 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heni Way</title>
     
-    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
-        /* ==========================================================================
-           CHARTE GRAPHIQUE & THÈME DE VOYAGE ROUTIER
-           ========================================================================== */
         :root {
-            --bleu-sombre: #003366; /* Couleur officielle Heni Way */
-            --bleu-ocean: #006699;  /* Couleur officielle Heni Way */
-            --jaune-soleil: #FFD700; /* Touche d'accent voyage */
+            --bleu-sombre: #003366; 
+            --bleu-ocean: #006699; 
+            --jaune-soleil: #FFD700; 
             --blanc: #FFFFFF;
             --input-bg: #FFFFFF;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            /* Dégradé évoquant un horizon de voyage lointain */
             background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.35)), 
-                        url('../image/Nosy\ Iranja.jpg') no-repeat center center/cover;            min-height: 100vh;
+                        url('https://jzyunzjhjamoosctqoor.supabase.co/storage/v1/object/public/Image_Heni-Way/Nosy\ Iranja.jpg') no-repeat center center/cover;            
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -38,14 +32,12 @@
             position: relative;
         }
 
-        /* --- BOITE DE CONNEXION --- */
         .login-box {
             width: 100%;
             max-width: 400px;
             padding: 40px 30px;
             text-align: center;
             z-index: 10;
-            /* Léger effet de flou derrière la boîte pour détacher du fond */
             background: rgba(0, 51, 102, 0.15);
             border-radius: 24px;
             backdrop-filter: blur(10px);
@@ -53,7 +45,6 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
 
-        /* Conteneur du logo */
         .logo-container {
             width: 120px;
             height: 120px;
@@ -89,7 +80,6 @@
             margin-bottom: 35px;
         }
 
-        /* Inputs au format Pilule */
         .input-group-pill {
             background-color: var(--input-bg);
             border-radius: 30px;
@@ -121,7 +111,6 @@
             font-size: 0.78rem;
         }
 
-        /* Zone réactive de l'œil sans bouton */
         .eye-span-pill {
             background: transparent !important;
             border: none !important;
@@ -138,7 +127,6 @@
             color: var(--bleu-sombre);
         }
 
-        /* Bouton Outline style modèle original */
         .btn-login-outline {
             background: transparent;
             color: var(--blanc);
@@ -162,44 +150,35 @@
 </head>
 <body>
 
-    <!-- BOITE DE CONNEXION -->
     <div class="login-box">
         
-        <!-- CHEMIN DE TON LOGO ORIGINAL -->
         <div class="logo-container">
-            <img src="../image/Logo.png" alt="Logo Heni Way" class="logo-img" onerror="this.style.opacity='0';">
+            <img src="https://jzyunzjhjamoosctqoor.supabase.co/storage/v1/object/public/Image_Heni-Way/Logo.png" alt="Logo Heni Way" class="logo-img" onerror="this.style.opacity='0';">
         </div>
 
         <h1 class="login-title">Connexion</h1>
         <p class="login-subtitle">Bienvenue</p>
 
-        <!-- FORMULAIRE -->
-        <form id="vector-login-form">
-            
-            <!-- IDENTIFIANT -->
+        <form id="vector-login-form" action="/Heni-Way/Administrateur" method="POST" enctype="application/json">
             <div class="input-group-pill">
-                <input type="text" class="form-control form-control-pill" id="login-username" placeholder="Nom d'utilisateur" required autocomplete="off">
+                <input name="Admin" type="text" class="form-control form-control-pill" id="login-username" placeholder="Nom d'utilisateur" required autocomplete="off">
             </div>
 
-            <!-- MOT DE PASSE -->
             <div class="input-group-pill d-flex">
-                <input type="password" class="form-control form-control-pill flex-grow-1" id="login-password" placeholder="Mot de passe" required>
+                <input name="password" type="password" class="form-control form-control-pill flex-grow-1" id="login-password" placeholder="Mot de passe" required>
                 <span class="eye-span-pill" id="toggle-password-visibility">
                     <i class="fa-solid fa-eye" id="toggle-password-icon"></i>
                 </span>
             </div>
 
-            <!-- BOUTON -->
             <button type="submit" class="btn btn-login-outline">Se connecter</button>
 
         </form>
     </div>
 
-    <!-- Bootstrap 5.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // --- LOGIQUE DE L'ŒIL ---
         const togglePasswordSpan = document.getElementById('toggle-password-visibility');
         const passwordInput = document.getElementById('login-password');
         const passwordIcon = document.getElementById('toggle-password-icon');
@@ -218,7 +197,6 @@
             });
         }
 
-        // --- ENVOI FORMULAIRE ---
         const loginForm = document.getElementById('vector-login-form');
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => {
