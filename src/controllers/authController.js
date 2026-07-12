@@ -83,7 +83,7 @@ const authController = {
 
             console.log("ID Table:", idtable, "== ID User:", iduser);
 
-            if (idtable === iduser) {
+            if (idtable == iduser) {
                 return res.status(200).json({
                     succes: true,
                     message: "Connexion administrateur réussie",
