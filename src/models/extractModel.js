@@ -1,3 +1,4 @@
+const e = require('express');
 const subabase = require('../config/supabase');
 
 const extraction = {
@@ -14,3 +15,5 @@ const extraction = {
         return data;
     }
 }
+
+module.exports = extraction;
