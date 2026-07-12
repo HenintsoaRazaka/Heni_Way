@@ -38,6 +38,33 @@ const authController = {
                 message: error.message
             });
         }
+    },
+
+    connexion: async (req, res) => {
+        try {
+            const { email, password } = req.body;
+
+            const sessionData = await authModel.connexion(email, password);
+
+            return res.status(200).json({
+                succes: true,
+                message: "Connexion",
+                token: sessionData.session.access_token,
+                utilisateur: sessionData.user
+            });
+
+        } catch (error) {
+            const errorMessage = error.message;
+
+            if (errorMessage.includes("Invalid login credentials")) {
+                messageErreur = "E.M.I";
+            }
+
+            return res.status(500).json({
+                succes: false,
+                message: errorMessage
+            });
+        }
     }
 };
 

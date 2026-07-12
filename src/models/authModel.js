@@ -29,6 +29,19 @@ const inscriptionModel = {
         return { 
             exist: emailExiste, error: null 
         };
+    },
+
+    connexion: async (email, password) => {
+        const { data: authData, error: authError } = await supabase.supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (authError) {
+            throw new Error(`Erreur de connexion : ${authError.message}`);
+        }
+
+        return authData.user;
     }
 };
 

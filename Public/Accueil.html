@@ -472,22 +472,22 @@
             
             <div class="contact-wrapper">
                 <div class="form-slider">
-                    <form class="contact-form" id="travel-login-form">
+                    <form class="contact-form" id="travel-login-form" method="post" action="/api/auth/connexion" enctype="application/json">
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label for="login-name" class="form-label fw-medium text-dark small">Nom Complet</label>
-                                <input type="text" class="form-content form-control p-3 bg-light" id="login-name" placeholder="Ex: Société Logistique ou Jean Marc" required>
+                                <label for="login-name" class="form-label fw-medium text-dark small">Pseudo</label>
+                                <input name="Pseudo" type="text" class="form-content form-control p-3 bg-light" id="login-name" placeholder="Ex: Société Logistique ou Jean Marc" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="login-email" class="form-label fw-medium text-dark small">Adresse Email</label>
-                                <input type="email" class="form-content form-control p-3 bg-light" id="login-email" placeholder="Ex: contact@votre-entreprise.mg" required>
+                                <input name="email" type="email" class="form-content form-control p-3 bg-light" id="login-email" placeholder="Ex: contact@votre-entreprise.mg" required>
                             </div>
                         </div>
                         
                         <div class="mb-4">
                             <label for="login-password" class="form-label fw-medium text-dark small">Mot de passe</label>
                             <div class="input-group">
-                                <input type="password" class="form-content form-control p-3 bg-light border-end-0" id="login-password" placeholder="••••••••" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" required>
+                                <input name="password" type="password" class="form-content form-control p-3 bg-light border-end-0" id="login-password" placeholder="••••••••" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" required>
                                 
                                 <span class="input-group-text btn-light border border-start-0 px-3" id="toggle-password-visibility" style="border-top-left-radius: 0; border-bottom-left-radius: 0; background-color: #f8f9fa; border-color: #dee2e6; cursor: pointer;">
                                     <i class="fa-solid fa-eye text-muted" id="toggle-password-icon"></i>
@@ -546,6 +546,23 @@
             </div>
         </div>
     </footer>
+
+    <div class="modal fade" id="EmailError" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom p-4 text-center">
+                <div class="modal-body">
+                    <div class="modal-icon mb-3 text-danger" style="font-size: 40px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="fw-bold mb-2" style="color: var(--bleu-sombre);">Désolé</h3>
+                    <p class="text-muted mb-4">
+                        E-mail ou mot de passe incorrect. Veuillez vérifier vos informations et réessayer.
+                    </p>
+                    <button type="button" class="btn btn-register-submit px-5" data-bs-dismiss="modal">Compris !</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -617,10 +634,29 @@
 
         const loginForm = document.getElementById('travel-login-form');
         if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
+            loginForm.addEventListener('submit',async (e) => {
                 e.preventDefault();
-                const name = document.getElementById('login-name').value;
-                alert(`Ravi de vous revoir, ${name} ! Connexion réussie à votre espace Heni Way.`);
+                const formData = new FormData(loginForm);
+                const data = Object.fromEntries(formData.entries());
+                try {
+                    const result = await fetch(loginForm.action, {
+                        method: loginForm.method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+
+                    const response = await result.json();
+
+                    if (response.succes === true){
+                        localStorage.setItem('Token_HeniWay', response.token);
+                        window.location.href = '/Heni-Way/Passager';
+                    }else if (response.succes === false){
+                        const emailErrorModal = new bootstrap.Modal(document.getElementById('EmailError'));
+                        emailErrorModal.show();
+                    }
+                } catch (error) {
+                    alert('Erreur du connexion');
+                }
                 loginForm.reset();
                 
                 if (passwordInput) passwordInput.type = 'password';
