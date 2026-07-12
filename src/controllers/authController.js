@@ -74,7 +74,7 @@ const authController = {
 
             const sessionData = await authModel.connexion(email, password);
 
-            const info = await ExtractModel.extraction("Administrateur", "*");
+            const info = await ExtractModel.extraction("Administrateur", "id");
 
             if (info.id === sessionData.users.id) {
                 return res.status(200).json({
