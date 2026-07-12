@@ -248,7 +248,7 @@
 
                     if (response.succes === true){
                         localStorage.setItem('Token_HeniWay', response.token);
-                        window.location.href = '/Heni-Way/dashAdmin'';
+                        window.location.href = '/Heni-Way/dashAdmin';
                     }else if (response.succes === false){
                         const emailErrorModal = new bootstrap.Modal(document.getElementById('EmailError'));
                         emailErrorModal.show();
@@ -267,4 +267,4 @@
         }
     </script>
 </body>
-</html
+</html>

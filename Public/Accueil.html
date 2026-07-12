@@ -94,6 +94,7 @@
         .navbar {
             transition: all 0.3s ease;
             padding: 20px 0;
+            z-index: 1030;
         }
         .navbar.scrolled {
             background-color: var(--blanc) !important;
@@ -285,7 +286,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg fixed-top" id="header">
+    <nav class="navbar navbar-expand-lg fixed-top scrolled" id="header">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="#accueil">
                 <img src="https://jzyunzjhjamoosctqoor.supabase.co/storage/v1/object/public/Image_Heni-Way/Logo.png" alt="Logo Heni Way" class="rounded-circle" style="width: 50px; height: 50px; object-fit: contain;">
@@ -602,6 +603,18 @@
                 const bsCollapse = bootstrap.Collapse.getInstance(menuCollapse);
                 if (bsCollapse) { bsCollapse.hide(); }
             });
+        });
+
+        menuCollapse.addEventListener('show.bs.collapse', () => {
+            header.classList.add('navbar-ouverte');
+            header.classList.add('scrolled');
+        });
+
+        menuCollapse.addEventListener('hide.bs.collapse', () => {
+            header.classList.remove('navbar-ouverte');
+            if (window.scrollY === 0) {
+                header.classList.remove('scrolled');
+            }
         });
 
         const sections = document.querySelectorAll('section[id]');
