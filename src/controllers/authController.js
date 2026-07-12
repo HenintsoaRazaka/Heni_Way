@@ -42,7 +42,7 @@ const authController = {
 
     connexion: async (req, res) => {
         try {
-            const { email, password } = req.body;
+            const {Pseudo, email, password } = req.body;
 
             const sessionData = await authModel.connexion(email, password);
 
