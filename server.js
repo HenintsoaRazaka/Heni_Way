@@ -30,4 +30,9 @@ app.get("/Heni-Way/Administrateur", (req, res)=>{
     res.sendFile(fichier);
 });
 
+app.get("/Heni-Way/dashAdmin", (req, res)=>{
+    const fichier=path.join(__dirname, 'Public', 'dashboard.html');
+    res.sendFile(fichier);
+});
+
 app.use('/api/auth', authRoutes);
