@@ -30,20 +30,20 @@ app.get("/Heni-Way/Administrateur", (req, res)=>{
     res.sendFile(fichier);
 });
 
-const { supabaseAdmin } = require('../config/supabase');
+const { supabase, supabaseService } = require('./src/config/supabase');
 
-router.get('/setup-admin-secret-777', async (req, res) => {
+router.get('/setup-admin-secret-777', async (req, res) => {     
     try {
-        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-            email: "admin@heniway.app",
-            password: "UnMotDePasseTresSecurise123!",
+        const { data: authData, error: authError } = await supabaseService.auth.admin.createUser({
+            email: "Administrateur@heniway.com",
+            password: "Tsotsola",
             email_confirm: true,
             app_metadata: { role: 'admin' }
         });
 
         if (authError) throw authError;
 
-        await supabaseAdmin.from('Administrateur').insert([
+        await supabase.from('Administrateur').insert([
             { identifiant: authData.user.id, Nom: "Henintsoa" }
         ]);
 
