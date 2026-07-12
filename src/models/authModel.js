@@ -41,7 +41,7 @@ const inscriptionModel = {
             throw new Error(`Erreur de connexion : ${authError.message}`);
         }
 
-        return authData.user;
+        return authData;
     }
 };
 
