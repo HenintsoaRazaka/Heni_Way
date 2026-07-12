@@ -19,6 +19,15 @@ const inscriptionModel = {
         }
 
         return authData.user;
+    },
+
+    verification: async (email) => {
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email);
+        
+        return { data, error };
     }
 };
 

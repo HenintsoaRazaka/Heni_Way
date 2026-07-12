@@ -10,11 +10,22 @@ const authController = {
             const abstractUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${abstractApiKey}&email=${email}`;
             const response = await fetch(abstractUrl);
             const dataEmail = await response.json();
-            console.log("Données de l'API Abstract:", dataEmail);
+
+            const { data: emailexist , error: searchError } = await authModel.verification(email);
 
             if (dataEmail.email_deliverability.status === "undeliverable") {
                 return res.status(400).json({
                     type: "INVALID_EMAIL"
+                });
+            }
+
+            if (searchError) {
+                throw new Error(`Erreur lors de la vérification de l'email : ${searchError.message}`);
+            }
+
+            if (emailexist && emailexist.length > 0) {
+                return res.status(400).json({
+                    message: "E-valide"
                 });
             }
 
