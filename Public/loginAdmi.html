@@ -237,7 +237,7 @@
                         emailErrorModal.show();
                     }
                 } catch (error) {
-                    alert('Erreur du connexion');
+                    alert('Erreur du connexion', error.message, "vvvvvv", error);
                 }
                 loginForm.reset();
                 
