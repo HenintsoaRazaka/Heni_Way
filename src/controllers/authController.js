@@ -19,10 +19,6 @@ const authController = {
                 });
             }
 
-            if (searchError) {
-                throw new Error(`Erreur lors de la vérification de l'email : ${searchError.message}`);
-            }
-
             if (emailExiste) {
                 return res.status(400).json({
                     message: "E-valide"
