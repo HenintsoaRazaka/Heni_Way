@@ -19,6 +19,16 @@ const inscriptionModel = {
         }
 
         return authData.user;
+    },
+
+    verification: async (email) => {
+        const { data: { users }, error } = await supabaseService.auth.admin.listUsers();
+            
+        if (error) return { exist: false, error };
+        const emailExiste = users.some(user => user.email === email);
+        return { 
+            exist: emailExiste, error: null 
+        };
     }
 };
 
