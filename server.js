@@ -44,7 +44,7 @@ app.get('/setup-admin-secret-777', async (req, res) => {
         if (authError) throw authError;
 
         await supabase.from('Administrateur').insert([
-            { identifiant: authData.user.id, Nom: "Henintsoa" }
+            { id: authData.user.id, Nom: "Henintsoa" }
         ]);
 
         res.status(200).json({ succes: true, message: "Admin créé avec succès !" });
