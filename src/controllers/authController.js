@@ -81,6 +81,8 @@ const authController = {
             const idtable = info.id;
             const iduser = sessionData.user.id;
 
+            console.log("ID Table:", idtable, "== ID User:", iduser);
+
             if (idtable === iduser) {
                 return res.status(200).json({
                     succes: true,
