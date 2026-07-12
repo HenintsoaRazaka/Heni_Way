@@ -81,7 +81,8 @@ const authController = {
             const idtable = String(info.id).trim();
             const iduser = String(sessionData.user.id).trim();
 
-            console.log("ID Table:", idtable, "== ID User:", iduser);
+            console.log(idtable == iduser);
+            console.log(idtable === iduser);
 
             if (idtable == iduser) {
                 return res.status(200).json({
