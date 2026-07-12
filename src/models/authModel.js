@@ -2,7 +2,7 @@ const supabase = require('../config/supabase');
 
 const inscriptionModel = {
     inscription: async (email, password, infosPassagers) => {
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        const { data: authData, error: authError } = await supabase.supabase.auth.signUp({
             email: email,
             password: password,
             options: {
@@ -22,7 +22,7 @@ const inscriptionModel = {
     },
 
     verification: async (email) => {
-        const { data: { users }, error } = await supabaseService.auth.admin.listUsers();
+        const { data: { users }, error } = await supabase.supabaseService.auth.admin.listUsers();
             
         if (error) return { exist: false, error };
         const emailExiste = users.some(user => user.email === email);
