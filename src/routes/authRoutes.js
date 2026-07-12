@@ -7,4 +7,6 @@ router.post('/inscription', authController.inscription);
 
 router.post('/connexion', authController.connexion);
 
+router.post('/api/auth/Connexion/administrateur', authController.connexionAdministrateur);
+
 module.exports = router;

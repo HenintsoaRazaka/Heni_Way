@@ -159,7 +159,7 @@
         <h1 class="login-title">Connexion</h1>
         <p class="login-subtitle">Bienvenue</p>
 
-        <form id="vector-login-form" action="/Heni-Way/Administrateur" method="POST" enctype="application/json">
+        <form id="vector-login-form" action="/api/auth/Connexion/administrateur" method="POST" enctype="application/json">
             <div class="input-group-pill">
                 <input name="Admin" type="text" class="form-control form-control-pill" id="login-username" placeholder="Nom d'utilisateur" required autocomplete="off">
             </div>
@@ -199,10 +199,27 @@
 
         const loginForm = document.getElementById('vector-login-form');
         if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
+            loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const user = document.getElementById('login-username').value;
-                alert(`Ravi de vous revoir, ${user} ! Connexion réussie.`);
+                try {
+                    const result = await fetch(loginForm.action, {
+                        method: loginForm.method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+
+                    const response = await result.json();
+
+                    if (response.succes === true){
+                        localStorage.setItem('Token_HeniWay', response.token);
+                        window.location.href = '/Heni-Way/dashboard';
+                    }else if (response.succes === false){
+                        const emailErrorModal = new bootstrap.Modal(document.getElementById('EmailError'));
+                        emailErrorModal.show();
+                    }
+                } catch (error) {
+                    alert('Erreur du connexion');
+                }
                 loginForm.reset();
                 
                 if (passwordInput) passwordInput.type = 'password';

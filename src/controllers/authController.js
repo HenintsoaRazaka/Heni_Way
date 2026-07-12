@@ -1,4 +1,5 @@
 const authModel = require('../models/authModel');
+const ExtractController = require('./ExtractController');
 
 const authController = {
     inscription: async (req, res) => {
@@ -63,6 +64,37 @@ const authController = {
             return res.status(500).json({
                 succes: false,
                 message: errorMessage
+            });
+        }
+    }, 
+
+    connexionAdministrateur: async (req, res) => {
+        try {
+            const { email, password } = req.body;
+
+            const sessionData = await authModel.connexion(email, password);
+
+            const info = await ExtractModel.extraction("administrateurs", "*");
+
+            if (info.id === sessionData.user.id) {
+                return res.status(200).json({
+                    succes: true,
+                    message: "Connexion administrateur réussie",
+                    token: sessionData.session.access_token,
+                    utilisateur: sessionData.user,
+                    informations: info
+                });
+            } else {
+                return res.status(403).json({
+                    succes: false,
+                    message: "Accès refusé. Vous n'êtes pas un administrateur."
+                });
+            }
+
+        } catch (error) {
+            return res.status(500).json({
+                succes: false,
+                message: error.message
             });
         }
     }
