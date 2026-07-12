@@ -281,12 +281,15 @@
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                     successModal.show();
                     form.reset();
+
                 } else if (result.type === 'INVALID_EMAIL') {
                     const emailErrorModal = new bootstrap.Modal(document.getElementById('EmailError'));
                     emailErrorModal.show();
-                }else if (result.message === 'E-valide.') {
+
+                }else if (result.message === 'E-valide') {
                     const emailValideModal = new bootstrap.Modal(document.getElementById('Emailvalide'));
                     emailValideModal.show();
+                    
                 } else {
                     alert(`Erreur: ${result.message || 'Une erreur est survenue.'}`);
 
