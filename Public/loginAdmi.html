@@ -218,6 +218,8 @@
         if (loginForm) {
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const formdata = new FormData(loginForm);
+                const data = Object.fromEntries(formdata.entries());
                 try {
                     const result = await fetch(loginForm.action, {
                         method: loginForm.method,
