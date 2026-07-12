@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const verifierSession = require('../middlewares/authMiddleware');
+const verifierSession = require('../middlewares/authMiddlewares');
 
 router.post('/inscription', authController.inscription);
 
