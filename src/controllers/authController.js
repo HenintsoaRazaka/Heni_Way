@@ -78,8 +78,8 @@ const authController = {
             const info = await ExtractModel.extraction("Administrateur", "id");
             console.log("Info:", info);
 
-            const idtable = info.id;
-            const iduser = sessionData.user.id;
+            const idtable = String(info.id).trim();
+            const iduser = String(sessionData.user.id).trim();
 
             console.log("ID Table:", idtable, "== ID User:", iduser);
 
