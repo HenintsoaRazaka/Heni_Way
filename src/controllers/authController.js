@@ -11,21 +11,9 @@ const authController = {
             const response = await fetch(abstractUrl);
             const dataEmail = await response.json();
 
-            const { data: emailexist , error: searchError } = await authModel.verification(email);
-
             if (dataEmail.email_deliverability.status === "undeliverable") {
                 return res.status(400).json({
                     type: "INVALID_EMAIL"
-                });
-            }
-
-            if (searchError) {
-                throw new Error(`Erreur lors de la vérification de l'email : ${searchError.message}`);
-            }
-
-            if (emailexist && emailexist.length > 0) {
-                return res.status(400).json({
-                    message: "E-valide"
                 });
             }
 
@@ -37,10 +25,8 @@ const authController = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                succes: false,
-                message: error.message
-            });
+            const errorMessage = error.message;
+            console.log("Erreur lors de l'inscription :", errorMessage);
         }
     }
 };
