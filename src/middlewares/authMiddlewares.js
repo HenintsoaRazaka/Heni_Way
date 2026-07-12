@@ -2,7 +2,6 @@ const { supabase } = require('../config/supabase');
 
 const verificationSession = async (req, res, next) => {
     try {
-        // 1. On récupère le jeton caché dans l'en-tête "Authorization"
         const authHeader = req.headers.authorization;
         
         if (!authHeader || !authHeader.startsWith('Bearer')) {
