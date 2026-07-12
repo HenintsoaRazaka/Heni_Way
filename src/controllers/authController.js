@@ -77,8 +77,8 @@ const authController = {
 
             const info = await ExtractModel.extraction("Administrateur", "id");
             console.log("Info:", info);
-            
-            if (info.id === sessionData.user.id) {
+
+            if (info.id == sessionData.user.id) {
                 return res.status(200).json({
                     succes: true,
                     message: "Connexion administrateur réussie",
