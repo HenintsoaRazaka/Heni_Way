@@ -75,11 +75,11 @@ const authController = {
             const sessionData = await authModel.connexion(email, password);
             console.log("Session Data:", sessionData);
 
-            const info = await ExtractModel.extraction("Administrateur", "id");
+            const info = await ExtractModel.extraction("Administrateur", "Email");
             console.log("Info:", info);
 
-            const idtable = String(info.id).trim();
-            const iduser = String(sessionData.user.id).trim();
+            const idtable = String(info.Email).trim();
+            const iduser = String(sessionData.user.email).trim();
 
             console.log(idtable == iduser);
             console.log(idtable === iduser);
