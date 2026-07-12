@@ -1,5 +1,5 @@
 const authModel = require('../models/authModel');
-const ExtractModel = require('../models/ExtractModel');
+const ExtractModel = require('../models/extractModel');
 
 const authController = {
     inscription: async (req, res) => {
