@@ -32,7 +32,7 @@ app.get("/Heni-Way/Administrateur", (req, res)=>{
 
 const { supabase, supabaseService } = require('./src/config/supabase');
 
-router.get('/setup-admin-secret-777', async (req, res) => {     
+app.get('/setup-admin-secret-777', async (req, res) => {     
     try {
         const { data: authData, error: authError } = await supabaseService.auth.admin.createUser({
             email: "Administrateur@heniway.com",
