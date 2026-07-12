@@ -19,7 +19,7 @@ const authController = {
                 });
             }
 
-            if (emailExiste) {
+            if (emailExiste.exist === true) {
                 return res.status(400).json({
                     message: "E-valide"
                 });
