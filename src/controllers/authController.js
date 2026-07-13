@@ -27,7 +27,6 @@ const authController = {
             }
 
             const utilisateur = await authModel.inscription(email, password, infosPassagers);
-            const sessionData = await authModel.connexion(email, password);
 
             return res.status(201).json({
                 message: "Valider.",
