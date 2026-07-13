@@ -7,22 +7,30 @@ const authController = {
             const {  Nom, Pseudo, email, Telephone , password} = req.body;
             const infosPassagers = { Nom, Pseudo, Telephone };
 
-            // const abstractApiKey = process.env.ABSTRACT_API_KEY;
-            // const abstractUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${abstractApiKey}&email=${email}`;
-            // const response = await fetch(abstractUrl);
-            // const dataEmail = await response.json();
+            const NPPattern = /^[a-zA-Z\s]+$/;
+
+            const abstractApiKey = process.env.ABSTRACT_API_KEY;
+            const abstractUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${abstractApiKey}&email=${email}`;
+            const response = await fetch(abstractUrl);
+            const dataEmail = await response.json();
 
             const emailExiste = await authModel.verification(email);
 
-            // if (dataEmail.email_deliverability.status === "undeliverable") {
-            //     return res.status(400).json({
-            //         type: "INVALID_EMAIL"
-            //     });
-            // }
+            if (dataEmail.email_deliverability.status === "undeliverable") {
+                return res.status(400).json({
+                    type: "INVALID_EMAIL"
+                });
+            }
 
             if (emailExiste.exist === true) {
                 return res.status(400).json({
                     message: "E-valide"
+                });
+            }
+
+            if (!NPPattern.test(Nom) || !NPPattern.test(Pseudo)) {
+                return res.status(400).json({
+                    message: "C-valide"
                 });
             }
 
