@@ -31,7 +31,6 @@ const authController = {
             return res.status(201).json({
                 message: "Valider.",
                 donnees: utilisateur,
-                token: sessionData.session.access_token
             });
 
         } catch (error) {
