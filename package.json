@@ -20,6 +20,7 @@
   "homepage": "https://github.com/HenintsoaRazaka/Heni_Way#readme",
   "dependencies": {
     "@supabase/supabase-js": "^2.110.1",
+    "ejs": "^6.0.1",
     "express": "^5.2.1"
   }
 }
