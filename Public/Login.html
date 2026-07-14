@@ -176,11 +176,11 @@
                         <div class="row g-3 mb-3">
                             <div class="col-sm-6">
                                 <label for="reg-username" class="form-label-custom">Pseudo d'utilisateur</label>
-                                <input name="Pseudo" type="text" class="form-control form-control-custom w-100" id="reg-username" placeholder="Ex: Heni_261" required pattern="[a-zA-Z\s]+" title="Veuillez entrer uniquement des lettres.">
+                                <input name="Pseudo" type="text" class="form-control form-control-custom w-100" id="reg-username" placeholder="Ex: Heni_261" required title="Veuillez entrer uniquement des lettres et des chiffres.">
                             </div>
                             <div class="col-sm-6">
                                 <label for="reg-phone-num" class="form-label-custom">Numéro de Téléphone</label>
-                                <input name="Telephone" type="tel" class="form-control form-control-custom w-100" id="reg-phone-num" placeholder="Ex: +261 34 18 999 70" required pattern="^\+261\s\d{2}\s\d{2}\s\d{3}\s\d{2}$" title="Veuillez entrer le format (+261 XX XX XXX XX).">
+                                <input id="phone" name="Telephone" type="tel" class="form-control form-control-custom w-100" id="reg-phone-num" placeholder="Ex: +261 34 18 999 70" required pattern="^\+261\s\d{2}\s\d{2}\s\d{3}\s\d{2}$" title="Veuillez entrer le format (+261 XX XX XXX XX).">
                             </div>
                         </div>
 
@@ -282,6 +282,52 @@
             const form = event.target;
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
+            const phoneInput = document.getElementById('phone');
+
+            phoneInput.addEventListener('focus', function () {
+                if (this.value === "") {
+                    this.value = "+261 ";
+                }
+            });
+
+            phoneInput.addEventListener('blur', function () {
+                if (this.value === "+261 ") {
+                    this.value = "";
+                }
+            });
+
+            phoneInput.addEventListener('input', function (e) {
+            let input = e.target.value;
+
+            if (!input.startsWith('+261 ')) {
+                e.target.value = "+261 ";
+                return;
+            }
+
+            let digitsAfterPrefix = input.substring(5).replace(/\D/g, ''); 
+            let formatted = '+261';
+
+            if (digitsAfterPrefix.length > 0) {
+                formatted += ' ' + digitsAfterPrefix.substring(0, 2); 
+            }
+            if (digitsAfterPrefix.length > 2) {
+                formatted += ' ' + digitsAfterPrefix.substring(2, 4);
+            }
+            if (digitsAfterPrefix.length > 4) {
+                formatted += ' ' + digitsAfterPrefix.substring(4, 7);
+            }
+            if (digitsAfterPrefix.length > 7) {
+                formatted += ' ' + digitsAfterPrefix.substring(7, 9);
+            }
+
+            e.target.value = formatted;
+        });
+
+        phoneInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Backspace' && this.value === '+261 ') {
+                e.preventDefault();
+            }
+        }); 
 
             try {
                 const response = await fetch(form.action, {

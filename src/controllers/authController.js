@@ -28,7 +28,7 @@ const authController = {
                 });
             }
 
-            if (!NPPattern.test(Nom) || !NPPattern.test(Pseudo)) {
+            if (!NPPattern.test(Nom)) {
                 return res.status(400).json({
                     message: "C-valide"
                 });
