@@ -180,7 +180,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="reg-phone-num" class="form-label-custom">Numéro de Téléphone</label>
-                                <input id="phone" name="Telephone" type="tel" class="form-control form-control-custom w-100" id="reg-phone-num" placeholder="Ex: +261 34 18 999 70" required pattern="^\+261\s\d{2}\s\d{2}\s\d{3}\s\d{2}$" title="Veuillez entrer le format (+261 XX XX XXX XX).">
+                                <input name="Telephone" type="tel" class="form-control form-control-custom w-100" id="reg-phone-num" placeholder="Ex: +261 34 18 999 70" required pattern="^\+261\s\d{2}\s\d{2}\s\d{3}\s\d{2}$" title="Veuillez entrer le format (+261 XX XX XXX XX).">
                             </div>
                         </div>
 
@@ -282,7 +282,7 @@
             const form = event.target;
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
-            const phoneInput = document.getElementById('phone');
+            const phoneInput = document.getElementById('reg-phone-num');
 
             phoneInput.addEventListener('focus', function () {
                 if (this.value === "") {
