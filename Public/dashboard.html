@@ -381,11 +381,11 @@
                                 <div class="d-flex align-items-center justify-content-between visits">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Passager</h3>
-                                        <h2 class="fw-bold m-0 text-body">249</h2>
+                                        <h2 id="nb_passager" class="fw-bold m-0 text-body">--</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-danger"><p class="m-0 small fw-bold">-48%</p></div>
+                                        <svg><circle id="cercle-passager-Public" cx="38" cy="38" r="36"></circle></svg>
+                                        <div id="pourcentage-voiture-Public" class="percentage text-danger"><p class="m-0 small fw-bold">--%</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -1758,6 +1758,9 @@ let listeVoitures = [];
 const statsContainer = document.getElementById('stats-vehicules');
 const pourcentageContainer = document.getElementById('pourcentage-voiture');
 const cercleProgression = document.getElementById('cercle-Voiture-public');
+const nbPassagerContainer = document.getElementById('nb_passager');
+const pourcentagePassagerContainer = document.querySelector('#pourcentage-voiture-Public p');
+const cerclePassager = document.getElementById('cercle-passager-Public');
 
 function mettreAJourAffichage() {
     if (!statsContainer) return;
@@ -1830,8 +1833,61 @@ function connecterAuTempsReel() {
         .subscribe();
 }
 
+async function chargerDonneesReservations() {
+    try {
+        // 1. On récupère les colonnes Nb_Place et Nb_NonLibre depuis Supabase
+        const { data, error } = await supabaseClient
+            .from('Reservation')
+            .select('Nb_Place, Nb_NonLibre');
+
+        if (error) throw error;
+
+        console.log("Données Réservations reçues :", data);
+
+        let totalPlaces = 0;
+        let totalPassagers = 0;
+
+        // 2. On calcule la somme de chaque colonne
+        if (data && data.length > 0) {
+            data.forEach(reservation => {
+                totalPlaces += Number(reservation.Nb_Place || 0);
+                totalPassagers += Number(reservation.Nb_NonLibre || 0);
+            });
+        }
+
+        // 3. Affichage du nombre total de passagers (ex: 45)
+        if (nbPassagerContainer) {
+            nbPassagerContainer.textContent = totalPassagers;
+        }
+
+        // 4. Calcul du pourcentage (Nb_NonLibre comparé à Nb_Place)
+        let pourcentage = 0;
+        if (totalPlaces > 0) {
+            pourcentage = Math.round((totalPassagers / totalPlaces) * 100);
+        }
+
+        // 5. Affichage du pourcentage textuel (ex: +45%)
+        if (pourcentagePassagerContainer) {
+            pourcentagePassagerContainer.textContent = `+${pourcentage}%`;
+        }
+
+        // 6. Animation du cercle SVG
+        if (cerclePassager) {
+            const perimetre = 226;
+            // On calcule le décalage (offset)
+            const decalage = perimetre - (pourcentage / 100) * perimetre;
+            cerclePassager.style.strokeDashoffset = decalage;
+        }
+
+    } catch (err) {
+        console.error("Erreur lors du chargement des réservations :", err);
+        if (nbPassagerContainer) nbPassagerContainer.textContent = "Erreur";
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     chargerDonneesInitiales();
+    chargerDonneesReservations();
     connecterAuTempsReel();
 });
     </script>
