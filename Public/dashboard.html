@@ -415,11 +415,11 @@
                                 <div class="d-flex align-items-center justify-content-between sales">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Vehicules</h3>
-                                        <h2 class="fw-bold m-0 text-body">15/20</h2>
+                                        <h2 id="Stats-vehicule-Special" class="fw-bold m-0 text-body">0/0</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-success"><p class="m-0 small fw-bold">+81%</p></div>
+                                        <svg><circle id="cercle-stats-Special" cx="38" cy="38" r="36"></circle></svg>
+                                        <div id="pourcentage-vehicyle-Special" class="percentage text-success"><p class="m-0 small fw-bold">--</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -463,11 +463,11 @@
                                 <div class="d-flex align-items-center justify-content-between sales">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Vehicules</h3>
-                                        <h2 class="fw-bold m-0 text-body">12/20</h2>
+                                        <h2 id="Stats-vehicule-Prive" class="fw-bold m-0 text-body">0/0</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-success"><p class="m-0 small fw-bold">+81%</p></div>
+                                        <svg><circle id="cercle-stats-Prive" cx="38" cy="38" r="36"></circle></svg>
+                                        <div id="pourcentage-vehicyle-Prive" class="percentage text-success"><p class="m-0 small fw-bold">--</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -1755,6 +1755,8 @@ const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let listeVoitures = [];
+let listeVoituresSpecial = [];
+let listeVoituresPrive = [];
 const statsContainer = document.getElementById('stats-vehicules');
 const pourcentageContainer = document.getElementById('pourcentage-voiture');
 const cercleProgression = document.getElementById('cercle-Voiture-public');
@@ -1765,16 +1767,40 @@ const nbPlaceContainer = document.getElementById('Nb_Place');
 const pourcentagePlaceContainer = document.querySelector('#pourcentage-Place-Public p');
 const cerclePlace = document.getElementById('cercle-place-Public');
 
+const statsContainerSpecial = document.getElementById('Stats-vehicule-Special');
+const pourcentageContainerSpecial = document.getElementById('pourcentage-vehicyle-Special');
+const cercleProgressionSpecial = document.getElementById('cercle-stats-Special');
+
+const statsContainerPrive = document.getElementById('Stats-vehicule-Prive');
+const pourcentageContainerPrive = document.getElementById('pourcentage-vehicyle-Prive');
+const cercleProgressionPrive = document.getElementById('cercle-stats-Prive');
+
 function mettreAJourAffichage() {
     if (!statsContainer) return;
+    if (!statsContainerSpecial) return;
+    if (!statsContainerPrive) return;
 
     const voituresPublices = listeVoitures.filter(v => v.Statut === 'Public');
-    const publicDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible')
+    const publicDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
+    const voituresSpecial = listeVoituresSpecial.filter(v => v.Statut === 'Special');
+    const SpecialDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
+    const voituresPrive = listeVoituresPrive.filter(v => v.Statut === 'Prive');
+    const PriveDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
 
     const total = voituresPublices.length;
     const dispos = publicDisponibles.length;
     let pourcentage = 0;
     statsContainer.textContent = `${dispos}/${total}`;
+
+    const totalSpecial = voituresSpecial.length;
+    const disposSpecial = SpecialDisponibles.length;
+    let pourcentageSpecial = 0;
+    statsContainerSpecial.textContent = `${disposSpecial}/${totalSpecial}`;
+
+    const totalPrive = voituresPrive.length;
+    const disposPrive = PriveDisponibles.length;
+    let pourcentagePrive = 0;
+    statsContainerPrive.textContent = `${disposPrive}/${totalPrive}`;
 
     if (pourcentageContainer) {
         if (total > 0) {
@@ -1784,12 +1810,38 @@ function mettreAJourAffichage() {
             pourcentageContainer.textContent = "0%";
         }
     }
-
     if (cercleProgression) {
         const perimetre = 226;
-        // Formule pour calculer le décalage inverse du pourcentage
         const decalage = perimetre - (pourcentage / 100) * perimetre;
         cercleProgression.style.strokeDashoffset = decalage;
+    }
+
+    if (pourcentageContainerSpecial) {
+        if (totalSpecial > 0) {
+            pourcentageSpecial = Math.round((disposSpecial / totalSpecial) * 100);
+            pourcentageContainerSpecial.textContent = `+${pourcentageSpecial}%`;
+        } else {
+            pourcentageContainerSpecial.textContent = "0%";
+        }
+    }
+    if (cercleProgressionSpecial) {
+        const perimetreSpecial = 226;
+        const decalageSpecial = perimetreSpecial - (pourcentageSpecial / 100) * perimetreSpecial;
+        cercleProgressionSpecial.style.strokeDashoffset = decalageSpecial;
+    }
+
+    if (pourcentageContainerPrive) {
+        if (totalPrive > 0) {
+            pourcentagePrive = Math.round((disposPrive / totalPrive) * 100);
+            pourcentageContainerPrive.textContent = `+${pourcentagePrive}%`;
+        } else {
+            pourcentageContainerPrive.textContent = "0%";
+        }
+    }
+    if (cercleProgressionPrive) {
+        const perimetrePrive = 226;
+        const decalagePrive = perimetrePrive - (pourcentagePrive / 100) * perimetrePrive;
+        cercleProgressionPrive.style.strokeDashoffset = decalagePrive;
     }
 }
 
@@ -1838,10 +1890,17 @@ function connecterAuTempsReel() {
 
 async function chargerDonneesReservations() {
     try {
-        // 1. On récupère les trois colonnes nécessaires depuis Supabase
         const { data, error } = await supabaseClient
             .from('Reservation')
-            .select('Nb_Place, Nb_NonLibre, Nb_Libre');
+            .select(`
+                Nb_Place, 
+                Nb_NonLibre, 
+                Nb_Libre,
+                Voiture:ID_Voiture (
+                    Statut
+                )
+            `)
+            .eq('Voiture.Statut', 'Public');
 
         if (error) throw error;
 
@@ -1851,7 +1910,6 @@ async function chargerDonneesReservations() {
         let totalPassagers = 0;
         let totalLibres = 0;
 
-        // 2. Somme cumulée des valeurs en base de données
         if (data && data.length > 0) {
             data.forEach(reservation => {
                 totalPlaces += Number(reservation.Nb_Place || 0);
@@ -1860,32 +1918,25 @@ async function chargerDonneesReservations() {
             });
         }
 
-        // --- 🔵 CARTE 1 : PLACES LIBRES ---
-        // Affichage du chiffre (Somme de Nb_Libre)
         if (nbPlaceContainer) {
             nbPlaceContainer.textContent = totalLibres;
         }
 
-        // Calcul du pourcentage : (Nb_Libre / Nb_Place) * 100
         let pourcentageLibres = 0;
         if (totalPlaces > 0) {
             pourcentageLibres = Math.round((totalLibres / totalPlaces) * 100);
         }
 
-        // Affichage du texte (ex: +60%)
         if (pourcentagePlaceContainer) {
             pourcentagePlaceContainer.textContent = `+${pourcentageLibres}%`;
         }
 
-        // Animation du cercle bleu
         if (cerclePlace) {
             const perimetre = 226;
             const decalage = perimetre - (pourcentageLibres / 100) * perimetre;
             cerclePlace.style.strokeDashoffset = decalage;
         }
 
-
-        // --- 🔴 CARTE 2 : PASSAGERS (Nb_NonLibre) ---
         if (nbPassagerContainer) {
             nbPassagerContainer.textContent = totalPassagers;
         }
