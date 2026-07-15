@@ -1758,11 +1758,11 @@ let listeVoitures = [];
 const statsContainer = document.getElementById('stats-vehicules');
 const pourcentageContainer = document.getElementById('pourcentage-voiture');
 
-function mettreAJourAffichage(voitue) {
+function mettreAJourAffichage() {
     if (!statsContainer) return;
 
-    const voituresPublices = listeVoitures.filter(voitue.Statut === 'Public');
-    const publicDisponibles = voituresPublices.filter(voitue.Etats === 'Disponible');
+    const voituresPublices = listeVoitures.filter(v => v.Statut === 'Public');
+    const publicDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible')
 
     const total = voituresPublices.length;
     const dispos = publicDisponibles.length;
@@ -1787,7 +1787,7 @@ async function chargerDonneesInitiales() {
         if (error) throw error;
 
         listeVoitures = data || [];
-        mettreAJourAffichage(listeVoitures);
+        mettreAJourAffichage();
     } catch (err) {
         console.log("Erreur lors du chargement initial :", err);
         if (statsContainer) statsContainer.textContent = "Erreur";
