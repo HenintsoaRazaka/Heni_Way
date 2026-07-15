@@ -1832,7 +1832,7 @@ function mettreAJourAffichageSpecial() {
 function mettreAJourAffichagePrive() {
     if (!statsContainerPrive) return;
 
-    const voituresPrive = listeVoituresPrive.filter(v => v.Statut === 'Prive');
+    const voituresPrive = listeVoituresPrive.filter(v => v.Statut === 'Privé');
     const PriveDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
 
     const totalPrive = voituresPrive.length;
