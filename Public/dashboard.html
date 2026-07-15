@@ -1758,13 +1758,11 @@ let listeVoitures = [];
 const statsContainer = document.getElementById('stats-vehicules');
 const pourcentageContainer = document.getElementById('pourcentage-voiture');
 
-function mettreAJourAffichage() {
-    // 🟢 Correction : "statsContainer" avec un 's' minuscule pour correspondre à la déclaration
+function mettreAJourAffichage(voitue) {
     if (!statsContainer) return;
 
-    // 🟢 Correction : On filtre avec les valeurs exactes de ta table (en minuscules)
-    const voituresPublices = listeVoitures.filter(v => v.Statut === 'Public');
-    const publicDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
+    const voituresPublices = listeVoitures.filter(voitue.Statut === 'Public');
+    const publicDisponibles = voituresPublices.filter(voitue.Etats === 'Disponible');
 
     const total = voituresPublices.length;
     const dispos = publicDisponibles.length;
@@ -1789,7 +1787,7 @@ async function chargerDonneesInitiales() {
         if (error) throw error;
 
         listeVoitures = data || [];
-        mettreAJourAffichage();
+        mettreAJourAffichage(listeVoiture);
     } catch (err) {
         console.log("Erreur lors du chargement initial :", err);
         if (statsContainer) statsContainer.textContent = "Erreur";
