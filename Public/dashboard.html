@@ -1787,7 +1787,7 @@ async function chargerDonneesInitiales() {
         if (error) throw error;
 
         listeVoitures = data || [];
-        mettreAJourAffichage(listeVoiture);
+        mettreAJourAffichage(listeVoitures);
     } catch (err) {
         console.log("Erreur lors du chargement initial :", err);
         if (statsContainer) statsContainer.textContent = "Erreur";
