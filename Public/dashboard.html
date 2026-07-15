@@ -367,7 +367,7 @@
                                 <div class="d-flex align-items-center justify-content-between sales">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Vehicules</h3>
-                                        <h2 id="stats-vehicules" class="fw-bold m-0 text-body">17/23</h2>
+                                        <h2 id="stats-vehicules" class="fw-bold m-0 text-body">0/0</h2>
                                     </div>
                                     <div class="progresss">
                                         <svg><circle id="cercle-Voiture-public" cx="38" cy="38" r="36"></circle></svg>
@@ -1772,7 +1772,7 @@ function mettreAJourAffichage() {
 
     if (pourcentageContainer) {
         if (total > 0) {
-            const pourcentage = Math.round((dispos / total) * 100);
+            pourcentage = Math.round((dispos / total) * 100);
             pourcentageContainer.textContent = `+${pourcentage}%`;
         } else {
             pourcentageContainer.textContent = "0%";
