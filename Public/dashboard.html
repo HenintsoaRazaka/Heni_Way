@@ -1806,7 +1806,7 @@ function mettreAJourAffichageSpecial() {
     if (!statsContainerSpecial) return;
 
     const voituresSpecial = listeVoituresSpecial.filter(v => v.Statut === 'Special');
-    const SpecialDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
+    const SpecialDisponibles = voituresSpecial.filter(v => v.Etats === 'Disponible');
 
     const totalSpecial = voituresSpecial.length;
     const disposSpecial = SpecialDisponibles.length;
@@ -1833,7 +1833,7 @@ function mettreAJourAffichagePrive() {
     if (!statsContainerPrive) return;
 
     const voituresPrive = listeVoituresPrive.filter(v => v.Statut === 'Privé');
-    const PriveDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
+    const PriveDisponibles = voituresPrive.filter(v => v.Etats === 'Disponible');
 
     const totalPrive = voituresPrive.length;
     const disposPrive = PriveDisponibles.length;
