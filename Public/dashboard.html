@@ -1791,7 +1791,7 @@ async function chargerDonneesInitiales() {
         listeVoitures = data || [];
         mettreAJourAffichage();
     } catch (err) {
-        console.error("Erreur lors du chargement initial :", err);
+        console.log("Erreur lors du chargement initial :", err);
         if (statsContainer) statsContainer.textContent = "Erreur";
     }
 }
