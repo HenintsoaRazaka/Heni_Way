@@ -10,6 +10,11 @@ app.use(express.json());
 
 app.use(express.static('Public'));
 
+app.get("/JS", (req, res)=>{
+    const fichier=path.join(__dirname, 'Public', './JS/Supabase.js');
+    res.sendFile(fichier);
+});
+
 app.get("/", (req, res)=>{
     const fichier=path.join(__dirname, 'Public', 'Accueil.html');
     res.sendFile(fichier);
