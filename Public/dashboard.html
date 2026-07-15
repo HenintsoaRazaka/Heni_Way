@@ -9,23 +9,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 🔍 On vérifie si le jeton de connexion existe
         const token = localStorage.getItem('Token_HeniWay');
-        
         if (!token) {
-            // 🚨 Pas de jeton ? Redirection immédiate vers la page de login !
             alert("Accès refusé. Veuillez vous connecter.");
-            window.location.href = '/Ins'; // Ajuste le chemin selon ton projet
+            window.location.href = '/';
         }
     </script>
 
     <title>Heni Way</title>
     <style>
-        /* Variables de couleurs personnalisées harmonisées pour Bootstrap 5.3 */
         :root, [data-bs-theme="light"] {
             --color-primary: #6C9BCF;
             --color-danger: #FF0060;
@@ -52,18 +48,17 @@
             overflow-x: hidden;
         }
 
-        /* --- STRUCTURE DE LA BARRE LATÉRALE (ASIDE) --- */
         aside {
             position: sticky;
             top: 0;
-            height: 100vh; /* Prend toute la hauteur de l'écran pour rester fixe */
+            height: 100vh;
             z-index: 1000;
         }
 
         aside .sidebar {
             background-color: var(--card-bg-custom);
             box-shadow: var(--box-shadow-custom);
-            height: calc(100vh - 6rem); /* Ajuste la hauteur pour laisser de la place au logo */
+            height: calc(100vh - 6rem);
             position: relative;
             top: 1.5rem;
             transition: all 0.3s ease;
@@ -79,60 +74,56 @@
             color: var(--color-info-dark);
             height: 3.7rem;
             gap: 1rem;
-            padding-left: 1rem; /* Ajusté pour laisser de la place au texte */
+            padding-left: 1rem;
             text-decoration: none;
-            white-space: nowrap; /* Empêche le texte de revenir à la ligne de force */
+            white-space: nowrap;
             transition: all 0.3s ease;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         aside .sidebar a:hover {
-    color: var(--color-primary);
-    background-color: rgba(108, 155, 207, 0.06); /* Léger fond bleu transparent au survol */
-    padding-left: 2.3rem; /* Décale légèrement tout le bloc vers la droite */
-}
+            color: var(--color-primary);
+            background-color: rgba(108, 155, 207, 0.06);
+            padding-left: 2.3rem;
+        }
 
-aside .sidebar a i {
-    font-size: 1.4rem;
-    width: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    /* Transition spécifique pour l'icône */
-    transition: transform 0.3s ease; 
-}
+        aside .sidebar a i {
+            font-size: 1.4rem;
+            width: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.3s ease; 
+        }
 
-/* Décale uniquement l'icône en plus du texte au survol */
-aside .sidebar a:hover i {
-    transform: translateX(3px);
-}
+        aside .sidebar a:hover i {
+            transform: translateX(3px);
+        }
 
-/* La barre verticale pour le lien Actif ET au Hover */
-aside .sidebar a::before {
-    content: '';
-    width: 6px;
-    height: 18px;
-    background-color: var(--color-primary);
-    position: absolute;
-    left: 0;
-    opacity: 0; /* Cachée par défaut */
-    transform: scaleY(0); /* Écrasée verticalement par défaut */
-    transition: transform 0.25s ease, opacity 0.25s ease;
-}
+        aside .sidebar a::before {
+            content: '';
+            width: 6px;
+            height: 18px;
+            background-color: var(--color-primary);
+            position: absolute;
+            left: 0;
+            opacity: 0;
+            transform: scaleY(0);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
 
-/* On affiche et étire la barre si le lien est actif OU survolé */
-aside .sidebar a.active::before,
-aside .sidebar a:hover::before {
-    opacity: 1;
-    transform: scaleY(1);
-}
+        aside .sidebar a.active::before,
+        aside .sidebar a:hover::before {
+            opacity: 1;
+            transform: scaleY(1);
+        }
 
-aside .sidebar a.active {
-    color: var(--color-primary);
-    background-color: var(--color-light);
-    padding-left: 2rem;
-}
+        aside .sidebar a.active {
+            color: var(--color-primary);
+            background-color: var(--color-light);
+            padding-left: 2rem;
+        }
 
         aside .sidebar a h3 {
             font-size: 1rem;
@@ -145,7 +136,7 @@ aside .sidebar a.active {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0; /* Empêche l'icône de s'écraser */
+            flex-shrink: 0;
         }
 
         aside .sidebar a:last-child {
@@ -175,7 +166,6 @@ aside .sidebar a.active {
             margin-left: 0.6rem;
         }
 
-        /* --- CERCLES DE PROGRESSION SVG --- */
         .progresss {
             position: relative;
             width: 92px;
@@ -209,7 +199,6 @@ aside .sidebar a.active {
             width: 100%;
         }
 
-        /* --- NAVIGATION INTERNE (ONGLETS) --- */
         .internal-nav .tab-link {
             border: none;
             position: relative;
@@ -218,13 +207,11 @@ aside .sidebar a.active {
             transition: color 0.3s ease;
         }
 
-        /* Style de l'onglet actif */
         .internal-nav .tab-link.active-tab {
             color: var(--color-primary) !important;
             opacity: 1 !important;
         }
 
-        /* La ligne de soulignement bleue animée */
         .internal-nav .tab-link::after {
             content: '';
             position: absolute;
@@ -233,17 +220,15 @@ aside .sidebar a.active {
             width: 100%;
             height: 2px;
             background-color: var(--color-primary);
-            transform: scaleX(0); /* Cachée par défaut */
+            transform: scaleX(0);
             transform-origin: bottom left;
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* On déploie la ligne quand l'onglet est actif */
         .internal-nav .tab-link.active-tab::after {
             transform: scaleX(1);
         }
 
-        /* --- CONFIGURATION DU BOUTON DARK MODE --- */
         .dark-mode {
             background-color: var(--color-light);
             height: 1.8rem;
@@ -293,18 +278,17 @@ aside .sidebar a.active {
             }
         }
 
-        /* Écrans Mobiles (Smartphones) */
         @media screen and (max-width: 768px) {
             aside {
                 position: fixed;
                 background-color: var(--card-bg-custom);
                 width: 16rem;
-                z-index: 1050; /* Passe au-dessus de tout */
+                z-index: 1050;
                 box-shadow: 1rem 3rem 4rem rgba(0,0,0,0.15);
                 height: 100vh;
                 left: -100%;
                 top: 0;
-                transition: left 0.4s ease; /* Animation fluide de glissement d'origine */
+                transition: left 0.4s ease;
                 display: block !important;
                 padding-left: 1.5rem;
                 padding-right: 1.5rem;
@@ -383,11 +367,11 @@ aside .sidebar a.active {
                                 <div class="d-flex align-items-center justify-content-between sales">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Vehicules</h3>
-                                        <h2 class="fw-bold m-0 text-body">17/23</h2>
+                                        <h2 id="stats-vehicules" class="fw-bold m-0 text-body">17/23</h2>
                                     </div>
                                     <div class="progresss">
                                         <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-success"><p class="m-0 small fw-bold">+81%</p></div>
+                                        <div class="percentage text-success"><p class="m-0 small fw-bold" id="pourcentage-voiture">--%</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -591,7 +575,6 @@ aside .sidebar a.active {
                                         <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-semibold">12 / 18</span>
                                     </td>
                                     <td class="text-center">
-                                        <!-- "Disponible", "En route", "En attente" -->
                                         <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-semibold">En attente</span> 
                                     </td>
                                 </tr>
@@ -689,7 +672,6 @@ aside .sidebar a.active {
                                         <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-semibold">Réserver</span>
                                     </td>
                                     <td class="text-center">
-                                        <!-- "Disponible", "En route", "En attente" -->
                                         <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-semibold">En gare</span> 
                                     </td>
                                 </tr>
@@ -834,284 +816,279 @@ aside .sidebar a.active {
 
             </main>
 
-<main class="col-12 col-md-8 col-xl-7 mt-6" style="margin-top: 6rem; display: none;" id="Passager">
+            <main class="col-12 col-md-8 col-xl-7 mt-6" style="margin-top: 6rem; display: none;" id="Passager">
 
-    <div class="card border-0 shadow-sm p-3 mb-4 bg-body-tertiary rounded-4">
-        <div class="row g-2 align-items-center">
-            <div class="col-12">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-end-0 text-secondary">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                    <input type="text" class="form-control border-start-0 bg-transparent ps-0" placeholder="Rechercher un passager ou un trajet...">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="d-flex gap-3 mb-3 px-2 internal-nav" id="passagerNav">
-        <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link active-tab" data-tab="Public">Public</button>
-        <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link text-secondary opacity-75" data-tab="Special">Spécial</button>
-        <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link text-secondary opacity-75" data-tab="Prive">Privé</button>
-    </div>
-
-    <div id="Public" class="d-flex flex-column gap-3">
-        <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item" 
-             style="cursor: pointer;"
-             data-bs-toggle="modal" 
-             data-bs-target="#passengersListModal">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <div class="d-flex align-items-center gap-2">
-                            <h6 class="m-0 fw-bold text-body">Mercedes Sprinter</h6>
-                        </div>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">1245 TAB</span></small><br>
-                        <small class="text-secondary fw-medium">Spécial</small>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Déprt :</small>
-                        <span class="fw-semibold text-body small">Antananarivo</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
-                        <span class="fw-semibold text-primary small">Mahajanga</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
-                        <i class="fa-regular fa-clock text-warning"></i>
-                        <span>08:00</span>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center gap-3">
-                    <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
-                        <div class="text-center px-2 border-end">
-                            <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">12</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
-                        </div>
-                        <div class="text-center px-2">
-                            <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">6</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+                <div class="card border-0 shadow-sm p-3 mb-4 bg-body-tertiary rounded-4">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0 text-secondary">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0 bg-transparent ps-0" placeholder="Rechercher un passager ou un trajet...">
+                            </div>
                         </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-secondary small"></i>
                 </div>
 
-            </div>
-        </div>
-    </div>
+                <div class="d-flex gap-3 mb-3 px-2 internal-nav" id="passagerNav">
+                    <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link active-tab" data-tab="Public">Public</button>
+                    <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link text-secondary opacity-75" data-tab="Special">Spécial</button>
+                    <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link text-secondary opacity-75" data-tab="Prive">Privé</button>
+                </div>
 
-    <div id="Special" class="d-flex flex-column gap-3" style="display: none !important;">
-        <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item" 
-             style="cursor: pointer;"
-             data-bs-toggle="modal" 
-             data-bs-target="#passengersListModal">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <div class="d-flex align-items-center gap-2">
-                            <h6 class="m-0 fw-bold text-body">Toyota Hiace</h6>
+                <div id="Public" class="d-flex flex-column gap-3">
+                    <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item" 
+                        style="cursor: pointer;"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#passengersListModal">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                    <i class="fas fa-bus fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <h6 class="m-0 fw-bold text-body">Mercedes Sprinter</h6>
+                                    </div>
+                                    <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">1245 TAB</span></small><br>
+                                    <small class="text-secondary fw-medium">Spécial</small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                                <div class="d-flex align-items-center justify-content-between gap-3">
+                                    <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Déprt :</small>
+                                    <span class="fw-semibold text-body small">Antananarivo</span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                    <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                                    <span class="fw-semibold text-primary small">Mahajanga</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                                    <i class="fa-regular fa-clock text-warning"></i>
+                                    <span>08:00</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
+                                    <div class="text-center px-2 border-end">
+                                        <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">12</span>
+                                        <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
+                                    </div>
+                                    <div class="text-center px-2">
+                                        <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">6</span>
+                                        <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-secondary small"></i>
+                            </div>
+
                         </div>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">7896 TAA</span></small><br>
-                        <small class="text-secondary fw-medium">Spécial</small>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Déprt :</small>
-                        <span class="fw-semibold text-body small">Antananarivo</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
-                        <span class="fw-semibold text-primary small">Toamasina</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
-                        <i class="fa-regular fa-clock text-warning"></i>
-                        <span>14:30</span>
                     </div>
                 </div>
 
-                <div class="d-flex align-items-center gap-3">
-                    <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
-                        <div class="text-center px-2 border-end">
-                            <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">4</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
+                <div id="Special" class="d-flex flex-column gap-3" style="display: none !important;">
+                    <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item" 
+                        style="cursor: pointer;"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#passengersListModal">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                    <i class="fas fa-bus fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <h6 class="m-0 fw-bold text-body">Toyota Hiace</h6>
+                                    </div>
+                                    <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">7896 TAA</span></small><br>
+                                    <small class="text-secondary fw-medium">Spécial</small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                                <div class="d-flex align-items-center justify-content-between gap-3">
+                                    <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Déprt :</small>
+                                    <span class="fw-semibold text-body small">Antananarivo</span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                    <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                                    <span class="fw-semibold text-primary small">Toamasina</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                                    <i class="fa-regular fa-clock text-warning"></i>
+                                    <span>14:30</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
+                                    <div class="text-center px-2 border-end">
+                                        <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">4</span>
+                                        <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
+                                    </div>
+                                    <div class="text-center px-2">
+                                        <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">11</span>
+                                        <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-secondary small"></i>
+                            </div>
+
                         </div>
-                        <div class="text-center px-2">
-                            <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">11</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+                    </div>
+                </div>
+
+                <div id="Prive" class="d-flex flex-column gap-3" style="display: none !important;">
+                    <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                    <i class="fas fa-bus fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <h6 class="m-0 fw-bold text-body">Mazda E2200</h6>
+                                        <span class="badge bg-danger-subtle text-danger rounded-pill px-2 py-0.5 small fw-semibold" style="font-size: 0.7rem;">Privé</span>
+                                    </div>
+                                    <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">4321 TAI</span></small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                                <div class="d-flex align-items-center justify-content-between gap-3">
+                                    <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-user me-1 text-success"></i> Proprio :</small>
+                                    <span class="fw-semibold text-body small">Jean René</span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                    <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-phone me-1 text-danger"></i> Numéro :</small>
+                                    <span class="fw-semibold text-primary small">034 12 345 67</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2 bg-body px-3 py-2 rounded-3 border text-center" style="min-width: 110px;">
+                                <div class="w-100">
+                                    <span class="d-block text-warning fw-bold m-0" style="font-size: 1.1rem;"><i class="fa-regular fa-hourglass-half me-1"></i> 45m</span>
+                                    <small class="text-secondary" style="font-size: 0.7rem;">Délai restant</small>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-secondary small"></i>
                 </div>
 
-            </div>
-        </div>
-    </div>
+            </main>
 
-    <div id="Prive" class="d-flex flex-column gap-3" style="display: none !important;">
-        <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
+            <main class="col-12 col-md-8 col-xl-5 mt-6 mx-auto" style="margin-top: 6rem; display: none;" id="deconnexion">
+
+                <div class="card border-0 shadow-sm p-4 text-center bg-body-tertiary rounded-4">
+                    
+                    <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" 
+                        style="width: 4rem; height: 4rem;">
+                        <i class="fa-solid fa-circle-exclamation fs-2"></i>
                     </div>
-                    <div>
-                        <div class="d-flex align-items-center gap-2">
-                            <h6 class="m-0 fw-bold text-body">Mazda E2200</h6>
-                            <span class="badge bg-danger-subtle text-danger rounded-pill px-2 py-0.5 small fw-semibold" style="font-size: 0.7rem;">Privé</span>
-                        </div>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">4321 TAI</span></small>
+                    
+                    <h4 class="fw-bold mb-2 text-body">Déconnexion</h4>
+                    <p class="text-secondary small mb-4 px-2">
+                        Voulez-vous vraiment vous déconnecter ? Vous devrez saisir à nouveau vos identifiants pour accéder à votre espace.
+                    </p>
+                    
+                    <div class="d-flex flex-column gap-2 w-100">
+                        <button type="button" class="btn btn-danger w-100 rounded-3 py-2 fw-semibold" id="confirmLogout">
+                            <i class="fa-solid fa-right-from-bracket me-2"></i>Se déconnecter
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary border-secondary-subtle text-body-secondary w-100 rounded-3 py-2 fw-medium" id="cancelLogout">
+                            Annuler
+                        </button>
                     </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-user me-1 text-success"></i> Proprio :</small>
-                        <span class="fw-semibold text-body small">Jean René</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-phone me-1 text-danger"></i> Numéro :</small>
-                        <span class="fw-semibold text-primary small">034 12 345 67</span>
-                    </div>
+
                 </div>
 
-                <div class="d-flex align-items-center gap-2 bg-body px-3 py-2 rounded-3 border text-center" style="min-width: 110px;">
-                    <div class="w-100">
-                        <span class="d-block text-warning fw-bold m-0" style="font-size: 1.1rem;"><i class="fa-regular fa-hourglass-half me-1"></i> 45m</span>
-                        <small class="text-secondary" style="font-size: 0.7rem;">Délai restant</small>
-                    </div>
-                </div>
+            </main>
 
-            </div>
-        </div>
-    </div>
-
-</main>
-
-<!-- MAIN CONTAINER : ÉCRAN DE DÉCONNEXION -->
-<main class="col-12 col-md-8 col-xl-5 mt-6 mx-auto" style="margin-top: 6rem; display: none;" id="deconnexion">
-
-    <!-- Carte centrale de confirmation -->
-    <div class="card border-0 shadow-sm p-4 text-center bg-body-tertiary rounded-4">
-        
-        <!-- Icône d'avertissement -->
-        <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" 
-             style="width: 4rem; height: 4rem;">
-            <i class="fa-solid fa-circle-exclamation fs-2"></i>
-        </div>
-        
-        <!-- Textes -->
-        <h4 class="fw-bold mb-2 text-body">Déconnexion</h4>
-        <p class="text-secondary small mb-4 px-2">
-            Voulez-vous vraiment vous déconnecter ? Vous devrez saisir à nouveau vos identifiants pour accéder à votre espace.
-        </p>
-        
-        <!-- Boutons d'action -->
-        <div class="d-flex flex-column gap-2 w-100">
-            <button type="button" class="btn btn-danger w-100 rounded-3 py-2 fw-semibold" id="confirmLogout">
-                <i class="fa-solid fa-right-from-bracket me-2"></i>Se déconnecter
-            </button>
-            <button type="button" class="btn btn-outline-secondary border-secondary-subtle text-body-secondary w-100 rounded-3 py-2 fw-medium" id="cancelLogout">
-                Annuler
-            </button>
-        </div>
-
-    </div>
-
-</main>
-
-<div class="modal fade" id="passengersListModal" tabindex="-1" aria-labelledby="passengersListModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow rounded-4 bg-body-tertiary text-body">
-            
-            <div class="modal-header border-0 pb-0">
-                <div>
-                    <h5 class="modal-title fw-bold" id="passengersListModalLabel">Passagers à bord</h5>
-                    <small class="text-secondary fw-medium" id="modalVehicleInfo">Mercedes Sprinter — 1245 TAB</small>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <div class="modal-body py-4" id="modalPassengersContainer" style="max-height: 65vh; overflow-y: auto;">
-                
-                <div class="card border-0 shadow-sm p-3 mb-2 bg-body rounded-3 border-start border-primary border-3">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="modal fade" id="passengersListModal" tabindex="-1" aria-labelledby="passengersListModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content border-0 shadow rounded-4 bg-body-tertiary text-body">
                         
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
-                                 style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem; background-color: var(--color-primary) !important;">
-                                05
-                            </div>
+                        <div class="modal-header border-0 pb-0">
                             <div>
-                                <h6 class="m-0 fw-bold text-body">Razakarimanana Henintsoa</h6>
-                                <small class="text-secondary fw-semibold">Pseudo : <span class="text-primary">Henintsoa</span></small>
+                                <h5 class="modal-title fw-bold" id="passengersListModalLabel">Passagers à bord</h5>
+                                <small class="text-secondary fw-medium" id="modalVehicleInfo">Mercedes Sprinter — 1245 TAB</small>
                             </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-
-                        <div class="d-flex flex-column gap-1 bg-body-tertiary px-3 py-2 rounded-3 border small" style="min-width: 230px;">
-                            <div class="d-flex align-items-center gap-2 text-body">
-                                <i class="fa-solid fa-phone text-success small" style="width: 14px;"></i>
-                                <span class="fw-medium">034 12 345 67</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 text-secondary border-top pt-1 mt-1">
-                                <i class="fa-regular fa-envelope small" style="width: 14px;"></i>
-                                <span>exemple@gmail.com</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="card border-0 shadow-sm p-3 mb-2 bg-body rounded-3 border-start border-primary border-3">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
-                                 style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem; background-color: var(--color-primary) !important;">
-                                06
-                            </div>
-                            <div>
-                                <h6 class="m-0 fw-bold text-body">Ranaivo Jean</h6>
-                                <small class="text-secondary fw-semibold">Pseudo : <span class="text-primary">Jeannot</span></small>
-                            </div>
-                        </div>
+                        <div class="modal-body py-4" id="modalPassengersContainer" style="max-height: 65vh; overflow-y: auto;">
+                            
+                            <div class="card border-0 shadow-sm p-3 mb-2 bg-body rounded-3 border-start border-primary border-3">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                    
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
+                                            style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem; background-color: var(--color-primary) !important;">
+                                            05
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 fw-bold text-body">Razakarimanana Henintsoa</h6>
+                                            <small class="text-secondary fw-semibold">Pseudo : <span class="text-primary">Henintsoa</span></small>
+                                        </div>
+                                    </div>
 
-                        <div class="d-flex flex-column gap-1 bg-body-tertiary px-3 py-2 rounded-3 border small" style="min-width: 230px;">
-                            <div class="d-flex align-items-center gap-2 text-body">
-                                <i class="fa-solid fa-phone text-success small" style="width: 14px;"></i>
-                                <span class="fw-medium">032 45 678 90</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 text-secondary border-top pt-1 mt-1">
-                                <i class="fa-regular fa-envelope small" style="width: 14px;"></i>
-                                <span>jean@gmail.com</span>
-                            </div>
-                        </div>
+                                    <div class="d-flex flex-column gap-1 bg-body-tertiary px-3 py-2 rounded-3 border small" style="min-width: 230px;">
+                                        <div class="d-flex align-items-center gap-2 text-body">
+                                            <i class="fa-solid fa-phone text-success small" style="width: 14px;"></i>
+                                            <span class="fw-medium">034 12 345 67</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 text-secondary border-top pt-1 mt-1">
+                                            <i class="fa-regular fa-envelope small" style="width: 14px;"></i>
+                                            <span>exemple@gmail.com</span>
+                                        </div>
+                                    </div>
 
+                                </div>
+                            </div>
+
+                            <div class="card border-0 shadow-sm p-3 mb-2 bg-body rounded-3 border-start border-primary border-3">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                    
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
+                                            style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem; background-color: var(--color-primary) !important;">
+                                            06
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 fw-bold text-body">Ranaivo Jean</h6>
+                                            <small class="text-secondary fw-semibold">Pseudo : <span class="text-primary">Jeannot</span></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-column gap-1 bg-body-tertiary px-3 py-2 rounded-3 border small" style="min-width: 230px;">
+                                        <div class="d-flex align-items-center gap-2 text-body">
+                                            <i class="fa-solid fa-phone text-success small" style="width: 14px;"></i>
+                                            <span class="fw-medium">032 45 678 90</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 text-secondary border-top pt-1 mt-1">
+                                            <i class="fa-regular fa-envelope small" style="width: 14px;"></i>
+                                            <span>jean@gmail.com</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-secondary rounded-3 btn-sm" data-bs-dismiss="modal">Fermer</button>
+                        </div>
                     </div>
                 </div>
-
             </div>
-            
-            <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-secondary rounded-3 btn-sm" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
             <div class="col-12 col-xl-3 mt-4">
                 <div class="nav-mobile-fixed d-flex justify-content-end align-items-center gap-3 p-3 p-md-0">
                     <button id="menu-btn" class="btn p-0 border-0 bg-transparent d-md-none me-auto fs-3 text-body">
@@ -1469,7 +1446,6 @@ aside .sidebar a.active {
         const closeBtn = document.getElementById('close-btn');
         const darkModeBtn = document.querySelector('.dark-mode');
 
-        // Gestion du menu sur mobile
         menuBtn.addEventListener('click', () => {
             sideMenu.classList.add('show-sidebar');
         });
@@ -1478,29 +1454,20 @@ aside .sidebar a.active {
             sideMenu.classList.remove('show-sidebar');
         });
 
-        // 1. GESTION DU CLIC POUR RENDRE UN LIEN ACTIVE
         const sidebarLinks = document.querySelectorAll('aside .sidebar a');
 
         sidebarLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                // Optionnel : décommente la ligne ci-dessous si tes liens n'ont pas encore de vraies URL de redirection (évite le rechargement)
-                // e.preventDefault(); 
 
-                // Supprime la classe 'active' de tous les liens de la sidebar
                 sidebarLinks.forEach(item => item.classList.remove('active'));
 
-                // Ajoute la classe 'active' uniquement sur le lien qui a été cliqué
                 this.classList.add('active');
-
-                // Sur mobile, ferme automatiquement le menu après avoir cliqué sur un élément
                 if (window.innerWidth <= 768) {
                     sideMenu.classList.remove('show-sidebar');
                 }
             });
         });
 
-
-        // 3. TOGGLE DU MODE SOMBRE
         darkModeBtn.addEventListener('click', () => {
             const htmlElement = document.documentElement;
             const currentTheme = htmlElement.getAttribute('data-bs-theme');
@@ -1515,33 +1482,26 @@ aside .sidebar a.active {
             darkModeBtn.querySelector('i:nth-child(2)').classList.toggle('active');
         });
 
-        // On sélectionne toutes les balises <main> de la page
         const mainSections = document.querySelectorAll('main');
 
-        // --- 2. FONCTION DE COMMUTATION DES COMPOSANTS <MAIN> ---
         sidebarLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href');
 
-                // On vérifie que le lien pointe bien vers une ancre valide (ex: "#dash")
                 if (targetId && targetId.startsWith('#') && targetId !== '#') {
-                    e.preventDefault(); // Empêche le comportement par défaut du lien
+                    e.preventDefault();
 
-                    // Gère la classe 'active' sur les onglets de la sidebar
                     sidebarLinks.forEach(item => item.classList.remove('active'));
                     this.classList.add('active');
 
-                    // Parcourt tous les <main> pour masquer ou afficher
                     mainSections.forEach(section => {
-                        // On compare l'ID de la section (ex: "dash") avec la cible du lien (sans le '#')
                         if ('#' + section.id === targetId) {
-                            section.style.setProperty('display', 'block', 'important'); // Affiche la section cible
+                            section.style.setProperty('display', 'block', 'important');
                         } else {
-                            section.style.setProperty('display', 'none', 'important');  // Cache les autres
+                            section.style.setProperty('display', 'none', 'important'); 
                         }
                     });
 
-                    // Ferme automatiquement le menu de gauche sur mobile après le clic
                     if (window.innerWidth <= 768) {
                         sideMenu.classList.remove('show-sidebar');
                     }
@@ -1549,50 +1509,40 @@ aside .sidebar a.active {
             });
         });
 
-        // --- 5. GESTION DU CLIC SUR LES ONGLETS INTERNES ---
         const tabLinks = document.querySelectorAll('.internal-nav .tab-link');
 
         tabLinks.forEach(tab => {
             tab.addEventListener('click', function() {
-                // 1. Nettoie les classes sur tous les onglets
                 tabLinks.forEach(item => {
                     item.classList.remove('active-tab');
                     item.classList.add('text-secondary', 'opacity-75');
                 });
 
-                // 2. Active l'onglet cliqué
                 this.classList.add('active-tab');
                 this.classList.remove('text-secondary', 'opacity-75');
 
-                // 3. FONCTION DE FILTRAGE DES DIVS
-                const selectedTab = this.getAttribute('data-tab'); // Récupère "Public", "Special" ou "Prive"
+                const selectedTab = this.getAttribute('data-tab'); 
                 
-                // On cible les 3 divs par leurs ID spécifiques
                 const divsToFilter = [document.getElementById('Public'), document.getElementById('Special'), document.getElementById('Prive')];
 
                 divsToFilter.forEach(div => {
-                    if (div) { // Vérifie que la div existe bien dans le HTML pour éviter les erreurs
+                    if (div) { 
                         if (div.id === selectedTab) {
-                            div.style.setProperty('display', 'block', 'important'); // Affiche le div ciblé
+                            div.style.setProperty('display', 'block', 'important');
                         } else {
-                            div.style.setProperty('display', 'none', 'important');  // Masque les autres
+                            div.style.setProperty('display', 'none', 'important');
                         }
                     }
                 });
             });
         });
-
-        // --- 6. GESTION DU CLIC SUR LES LIGNES POUR LES DÉTAILS ---
-        // Initialisation de la modale via l'objet global Bootstrap
         const vehicleModal = new bootstrap.Modal(document.getElementById('vehicleDetailModalPublic'));
         const vehicleModalSpecial = new bootstrap.Modal(document.getElementById('vehicleDetailModalSpecial'));
         const vehicleModalPrive = new bootstrap.Modal(document.getElementById('vehicleDetailModalPrive'));
 
 
         document.querySelectorAll('.clickable-row').forEach(row => {
-            row.addEventListener('click', function() {
-                // Extraction des données de la ligne cliquée
-                const marque = this.getAttribute('data-marque');
+            row.addEventListener('click', function() {                const marque = this.getAttribute('data-marque');
                 const gamme = this.getAttribute('data-gamme');
                 const immat = this.getAttribute('data-immat');
                 const chauffeur = this.getAttribute('data-chauffeur');
@@ -1641,54 +1591,41 @@ aside .sidebar a.active {
                     vehicleModalPrive.show();
 
                 }
-
-                // Injection des valeurs dans les conteneurs de la modale
-
-
-                // Affichage de la modale à l'écran
             });
         });
 
-        // --- 7. GESTION DU FORMULAIRE D'AJOUT D'UN VÉHICULE ---
         const vehicleStatusSelect = document.getElementById('vehicleStatus');
         const vehicleChauffeurInput = document.getElementById('vehicleChauffeur');
 
         vehicleStatusSelect.addEventListener('change', function() {
             if (this.value === 'Privé') {
-                // Bloque l'accès au champ chauffeur
                 vehicleChauffeurInput.disabled = true;
-                vehicleChauffeurInput.required = false; // N'est plus obligatoire
-                vehicleChauffeurInput.value = ''; // Efface le texte écrit
+                vehicleChauffeurInput.required = false;
+                vehicleChauffeurInput.value = '';
                 vehicleChauffeurInput.placeholder = 'Non applicable (Véhicule Privé)';
-                vehicleChauffeurInput.classList.add('bg-secondary-subtle'); // Grise légèrement le fond
+                vehicleChauffeurInput.classList.add('bg-secondary-subtle');
             } else {
-                // Débloque pour Public et Spécial
                 vehicleChauffeurInput.disabled = false;
-                vehicleChauffeurInput.required = true; // Devient obligatoire
+                vehicleChauffeurInput.required = true;
                 vehicleChauffeurInput.placeholder = 'Nom du chauffeur';
                 vehicleChauffeurInput.classList.remove('bg-secondary-subtle');
             }
         });
 
-        // --- GESTION DES ONGLETS DE L'ÉCRAN PUBLICATION (CORRIGÉ) ---
         const pubTabLinks = document.querySelectorAll('#pubNav .tab-link');
 
         pubTabLinks.forEach(tab => {
             tab.addEventListener('click', function() {
-                // 1. Nettoyage des onglets de publication uniquement
                 pubTabLinks.forEach(item => {
                     item.classList.remove('active-tab');
                     item.classList.add('text-secondary', 'opacity-75');
                 });
 
-                // 2. Active l'onglet cliqué
                 this.classList.add('active-tab');
                 this.classList.remove('text-secondary', 'opacity-75');
 
-                // 3. Filtrage dynamique des blocs de listes (Public, Special, Prive)
-                const selectedTab = this.getAttribute('data-tab'); // Récupère "Public", "Special" ou "Prive"
+                const selectedTab = this.getAttribute('data-tab');
                 
-                // On cible spécifiquement les 3 conteneurs de l'écran Publication
                 const pubContainers = [
                     document.querySelector('#Publication #Public'),
                     document.querySelector('#Publication #Special'),
@@ -1698,7 +1635,6 @@ aside .sidebar a.active {
                 pubContainers.forEach(container => {
                     if (container) {
                         if (container.id === selectedTab) {
-                            // On utilise flex car la structure d'origine utilise "d-flex flex-column"
                             container.style.setProperty('display', 'flex', 'important'); 
                         } else {
                             container.style.setProperty('display', 'none', 'important');
@@ -1708,24 +1644,20 @@ aside .sidebar a.active {
             });
         });
 
-        // --- GESTION DU FORMULAIRE D'AJOUT DE PUBLICATION ---
         const pubStatusSelect = document.getElementById('pubStatus');
         const dynamicPubFields = document.getElementById('dynamicPubFields');
 
-        // On récupère les inputs à l'intérieur de la zone dynamique
         const pubDepartInput = document.getElementById('pubDepart');
         const pubDestInput = document.getElementById('pubDestination');
         const pubHeureInput = document.getElementById('pubHeure');
 
         pubStatusSelect.addEventListener('change', function() {
             if (this.value === 'Privé') {
-                // 1. Cache visuellement le bloc de trajet
                 dynamicPubFields.style.setProperty('display', 'none', 'important');
                 
-                // 2. Désactive les champs et retire l'obligation (required)
                 pubDepartInput.required = false;
                 pubDepartInput.disabled = true;
-                pubDepartInput.value = ''; // Reset la valeur
+                pubDepartInput.value = ''; 
 
                 pubDestInput.required = false;
                 pubDestInput.disabled = true;
@@ -1735,7 +1667,6 @@ aside .sidebar a.active {
                 pubHeureInput.disabled = true;
                 pubHeureInput.value = '';
             } else {
-                // Débloque et réaffiche pour Public et Spécial
                 dynamicPubFields.style.setProperty('display', 'block', 'important');
                 
                 pubDepartInput.required = true;
@@ -1748,99 +1679,77 @@ aside .sidebar a.active {
                 pubHeureInput.disabled = false;
             }
         });
+        const passagerTabLinks = document.querySelectorAll('#passagerNav .tab-link');
 
-// --- GESTION DES ONGLETS DE L'ÉCRAN PASSAGER ---
-const passagerTabLinks = document.querySelectorAll('#passagerNav .tab-link');
+        passagerTabLinks.forEach(tab => {
+            tab.addEventListener('click', function() {        passagerTabLinks.forEach(item => {
+                    item.classList.remove('active-tab');
+                    item.classList.add('text-secondary', 'opacity-75');
+                });
+                this.classList.add('active-tab');
+                this.classList.remove('text-secondary', 'opacity-75');
 
-passagerTabLinks.forEach(tab => {
-    tab.addEventListener('click', function() {
-        // 1. Nettoyage des onglets de l'écran Passager uniquement
-        passagerTabLinks.forEach(item => {
-            item.classList.remove('active-tab');
-            item.classList.add('text-secondary', 'opacity-75');
+                const selectedTab = this.getAttribute('data-tab')
+                        const passagerContainers = [
+                    document.querySelector('#Passager #Public'),
+                    document.querySelector('#Passager #Special'),
+                    document.querySelector('#Passager #Prive')
+                ];
+
+                passagerContainers.forEach(container => {
+                    if (container) {
+                        if (container.id === selectedTab) {
+                            container.style.setProperty('display', 'flex', 'important');
+                        } else {
+                            container.style.setProperty('display', 'none', 'important');
+                        }
+                    }
+                });
+            });
         });
 
-        // 2. Active l'onglet sélectionné
-        this.classList.add('active-tab');
-        this.classList.remove('text-secondary', 'opacity-75');
-
-        const selectedTab = this.getAttribute('data-tab'); // Public, Special, Prive
-        
-        // 3. Ciblage exclusif des blocs de l'écran Passager
-        const passagerContainers = [
-            document.querySelector('#Passager #Public'),
-            document.querySelector('#Passager #Special'),
-            document.querySelector('#Passager #Prive')
-        ];
-
-        passagerContainers.forEach(container => {
-            if (container) {
-                if (container.id === selectedTab) {
-                    container.style.setProperty('display', 'flex', 'important');
-                } else {
-                    container.style.setProperty('display', 'none', 'important');
-                }
+        document.addEventListener('DOMContentLoaded', () => {
+            const modalElement = document.getElementById('passengersListModal');
+            
+            if (modalElement) {
+                modalElement.addEventListener('show.bs.modal', (event) => {
+                    const card = event.relatedTarget;
+                    
+                    const carName = card.querySelector('h6').innerText;
+                    const carImmatriculation = card.querySelector('small span').innerText;
+                    
+                    const modalTitleInfo = document.getElementById('modalVehicleInfo');
+                    modalTitleInfo.innerText = `${carName} — ${carImmatriculation}`;
+                    console.log(`Chargement des passagers pour le véhicule : ${carImmatriculation}`);
+                });
             }
         });
-    });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-    const modalElement = document.getElementById('passengersListModal');
-    
-    if (modalElement) {
-        modalElement.addEventListener('show.bs.modal', (event) => {
-            // Le bouton (ou la carte) qui a déclenché la modale
-            const card = event.relatedTarget;
+        document.addEventListener('DOMContentLoaded', () => {
+            const screenPassager = document.getElementById('Passager');
+            const screenDeconnexion = document.getElementById('deconnexion');
             
-            // Extraction des données de la carte cliquée
-            const carName = card.querySelector('h6').innerText;
-            const carImmatriculation = card.querySelector('small span').innerText;
-            
-            // Mise à jour de l'en-tête de la modale
-            const modalTitleInfo = document.getElementById('modalVehicleInfo');
-            modalTitleInfo.innerText = `${carName} — ${carImmatriculation}`;
-            
-            // TODO: C'est ici que tu peux faire un fetch() vers ton API backend
-            // pour récupérer les vrais passagers de cette voiture et les injecter dans #modalPassengersContainer
-            console.log(`Chargement des passagers pour le véhicule : ${carImmatriculation}`);
+            const btnConfirmLogout = document.getElementById('confirmLogout');
+            const btnCancelLogout = document.getElementById('cancelLogout');
+
+            if (btnCancelLogout) {
+                btnCancelLogout.addEventListener('click', () => {
+                    screenDeconnexion.style.setProperty('display', 'none', 'important');
+                    screenPassager.style.display = 'block'; 
+                });
+            }
+
+            if (btnConfirmLogout) {
+                btnConfirmLogout.addEventListener('click', () => {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    window.location.href = 'login.html'; 
+                });
+            }
         });
-    }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const screenPassager = document.getElementById('Passager');
-    const screenDeconnexion = document.getElementById('deconnexion');
-    
-    const btnConfirmLogout = document.getElementById('confirmLogout');
-    const btnCancelLogout = document.getElementById('cancelLogout');
-
-    // --- 1. ANNULER LA DÉCONNEXION ---
-    if (btnCancelLogout) {
-        btnCancelLogout.addEventListener('click', () => {
-            // Masque l'écran de déconnexion et réaffiche l'écran Passager
-            screenDeconnexion.style.setProperty('display', 'none', 'important');
-            screenPassager.style.display = 'block'; // ou le display initial de ton choix
-        });
-    }
-
-    // --- 2. CONFIRMER LA DÉCONNEXION ---
-    if (btnConfirmLogout) {
-        btnConfirmLogout.addEventListener('click', () => {
-            // Nettoyage des données de session stockées dans le navigateur
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            // Redirection vers ta page d'authentification principale
-            window.location.href = 'login.html'; 
-            
-            // Si tu utilises express-session ou PHP, préfère un appel API :
-            // fetch('/api/logout').then(() => window.location.reload());
-        });
-    }
-});
     </script>
 
-
+    <script src="/JS/Supabase.js"></script>
 </body>
  

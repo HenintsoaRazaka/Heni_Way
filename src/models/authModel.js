@@ -18,7 +18,7 @@ const inscriptionModel = {
             throw new Error(`Erreur d'authentification : ${authError.message}`);
         }
 
-        return authData.user;
+        return authData;
     },
 
     verification: async (email) => {

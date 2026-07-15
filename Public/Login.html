@@ -343,6 +343,7 @@
 
                 if (result.message === 'Valider.') {
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    localStorage.setItem('Token_HeniWay', result.token);
                     successModal.show();
                     form.reset();
 
