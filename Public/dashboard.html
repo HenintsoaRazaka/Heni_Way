@@ -1763,8 +1763,8 @@ function mettreAJourAffichage() {
     if (!statsContainer) return;
 
     // 🟢 Correction : On filtre avec les valeurs exactes de ta table (en minuscules)
-    const voituresPublices = listeVoitures.filter(v => v.Statut === 'public');
-    const publicDisponibles = voituresPublices.filter(v => v.Etats === 'disponible');
+    const voituresPublices = listeVoitures.filter(v => v.Statut === 'Public');
+    const publicDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
 
     const total = voituresPublices.length;
     const dispos = publicDisponibles.length;
