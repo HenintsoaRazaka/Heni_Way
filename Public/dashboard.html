@@ -184,7 +184,7 @@
             transform: translate(5px, 5px);
         }
 
-        .analyse .sales svg circle { stroke: var(--color-success); stroke-dashoffset: -30; stroke-dasharray: 200; }
+        .analyse .sales svg circle { stroke: var(--color-success); stroke-dashoffset: 226; stroke-dasharray: 226; }
         .analyse .visits svg circle { stroke: var(--color-danger); stroke-dashoffset: -30; stroke-dasharray: 200; }
         .analyse .searches svg circle { stroke: var(--color-primary); stroke-dashoffset: -30; stroke-dasharray: 200; }
 
@@ -370,7 +370,7 @@
                                         <h2 id="stats-vehicules" class="fw-bold m-0 text-body">17/23</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                                        <svg><circle id="cercle-Voiture-public" cx="38" cy="38" r="36"></circle></svg>
                                         <div class="percentage text-success"><p class="m-0 small fw-bold" id="pourcentage-voiture">--%</p></div>
                                     </div>
                                 </div>
@@ -1757,6 +1757,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let listeVoitures = [];
 const statsContainer = document.getElementById('stats-vehicules');
 const pourcentageContainer = document.getElementById('pourcentage-voiture');
+const cercleProgression = document.getElementById('cercle-Voiture-public');
 
 function mettreAJourAffichage() {
     if (!statsContainer) return;
@@ -1766,6 +1767,7 @@ function mettreAJourAffichage() {
 
     const total = voituresPublices.length;
     const dispos = publicDisponibles.length;
+    let pourcentage = 0;
     statsContainer.textContent = `${dispos}/${total}`;
 
     if (pourcentageContainer) {
@@ -1775,6 +1777,13 @@ function mettreAJourAffichage() {
         } else {
             pourcentageContainer.textContent = "0%";
         }
+    }
+
+    if (cercleProgression) {
+        const perimetre = 226;
+        // Formule pour calculer le décalage inverse du pourcentage
+        const decalage = perimetre - (pourcentage / 100) * perimetre;
+        cercleProgression.style.strokeDashoffset = decalage;
     }
 }
 
@@ -1787,7 +1796,7 @@ async function chargerDonneesInitiales() {
         if (error) throw error;
 
         listeVoitures = data || [];
-        console.log(listeVoitures)
+            
         mettreAJourAffichage();
     } catch (err) {
         console.log("Erreur lors du chargement initial :", err);
