@@ -595,7 +595,7 @@
                                     <th class="py-3 text-end pe-4">Présence</th>
                                 </tr>
                             </thead>
-                            <tbody class="border-top-0">
+                            <tbody class="border-top-0" id="liste-voitures-special-body">
                                 <tr class="clickable-row" style="cursor: pointer;" 
                                     data-marque="Mercedes Sprinter" 
                                     data-gamme="Spécial"
@@ -1921,6 +1921,7 @@
                 mettreAJourAffichageSpecial();
                 mettreAJourAffichagePrive();
                 genererTableauVoitures(listeVoitures);
+                genererTableauVoituresSpecial(listeVoitures);
 
             } catch (err) {
                 console.error("Erreur lors du chargement initial :", err);
@@ -2086,7 +2087,7 @@
                 row.setAttribute('data-marque', marque);
                 row.setAttribute('data-gamme', "Public");
                 row.setAttribute('data-immat', immatriculation);
-                row.setAttribute('data-chauffeur', couleur)
+                row.setAttribute('data-chauffeur', couleur);
                 if (reservation) {
                     row.setAttribute('data-depart', reservation.Depart || "");
                     row.setAttribute('data-destination', destination);
@@ -2116,6 +2117,84 @@
 
                 tbody.appendChild(row);
             });
+        }
+
+        function genererTableauVoituresSpecial(voitures) {
+        const tbody = document.getElementById('liste-voitures-special-body');
+        if (!tbody) return;
+
+        tbody.innerHTML = ''; 
+
+        const voituresSpeciales = voitures.filter(v => v.Statut === 'Special' || v.Statut === 'Spécial');
+
+        voituresSpeciales.forEach(voiture => {
+            const id = voiture.id;
+            const marque = voiture.Marque || "Inconnu";
+            const immatriculation = voiture.Immatriculation || "N/A";
+            const etats = voiture.Etats || "Disponible"; 
+            const chauffeur = voiture.Couleur || "Blanc"; 
+
+            const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
+
+            let destination = "Aucune";
+            let depart = "Aucun";
+            let reservationTexte = "Disponible";
+
+            if (reservation) {
+                destination = reservation.Destination || "Non définie";
+                depart = reservation.Depart || "Aucun";
+                reservationTexte = "Réserver"; 
+            }
+
+            const row = document.createElement('tr');
+            row.className = "clickable-row";
+            row.style.cursor = "pointer";
+
+            row.setAttribute('data-id', id);
+            row.setAttribute('data-marque', marque);
+            row.setAttribute('data-gamme', "Spécial");
+            row.setAttribute('data-immat', immatriculation);
+            row.setAttribute('data-chauffeur', chauffeur);
+            row.setAttribute('data-Presence', etats); 
+            row.setAttribute('data-occupe', reservationTexte);
+            row.setAttribute('data-depart', depart);
+            row.setAttribute('data-destination', destination);
+
+            const badgeReservationClass = reservationTexte === "Réserver" 
+                ? "badge bg-warning-subtle text-warning" 
+                : "badge bg-success-subtle text-success";
+
+            let badgePresenceClass = "badge bg-success-subtle text-success";
+            if (etats === "En panne") {
+                badgePresenceClass = "badge bg-danger-subtle text-danger";
+            } else if (etats === "En route") {
+                badgePresenceClass = "badge bg-primary-subtle text-primary";
+            }
+
+            row.innerHTML = `
+                <td class="ps-4 py-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <div>
+                            <h6 class="m-0 fw-semibold">${marque}</h6>
+                            <small class="text-secondary">Special</small>
+                        </div>
+                    </div>
+                </td>
+                <td class="fw-medium">${immatriculation}</td>
+                <td>${destination}</td>
+                <td class="text-center">
+                    <span class="${badgeReservationClass} rounded-pill px-3 py-1 fw-semibold">${reservationTexte}</span>
+                </td>
+                <td class="text-end pe-4">
+                    <span class="${badgePresenceClass} rounded-pill px-3 py-1 fw-semibold">${etats}</span>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
         }
         
         document.addEventListener("DOMContentLoaded", () => {
