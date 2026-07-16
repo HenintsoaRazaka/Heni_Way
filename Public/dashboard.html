@@ -2203,65 +2203,77 @@
             connecterAuTempsReel();
         });
 
-        const tbodyVoitures = document.getElementById('liste-voitures-body');
+        // On récupère les deux parents stables
+        const tbodyPublic = document.getElementById('liste-voitures-body');
+        const tbodySpecial = document.getElementById('liste-voitures-special-body');
 
-        if (tbodyVoitures) {
-            tbodyVoitures.addEventListener('click', function(event) {
-                const row = event.target.closest('.clickable-row');
-                
-                if (row) {
-                    const marque = row.getAttribute('data-marque');
-                    const gamme = row.getAttribute('data-gamme');
-                    const immat = row.getAttribute('data-immat');
-                    const chauffeur = row.getAttribute('data-chauffeur') || "Aucun";
-                    const dispo = row.getAttribute('data-dispo') || "0";
-                    const occupe = row.getAttribute('data-occupe') || "0";
-                    const total = row.getAttribute('data-total') || "0";
-                    const depart = row.getAttribute('data-depart') || "Aucun";
-                    const destination = row.getAttribute('data-destination') || "Aucune";
-                    const presence = row.getAttribute('data-Presence') || "Absent";
-                    const proprietaire = row.getAttribute('data-Propri') || "Non défini";
-                    const delait = row.getAttribute('data-Delait') || "N/A";
-                    const numero = row.getAttribute('data-Num') || "N/A";
+        // Fonction unique pour traiter le clic (évite de répéter le code)
+        function gererClicLigne(event) {
+            const row = event.target.closest('.clickable-row');
+            
+            if (row) {
+                const id = row.getAttribute('data-id');
+                const marque = row.getAttribute('data-marque');
+                const gamme = row.getAttribute('data-gamme');
+                const immat = row.getAttribute('data-immat');
+                const chauffeur = row.getAttribute('data-chauffeur') || "Aucun";
+                const dispo = row.getAttribute('data-dispo') || "0";
+                const occupe = row.getAttribute('data-occupe') || "0";
+                const total = row.getAttribute('data-total') || "0";
+                const depart = row.getAttribute('data-depart') || "Aucun";
+                const destination = row.getAttribute('data-destination') || "Aucune";
+                const presence = row.getAttribute('data-Presence') || "Absent";
+                const proprietaire = row.getAttribute('data-Propri') || "Non défini";
+                const delait = row.getAttribute('data-Delait') || "N/A";
+                const numero = row.getAttribute('data-Num') || "N/A";
 
-                    if (gamme === 'Public') {
-                        document.getElementById('infoMarque').innerText = marque;
-                        document.getElementById('infoGamme').innerText = gamme;
-                        document.getElementById('infoImmat').innerText = immat;
-                        document.getElementById('infoChauffeur').innerText = chauffeur;
-                        document.getElementById('infoOccupe').innerText = `${occupe} place(s)`;
-                        document.getElementById('infoDispo').innerText = `${dispo} / ${total}`;
-                        document.getElementById('infoDepart').innerText = depart;
-                        document.getElementById('infoDestination').innerText = destination;
+                if (gamme === 'Public') {
+                    document.getElementById('infoMarque').innerText = marque;
+                    document.getElementById('infoGamme').innerText = gamme;
+                    document.getElementById('infoImmat').innerText = immat;
+                    document.getElementById('infoChauffeur').innerText = chauffeur;
+                    document.getElementById('infoOccupe').innerText = `${occupe} place(s)`;
+                    document.getElementById('infoDispo').innerText = `${dispo} / ${total}`;
+                    document.getElementById('infoDepart').innerText = depart;
+                    document.getElementById('infoDestination').innerText = destination;
 
-                        vehicleModal.show();
-                    } 
-                    else if (gamme === 'Special' || gamme === 'Spécial') { 
-                        document.getElementById('infoSMarque').innerText = marque;
-                        document.getElementById('infoSGamme').innerText = gamme;
-                        document.getElementById('infoSImmat').innerText = immat;
-                        document.getElementById('infoSChauffeur').innerText = chauffeur;
-                        document.getElementById('infoSOccupe').innerText = occupe;
-                        document.getElementById('infoSPresence').innerText = presence;
-                        document.getElementById('infoSDepart').innerText = depart;
-                        document.getElementById('infoSDestination').innerText = destination;
+                    vehicleModal.show();
+                } 
+                else if (gamme === 'Special' || gamme === 'Spécial') {
+                    document.getElementById('infoSMarque').innerText = marque;
+                    document.getElementById('infoSGamme').innerText = gamme;
+                    document.getElementById('infoSImmat').innerText = immat;
+                    document.getElementById('infoSChauffeur').innerText = chauffeur;
+                    document.getElementById('infoSOccupe').innerText = occupe;
+                    document.getElementById('infoSPresence').innerText = presence;
+                    document.getElementById('infoSDepart').innerText = depart;
+                    document.getElementById('infoSDestination').innerText = destination;
 
-                        vehicleModalSpecial.show();
-                    } 
-                    else if (gamme === 'Privé' || gamme === 'Prive') {
-                        document.getElementById('infoPMarque').innerText = marque;
-                        document.getElementById('infoPGamme').innerText = gamme;
-                        document.getElementById('infoPImmat').innerText = immat;
-                        document.getElementById('infoPProprietaire').innerText = proprietaire;
-                        document.getElementById('infoPOccupe').innerText = occupe;
-                        document.getElementById('infoPPresence').innerText = presence;
-                        document.getElementById('infoPDelait').innerText = delait;
-                        document.getElementById('infoPNumero').innerText = numero;
+                    vehicleModalSpecial.show();
+                } 
+                else if (gamme === 'Privé' || gamme === 'Prive') {
+                    document.getElementById('infoPMarque').innerText = marque;
+                    document.getElementById('infoPGamme').innerText = gamme;
+                    document.getElementById('infoPImmat').innerText = immat;
+                    document.getElementById('infoPProprietaire').innerText = proprietaire;
+                    document.getElementById('infoPOccupe').innerText = occupe;
+                    document.getElementById('infoPPresence').innerText = presence;
+                    document.getElementById('infoPDelait').innerText = delait;
+                    document.getElementById('infoPNumero').innerText = numero;
 
-                        vehicleModalPrive.show();
-                    }
+                    vehicleModalPrive.show();
                 }
-            });
+            }
+        }
+
+        // 🟢 On applique l'écouteur sur le tableau Public
+        if (tbodyPublic) {
+            tbodyPublic.addEventListener('click', gererClicLigne);
+        }
+
+        // 🟢 On applique EXACTEMENT le même écouteur sur le tableau Spécial !
+        if (tbodySpecial) {
+            tbodySpecial.addEventListener('click', gererClicLigne);
         }
     </script>
 </body>
