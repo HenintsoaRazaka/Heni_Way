@@ -1,8 +1,8 @@
-const supabase = require('../config/supabaseClient');
+const subabase = require('../config/supabase');
 
 const createVoiture =  {
     create: async (voitureData) => {
-            const { data, error } = await supabase
+            const { data, error } = await supabase.supabasecreateClient
                 .from('Voiture')
                 .insert([voitureData])
                 .select();
