@@ -429,11 +429,11 @@
                                 <div class="d-flex align-items-center justify-content-between visits">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Réservations</h3>
-                                        <h2 class="fw-bold m-0 text-body">12/20</h2>
+                                        <h2 id="reservation-Special" class="fw-bold m-0 text-body">0/0</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-danger"><p class="m-0 small fw-bold">-48%</p></div>
+                                        <svg><circle id="reservation-Special-Cercle" cx="38" cy="38" r="36"></circle></svg>
+                                        <div class="percentage text-danger"><p id="Special-reservation-Pourcentage" class="m-0 small fw-bold">--</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -443,11 +443,11 @@
                                 <div class="d-flex align-items-center justify-content-between searches">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Disponibilité</h3>
-                                        <h2 class="fw-bold m-0 text-body">3/20</h2>
+                                        <h2 id="Disponible-Special" class="fw-bold m-0 text-body">0/0</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-primary"><p class="m-0 small fw-bold">+21%</p></div>
+                                        <svg><circle id="Disponible-Special-Cercle" cx="38" cy="38" r="36"></circle></svg>
+                                        <div class="percentage text-primary"><p id="Disponible-Special-Pourcentage" class="m-0 small fw-bold">+21%</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -477,11 +477,11 @@
                                 <div class="d-flex align-items-center justify-content-between visits">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Réservations</h3>
-                                        <h2 class="fw-bold m-0 text-body">24,981</h2>
+                                        <h2 id="reservation-Prive" class="fw-bold m-0 text-body">0/0</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-danger"><p class="m-0 small fw-bold">-48%</p></div>
+                                        <svg><circle id="reservation-Prive-Cercle" cx="38" cy="38" r="36"></circle></svg>
+                                        <div class="percentage text-danger"><p id="Prive-reservation-Pourcentage" class="m-0 small fw-bold">--</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -491,11 +491,11 @@
                                 <div class="d-flex align-items-center justify-content-between searches">
                                     <div>
                                         <h3 class="text-secondary small fw-semibold m-0 mb-1">Disponibilité</h3>
-                                        <h2 class="fw-bold m-0 text-body">14,147</h2>
+                                        <h2 id="Disponible-Prive" class="fw-bold m-0 text-body">0/0</h2>
                                     </div>
                                     <div class="progresss">
-                                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                                        <div class="percentage text-primary"><p class="m-0 small fw-bold">+21%</p></div>
+                                        <svg><circle id="Disponible-Prive-Cercle" cx="38" cy="38" r="36"></circle></svg>
+                                        <div class="percentage text-primary"><p id="Disponible-Prive-Pourcentage" class="m-0 small fw-bold">+21%</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -1755,8 +1755,6 @@ const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let listeVoitures = [];
-let listeVoituresSpecial = [];
-let listeVoituresPrive = [];
 const statsContainer = document.getElementById('stats-vehicules');
 const pourcentageContainer = document.getElementById('pourcentage-voiture');
 const cercleProgression = document.getElementById('cercle-Voiture-public');
@@ -1774,6 +1772,22 @@ const cercleProgressionSpecial = document.getElementById('cercle-stats-Special')
 const statsContainerPrive = document.getElementById('Stats-vehicule-Prive');
 const pourcentageContainerPrive = document.getElementById('pourcentage-vehicyle-Prive');
 const cercleProgressionPrive = document.getElementById('cercle-stats-Prive');
+
+const resSpecialContainer = document.getElementById('reservation-Special');
+const resSpecialPourcentage = document.getElementById('Special-reservation-Pourcentage');
+const resSpecialCercle = document.getElementById('reservation-Special-Cercle');
+
+const dispSpecialContainer = document.getElementById('Disponible-Special');
+const dispSpecialPourcentage = document.getElementById('Disponible-Special-Pourcentage');
+const dispSpecialCercle = document.getElementById('Disponible-Special-Cercle');
+
+const resPriveContainer = document.getElementById('reservation-Prive');
+const resPrivePourcentage = document.getElementById('Prive-reservation-Pourcentage');
+const resPriveCercle = document.getElementById('reservation-Prive-Cercle');
+
+const dispPriveContainer = document.getElementById('Disponible-Prive');
+const dispPrivePourcentage = document.getElementById('Disponible-Prive-Pourcentage');
+const dispPriveCercle = document.getElementById('Disponible-Prive-Cercle');
 
 function mettreAJourAffichage() {
     if (!statsContainer) return;
@@ -1803,55 +1817,108 @@ function mettreAJourAffichage() {
 }
 
 function mettreAJourAffichageSpecial() {
-    if (!statsContainerSpecial) return;
-
+    // On récupère toutes les voitures Special
     const voituresSpecial = listeVoitures.filter(v => v.Statut === 'Special');
-    const SpecialDisponibles = voituresSpecial.filter(v => v.Etats === 'Disponible');
-
     const totalSpecial = voituresSpecial.length;
-    const disposSpecial = SpecialDisponibles.length;
-    let pourcentageSpecial = 0;
-    statsContainerSpecial.textContent = `${disposSpecial}/${totalSpecial}`;
 
-    if (pourcentageContainerSpecial) {
-        if (totalSpecial > 0) {
-            pourcentageSpecial = Math.round((disposSpecial / totalSpecial) * 100);
-            pourcentageContainerSpecial.textContent = `+${pourcentageSpecial}%`;
-        } else {
-            pourcentageContainerSpecial.textContent = "0%";
-        }
-    }
-    if (cercleProgressionSpecial) {
-        const perimetreSpecial = 226;
-        const decalageSpecial = perimetreSpecial - (pourcentageSpecial / 100) * perimetreSpecial;
-        cercleProgressionSpecial.style.strokeDashoffset = decalageSpecial;
+    const perimetre = 226;
+
+    // --- 1. Gestion des Réservations (Etats === 'Réservé') ---
+    const specialReserves = voituresSpecial.filter(v => v.Etats === 'Réservé');
+    const countReserves = specialReserves.length;
+
+    if (resSpecialContainer) {
+        resSpecialContainer.textContent = `${countReserves}/${totalSpecial}`;
     }
 
+    let pourcentageRes = 0;
+    if (totalSpecial > 0) {
+        pourcentageRes = Math.round((countReserves / totalSpecial) * 100);
+    }
+
+    if (resSpecialPourcentage) {
+        resSpecialPourcentage.textContent = `+${pourcentageRes}%`;
+    }
+
+    if (resSpecialCercle) {
+        const decalage = perimetre - (pourcentageRes / 100) * perimetre;
+        resSpecialCercle.style.strokeDashoffset = decalage;
+    }
+
+
+    // --- 2. Gestion de la Disponibilité (Etats === 'Disponible') ---
+    const specialDispos = voituresSpecial.filter(v => v.Etats === 'Disponible');
+    const countDispos = specialDispos.length;
+
+    if (dispSpecialContainer) {
+        dispSpecialContainer.textContent = `${countDispos}/${totalSpecial}`;
+    }
+
+    let pourcentageDisp = 0;
+    if (totalSpecial > 0) {
+        pourcentageDisp = Math.round((countDispos / totalSpecial) * 100);
+    }
+
+    if (dispSpecialPourcentage) {
+        dispSpecialPourcentage.textContent = `+${pourcentageDisp}%`;
+    }
+
+    if (dispSpecialCercle) {
+        const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
+        dispSpecialCercle.style.strokeDashoffset = decalage;
+    }
 }
 
 function mettreAJourAffichagePrive() {
-    if (!statsContainerPrive) return;
-
+    // On récupère toutes les voitures Privé (avec accent)
     const voituresPrive = listeVoitures.filter(v => v.Statut === 'Privé');
-    const PriveDisponibles = voituresPrive.filter(v => v.Etats === 'Disponible');
-
     const totalPrive = voituresPrive.length;
-    const disposPrive = PriveDisponibles.length;
-    let pourcentagePrive = 0;
-    statsContainerPrive.textContent = `${disposPrive}/${totalPrive}`;
 
-    if (pourcentageContainerPrive) {
-        if (totalPrive > 0) {
-            pourcentagePrive = Math.round((disposPrive / totalPrive) * 100);
-            pourcentageContainerPrive.textContent = `+${pourcentagePrive}%`;
-        } else {
-            pourcentageContainerPrive.textContent = "0%";
-        }
+    const perimetre = 226;
+
+    // --- 1. Gestion des Réservations (Etats === 'Réservé') ---
+    const priveReserves = voituresPrive.filter(v => v.Etats === 'Réservé');
+    const countReserves = priveReserves.length;
+
+    if (resPriveContainer) {
+        resPriveContainer.textContent = `${countReserves}/${totalPrive}`;
     }
-    if (cercleProgressionPrive) {
-        const perimetrePrive = 226;
-        const decalagePrive = perimetrePrive - (pourcentagePrive / 100) * perimetrePrive;
-        cercleProgressionPrive.style.strokeDashoffset = decalagePrive;
+
+    let pourcentageRes = 0;
+    if (totalPrive > 0) {
+        pourcentageRes = Math.round((countReserves / totalPrive) * 100);
+    }
+
+    if (resPrivePourcentage) {
+        resPrivePourcentage.textContent = `+${pourcentageRes}%`;
+    }
+
+    if (resPriveCercle) {
+        const decalage = perimetre - (pourcentageRes / 100) * perimetre;
+        resPriveCercle.style.strokeDashoffset = decalage;
+    }
+
+
+    // --- 2. Gestion de la Disponibilité (Etats === 'Disponible') ---
+    const priveDispos = voituresPrive.filter(v => v.Etats === 'Disponible');
+    const countDispos = priveDispos.length;
+
+    if (dispPriveContainer) {
+        dispPriveContainer.textContent = `${countDispos}/${totalPrive}`;
+    }
+
+    let pourcentageDisp = 0;
+    if (totalPrive > 0) {
+        pourcentageDisp = Math.round((countDispos / totalPrive) * 100);
+    }
+
+    if (dispPrivePourcentage) {
+        dispPrivePourcentage.textContent = `+${pourcentageDisp}%`;
+    }
+
+    if (dispPriveCercle) {
+        const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
+        dispPriveCercle.style.strokeDashoffset = decalage;
     }
 }
 
