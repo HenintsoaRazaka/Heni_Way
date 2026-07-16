@@ -2254,81 +2254,81 @@ if (formAddPublication) {
         }
 
         function genererTableauVoituresSpecial(voitures) {
-        const tbody = document.getElementById('liste-voitures-special-body');
-        if (!tbody) return;
+            const tbody = document.getElementById('liste-voitures-special-body');
+            if (!tbody) return;
 
-        tbody.innerHTML = ''; 
+            tbody.innerHTML = ''; 
 
-        const voituresSpeciales = voitures.filter(v => v.Statut === 'Special' || v.Statut === 'Spécial');
+            const voituresSpeciales = voitures.filter(v => v.Statut === 'Special' || v.Statut === 'Spécial');
 
-        voituresSpeciales.forEach(voiture => {
-            const id = voiture.id;
-            const marque = voiture.Marque || "Inconnu";
-            const immatriculation = voiture.Immatriculation || "N/A";
-            const etats = voiture.Etats || "Disponible"; 
-            const chauffeur = voiture.Couleur || "Blanc"; 
+            voituresSpeciales.forEach(voiture => {
+                const id = voiture.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const etats = voiture.Etats || "Disponible"; 
+                const chauffeur = voiture.Couleur || "Blanc"; 
 
-            const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
+                const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
 
-            let destination = "Aucune";
-            let depart = "Aucun";
-            let reservationTexte = "Disponible";
+                let destination = "Aucune";
+                let depart = "Aucun";
+                let reservationTexte = "Disponible";
 
-            if (reservation) {
-                destination = reservation.Destination || "Non définie";
-                depart = reservation.Depart || "Aucun";
-                reservationTexte = "Réserver"; 
-            }
+                if (reservation) {
+                    destination = reservation.Destination || "Non définie";
+                    depart = reservation.Depart || "Aucun";
+                    reservationTexte = "Réserver"; 
+                }
 
-            const row = document.createElement('tr');
-            row.className = "clickable-row";
-            row.style.cursor = "pointer";
+                const row = document.createElement('tr');
+                row.className = "clickable-row";
+                row.style.cursor = "pointer";
 
-            row.setAttribute('data-id', id);
-            row.setAttribute('data-marque', marque);
-            row.setAttribute('data-gamme', "Spécial");
-            row.setAttribute('data-immat', immatriculation);
-            row.setAttribute('data-chauffeur', chauffeur);
-            row.setAttribute('data-Presence', etats); 
-            row.setAttribute('data-occupe', reservationTexte);
-            row.setAttribute('data-depart', depart);
-            row.setAttribute('data-destination', destination);
+                row.setAttribute('data-id', id);
+                row.setAttribute('data-marque', marque);
+                row.setAttribute('data-gamme', "Spécial");
+                row.setAttribute('data-immat', immatriculation);
+                row.setAttribute('data-chauffeur', chauffeur);
+                row.setAttribute('data-Presence', etats); 
+                row.setAttribute('data-occupe', reservationTexte);
+                row.setAttribute('data-depart', depart);
+                row.setAttribute('data-destination', destination);
 
-            const badgeReservationClass = reservationTexte === "Réserver" 
-                ? "badge bg-warning-subtle text-warning" 
-                : "badge bg-success-subtle text-success";
+                const badgeReservationClass = reservationTexte === "Réserver" 
+                    ? "badge bg-warning-subtle text-warning" 
+                    : "badge bg-success-subtle text-success";
 
-            let badgePresenceClass = "badge bg-success-subtle text-success";
-            if (etats === "En panne") {
-                badgePresenceClass = "badge bg-danger-subtle text-danger";
-            } else if (etats === "En route") {
-                badgePresenceClass = "badge bg-primary-subtle text-primary";
-            }
+                let badgePresenceClass = "badge bg-success-subtle text-success";
+                if (etats === "En panne") {
+                    badgePresenceClass = "badge bg-danger-subtle text-danger";
+                } else if (etats === "En route") {
+                    badgePresenceClass = "badge bg-primary-subtle text-primary";
+                }
 
-            row.innerHTML = `
-                <td class="ps-4 py-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
-                            <i class="fas fa-bus"></i>
+                row.innerHTML = `
+                    <td class="ps-4 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="fas fa-bus"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 fw-semibold">${marque}</h6>
+                                <small class="text-secondary">Special</small>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="m-0 fw-semibold">${marque}</h6>
-                            <small class="text-secondary">Special</small>
-                        </div>
-                    </div>
-                </td>
-                <td class="fw-medium">${immatriculation}</td>
-                <td>${destination}</td>
-                <td class="text-center">
-                    <span class="${badgeReservationClass} rounded-pill px-3 py-1 fw-semibold">${reservationTexte}</span>
-                </td>
-                <td class="text-end pe-4">
-                    <span class="${badgePresenceClass} rounded-pill px-3 py-1 fw-semibold">${etats}</span>
-                </td>
-            `;
+                    </td>
+                    <td class="fw-medium">${immatriculation}</td>
+                    <td>${destination}</td>
+                    <td class="text-center">
+                        <span class="${badgeReservationClass} rounded-pill px-3 py-1 fw-semibold">${reservationTexte}</span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <span class="${badgePresenceClass} rounded-pill px-3 py-1 fw-semibold">${etats}</span>
+                    </td>
+                `;
 
-            tbody.appendChild(row);
-        });
+                tbody.appendChild(row);
+            });
         }
 
         function genererTableauVoituresPrive(voitures) {
@@ -2498,6 +2498,7 @@ function genererPublicationsPublic(reservations) {
             chargerDonneesInitiales();
             chargerDonneesReservations();
             connecterAuTempsReel();
+            chargerPublications()
         });
 
         // On récupère les deux parents stables
