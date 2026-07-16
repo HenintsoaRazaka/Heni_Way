@@ -1868,7 +1868,7 @@ function mettreAJourAffichageSpecial() {
         dispSpecialCercle.style.strokeDashoffset = decalage;
     }
 
-    const specialDisponible = voituresSpecial.filter(v => v.Etats === 'En attente');
+    const specialDisponibles = voituresSpecial.filter(v => v.Etats === 'En attente');
     //const totalSpecial = voituresSpecial.length;
     const disposSpecial = SpecialDisponibles.length+countDispos;
     let pourcentageSpecial = 0;
@@ -1941,7 +1941,7 @@ function mettreAJourAffichagePrive() {
         dispPriveCercle.style.strokeDashoffset = decalage;
     }
 
-    const PriveDisponible = voituresPrive.filter(v => v.Etats === 'En attente');
+    const PriveDisponibles = voituresPrive.filter(v => v.Etats === 'En attente');
     // const totalPrive = voituresPrive.length;
     const disposPrive = PriveDisponibles.length+countDispos;
     let pourcentagePrive = 0;
