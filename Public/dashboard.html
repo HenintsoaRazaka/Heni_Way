@@ -1867,6 +1867,25 @@ function mettreAJourAffichageSpecial() {
         const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
         dispSpecialCercle.style.strokeDashoffset = decalage;
     }
+
+    const totalSpecial = voituresSpecial.length;
+    const disposSpecial = SpecialDisponibles.length;
+    let pourcentageSpecial = 0;
+    statsContainerSpecial.textContent = `${disposSpecial}/${totalSpecial}`;
+
+    if (pourcentageContainerSpecial) {
+        if (totalSpecial > 0) {
+            pourcentageSpecial = Math.round((disposSpecial / totalSpecial) * 100);
+            pourcentageContainerSpecial.textContent = `+${pourcentageSpecial}%`;
+        } else {
+            pourcentageContainerSpecial.textContent = "0%";
+        }
+    }
+    if (cercleProgressionSpecial) {
+        const perimetreSpecial = 226;
+        const decalageSpecial = perimetreSpecial - (pourcentageSpecial / 100) * perimetreSpecial;
+        cercleProgressionSpecial.style.strokeDashoffset = decalageSpecial;
+    }
 }
 
 function mettreAJourAffichagePrive() {
@@ -1919,6 +1938,25 @@ function mettreAJourAffichagePrive() {
     if (dispPriveCercle) {
         const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
         dispPriveCercle.style.strokeDashoffset = decalage;
+    }
+
+    const totalPrive = voituresPrive.length;
+    const disposPrive = PriveDisponibles.length;
+    let pourcentagePrive = 0;
+    statsContainerPrive.textContent = `${disposPrive}/${totalPrive}`;
+
+    if (pourcentageContainerPrive) {
+        if (totalPrive > 0) {
+            pourcentagePrive = Math.round((disposPrive / totalPrive) * 100);
+            pourcentageContainerPrive.textContent = `+${pourcentagePrive}%`;
+        } else {
+            pourcentageContainerPrive.textContent = "0%";
+        }
+    }
+    if (cercleProgressionPrive) {
+        const perimetrePrive = 226;
+        const decalagePrive = perimetrePrive - (pourcentagePrive / 100) * perimetrePrive;
+        cercleProgressionPrive.style.strokeDashoffset = decalagePrive;
     }
 }
 
