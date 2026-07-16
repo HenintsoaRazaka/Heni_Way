@@ -644,7 +644,7 @@
                                     <th class="py-3 text-end pe-4">Présence</th>
                                 </tr>
                             </thead>
-                            <tbody class="border-top-0">
+                            <tbody class="border-top-0" id="liste-voitures-prive-body">
                                 <tr class="clickable-row" style="cursor: pointer;" 
                                     data-marque="Mercedes Sprinter" 
                                     data-gamme="Privé"
@@ -1922,6 +1922,7 @@
                 mettreAJourAffichagePrive();
                 genererTableauVoitures(listeVoitures);
                 genererTableauVoituresSpecial(listeVoitures);
+                genererTableauVoituresPrive(listeVoitures);
 
             } catch (err) {
                 console.error("Erreur lors du chargement initial :", err);
@@ -2196,6 +2197,98 @@
             tbody.appendChild(row);
         });
         }
+
+        function genererTableauVoituresPrive(voitures) {
+    const tbody = document.getElementById('liste-voitures-prive-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = ''; // Évite les doublons lors du rafraîchissement
+
+    // 1. Filtrer uniquement sur la gamme "Privé"
+    const voituresPrivees = voitures.filter(v => v.Statut === 'Privé' || v.Statut === 'Prive');
+
+    voituresPrivees.forEach(voiture => {
+        const id = voiture.id;
+        const marque = voiture.Marque || "Inconnu";
+        const immatriculation = voiture.Immatriculation || "N/A";
+        const etats = voiture.Etats || "Disponible"; // Lié à la Présence (ex: En gare, En route...)
+        
+        // Attributs spécifiques au Privé
+        const proprietaire = voiture.Proprietaire || "Non défini";
+        const delai = voiture.Delai || "N/A";
+        const numero = voiture.Numero || "N/A";
+
+        // Récupération de la réservation liée
+        const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
+
+        let destination = "Aucune";
+        let reservationTexte = "Disponible";
+
+        if (reservation) {
+            destination = reservation.Destination || "Non définie";
+            reservationTexte = "Réserver"; 
+        }
+
+        // 2. Création de la ligne <tr>
+        const row = document.createElement('tr');
+        row.className = "clickable-row";
+        row.style.cursor = "pointer";
+
+        // 3. Injection des attributs data-* attendus par ton écouteur de clic
+        row.setAttribute('data-id', id);
+        row.setAttribute('data-marque', marque);
+        row.setAttribute('data-gamme', "Privé");
+        row.setAttribute('data-immat', immatriculation);
+        row.setAttribute('data-Propri', proprietaire);
+        row.setAttribute('data-Presence', etats); // "Presence" liée à l'Etat du véhicule
+        row.setAttribute('data-occupe', reservationTexte);
+        row.setAttribute('data-Delait', delai);
+        row.setAttribute('data-Num', numero);
+        if (reservation) {
+            row.setAttribute('data-depart', reservation.Depart || "");
+            row.setAttribute('data-destination', destination);
+        }
+
+        // 4. Choix du style de badge
+        // Badge Réservation
+        const badgeReservationClass = reservationTexte === "Réserver" 
+            ? "badge bg-warning-subtle text-warning" 
+            : "badge bg-success-subtle text-success";
+
+        // Badge Présence (Etat de la voiture)
+        let badgePresenceClass = "badge bg-success-subtle text-success";
+        if (etats === "En panne") {
+            badgePresenceClass = "badge bg-danger-subtle text-danger";
+        } else if (etats === "En route") {
+            badgePresenceClass = "badge bg-primary-subtle text-primary";
+        }
+
+        // 5. Code HTML interne de la ligne
+        row.innerHTML = `
+            <td class="ps-4 py-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 fw-semibold">${marque}</h6>
+                        <small class="text-secondary">Privé</small>
+                    </div>
+                </div>
+            </td>
+            <td class="fw-medium">${immatriculation}</td>
+            <td>${destination}</td>
+            <td class="text-center">
+                <span class="${badgeReservationClass} rounded-pill px-3 py-1 fw-semibold">${reservationTexte}</span>
+            </td>
+            <td class="text-center">
+                <span class="${badgePresenceClass} rounded-pill px-3 py-1 fw-semibold">${etats}</span>
+            </td>
+        `;
+
+        tbody.appendChild(row);
+    });
+}
         
         document.addEventListener("DOMContentLoaded", () => {
             chargerDonneesInitiales();
@@ -2206,6 +2299,7 @@
         // On récupère les deux parents stables
         const tbodyPublic = document.getElementById('liste-voitures-body');
         const tbodySpecial = document.getElementById('liste-voitures-special-body');
+        const tbodyPrive = document.getElementById('liste-voitures-prive-body');
 
         // Fonction unique pour traiter le clic (évite de répéter le code)
         function gererClicLigne(event) {
@@ -2274,6 +2368,10 @@
         // 🟢 On applique EXACTEMENT le même écouteur sur le tableau Spécial !
         if (tbodySpecial) {
             tbodySpecial.addEventListener('click', gererClicLigne);
+        }
+
+        if (tbodyPrive) {
+            tbodyPrive.addEventListener('click', gererClicLigne);
         }
     </script>
 </body>
