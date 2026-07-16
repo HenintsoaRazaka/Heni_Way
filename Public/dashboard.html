@@ -1340,11 +1340,11 @@
                 </div>
                 
                 <div class="modal-body py-4">
-                    <form id="formAddVehicle">
+                    <form action="/api/auth/voitures" id="formAddVehicle"  method="POST" enctype="application/json">
                         
                         <div class="mb-3">
                             <label for="vehicleStatus" class="form-label small fw-semibold text-secondary">Statut / Catégorie</label>
-                            <select class="form-select bg-body border rounded-3" id="vehicleStatus" required>
+                            <select name="statut" class="form-select bg-body border rounded-3" id="vehicleStatus" required>
                                 <option value="Public" selected>Public</option>
                                 <option value="Spécial">Spécial</option>
                                 <option value="Privé">Privé</option>
@@ -1353,17 +1353,17 @@
 
                         <div class="mb-3">
                             <label for="vehicleMarque" class="form-label small fw-semibold text-secondary">Marque / Modèle</label>
-                            <input type="text" class="form-control bg-body border rounded-3" id="vehicleMarque" placeholder="Ex: Mercedes Sprinter" required>
+                            <input name="marque" type="text" class="form-control bg-body border rounded-3" id="vehicleMarque" placeholder="Ex: Mercedes Sprinter" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="vehicleImmat" class="form-label small fw-semibold text-secondary">Immatriculation</label>
-                            <input type="text" class="form-control bg-body border rounded-3" id="vehicleImmat" placeholder="Ex: 1245 TAB" required>
+                            <input name="immat" type="text" class="form-control bg-body border rounded-3" id="vehicleImmat" placeholder="Ex: 1245 TAB" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="vehicleChauffeur" class="form-label small fw-semibold text-secondary" id="labelChauffeur">Couleur</label>
-                            <input type="text" class="form-control bg-body border rounded-3" id="vehicleChauffeur" placeholder="Blanc" required>
+                            <input name="chauffeurOuCouleur" type="text" class="form-control bg-body border rounded-3" id="vehicleChauffeur" placeholder="Blanc" required>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2 mt-4">
@@ -2374,76 +2374,6 @@
             tbodyPrive.addEventListener('click', gererClicLigne);
         }
 
-        // Récupération du formulaire et du modal Bootstrap pour pouvoir le fermer après l'ajout
-const formAddVehicle = document.getElementById('formAddVehicle');
-// Assure-toi que l'ID de ton modal HTML d'ajout est bien "addVehicleModal"
-const addVehicleModalEl = document.getElementById('addVehicleModal'); 
-const addVehicleModal = addVehicleModalEl ? bootstrap.Modal.getInstance(addVehicleModalEl) : null;
-
-if (formAddVehicle) {
-    formAddVehicle.addEventListener('submit', async function(e) {
-        e.preventDefault(); // Empêche le rechargement de la page
-
-        // 1. Récupération des valeurs du formulaire
-        const statut = document.getElementById('vehicleStatus').value;
-        const marque = document.getElementById('vehicleMarque').value;
-        const immat = document.getElementById('vehicleImmat').value;
-        const chauffeurOuCouleur = document.getElementById('vehicleChauffeur').value;
-
-        // 2. Préparation de l'objet à insérer dans Supabase
-        // On initialise l'état par défaut à "Disponible"
-        const nouvelleVoiture = {
-            Marque: marque,
-            Immatriculation: immat,
-            Statut: statut,
-            Etats: "Disponible" 
-        };
-
-        // On adapte le champ dynamiquement :
-        // Si c'est "Public", la valeur entrée va dans la colonne 'Couleur'
-        // Si c'est "Spécial" ou "Privé", elle va dans 'Chauffeur' ou 'Proprietaire' selon ta structure
-        if (statut === 'Public') {
-            nouvelleVoiture.Couleur = chauffeurOuCouleur;
-        } else if (statut === 'Spécial' || statut === 'Special') {
-            nouvelleVoiture.Chauffeur = chauffeurOuCouleur;
-        } else {
-            nouvelleVoiture.Proprietaire = chauffeurOuCouleur;
-        }
-
-        try {
-            // 3. Envoi des données à Supabase
-            const { data, error } = await supabaseClient
-                .from('Voiture')
-                .insert([nouvelleVoiture])
-                .select(); // Récupère la ligne insérée pour confirmation
-
-            if (error) throw error;
-
-            console.log("Véhicule ajouté avec succès :", data);
-
-            // 4. Réinitialisation du formulaire et fermeture du Modal
-            formAddVehicle.reset();
-            
-            if (addVehicleModal) {
-                addVehicleModal.hide();
-            } else {
-                // Alternative JS native si l'instance Bootstrap n'est pas récupérée
-                const modalInstance = bootstrap.Modal.getOrCreateInstance(addVehicleModalEl);
-                modalInstance.hide();
-            }
-
-            // Optionnel : Notification visuelle de succès (ex: Toast ou alerte simple)
-            alert("Véhicule enregistré avec succès !");
-
-            // Pas besoin d'appeler chargerDonneesInitiales() à la main si ton écouteur temps réel (Realtime) est actif !
-            // Sinon, décommente la ligne ci-dessous :
-            // await chargerDonneesInitiales();
-
-        } catch (err) {
-            console.error("Erreur lors de l'ajout du véhicule :", err.message);
-            alert("Une erreur est survenue lors de l'enregistrement : " + err.message);
-        }
-    });
-}
+        
     </script>
 </body>
