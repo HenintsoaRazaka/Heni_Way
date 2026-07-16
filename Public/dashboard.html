@@ -547,7 +547,7 @@
                                     <th class="py-3 text-end pe-4">Etats</th>
                                 </tr>
                             </thead>
-                            <tbody class="border-top-0">
+                            <tbody id="liste-voitures-body" class="border-top-0">
                                 <tr class="clickable-row" style="cursor: pointer;" 
                                     data-marque="Mercedes Sprinter" 
                                     data-gamme="Public"
@@ -1750,348 +1750,438 @@
         });
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
-const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
-const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let listeVoitures = [];
-const statsContainer = document.getElementById('stats-vehicules');
-const pourcentageContainer = document.getElementById('pourcentage-voiture');
-const cercleProgression = document.getElementById('cercle-Voiture-public');
-const nbPassagerContainer = document.getElementById('nb_passager');
-const pourcentagePassagerContainer = document.querySelector('#pourcentage-voiture-Public p');
-const cerclePassager = document.getElementById('cercle-passager-Public');
-const nbPlaceContainer = document.getElementById('Nb_Place'); 
-const pourcentagePlaceContainer = document.querySelector('#pourcentage-Place-Public p');
-const cerclePlace = document.getElementById('cercle-place-Public');
+        let listeVoitures = [];
+        const statsContainer = document.getElementById('stats-vehicules');
+        const pourcentageContainer = document.getElementById('pourcentage-voiture');
+        const cercleProgression = document.getElementById('cercle-Voiture-public');
+        const nbPassagerContainer = document.getElementById('nb_passager');
+        const pourcentagePassagerContainer = document.querySelector('#pourcentage-voiture-Public p');
+        const cerclePassager = document.getElementById('cercle-passager-Public');
+        const nbPlaceContainer = document.getElementById('Nb_Place'); 
+        const pourcentagePlaceContainer = document.querySelector('#pourcentage-Place-Public p');
+        const cerclePlace = document.getElementById('cercle-place-Public');
 
-const statsContainerSpecial = document.getElementById('Stats-vehicule-Special');
-const pourcentageContainerSpecial = document.getElementById('pourcentage-vehicyle-Special');
-const cercleProgressionSpecial = document.getElementById('cercle-stats-Special');
+        const statsContainerSpecial = document.getElementById('Stats-vehicule-Special');
+        const pourcentageContainerSpecial = document.getElementById('pourcentage-vehicyle-Special');
+        const cercleProgressionSpecial = document.getElementById('cercle-stats-Special');
 
-const statsContainerPrive = document.getElementById('Stats-vehicule-Prive');
-const pourcentageContainerPrive = document.getElementById('pourcentage-vehicyle-Prive');
-const cercleProgressionPrive = document.getElementById('cercle-stats-Prive');
+        const statsContainerPrive = document.getElementById('Stats-vehicule-Prive');
+        const pourcentageContainerPrive = document.getElementById('pourcentage-vehicyle-Prive');
+        const cercleProgressionPrive = document.getElementById('cercle-stats-Prive');
 
-const resSpecialContainer = document.getElementById('reservation-Special');
-const resSpecialPourcentage = document.getElementById('Special-reservation-Pourcentage');
-const resSpecialCercle = document.getElementById('reservation-Special-Cercle');
+        const resSpecialContainer = document.getElementById('reservation-Special');
+        const resSpecialPourcentage = document.getElementById('Special-reservation-Pourcentage');
+        const resSpecialCercle = document.getElementById('reservation-Special-Cercle');
 
-const dispSpecialContainer = document.getElementById('Disponible-Special');
-const dispSpecialPourcentage = document.getElementById('Disponible-Special-Pourcentage');
-const dispSpecialCercle = document.getElementById('Disponible-Special-Cercle');
+        const dispSpecialContainer = document.getElementById('Disponible-Special');
+        const dispSpecialPourcentage = document.getElementById('Disponible-Special-Pourcentage');
+        const dispSpecialCercle = document.getElementById('Disponible-Special-Cercle');
 
-const resPriveContainer = document.getElementById('reservation-Prive');
-const resPrivePourcentage = document.getElementById('Prive-reservation-Pourcentage');
-const resPriveCercle = document.getElementById('reservation-Prive-Cercle');
+        const resPriveContainer = document.getElementById('reservation-Prive');
+        const resPrivePourcentage = document.getElementById('Prive-reservation-Pourcentage');
+        const resPriveCercle = document.getElementById('reservation-Prive-Cercle');
 
-const dispPriveContainer = document.getElementById('Disponible-Prive');
-const dispPrivePourcentage = document.getElementById('Disponible-Prive-Pourcentage');
-const dispPriveCercle = document.getElementById('Disponible-Prive-Cercle');
+        const dispPriveContainer = document.getElementById('Disponible-Prive');
+        const dispPrivePourcentage = document.getElementById('Disponible-Prive-Pourcentage');
+        const dispPriveCercle = document.getElementById('Disponible-Prive-Cercle');
 
-function mettreAJourAffichage() {
-    if (!statsContainer) return;
+        function mettreAJourAffichage() {
+            if (!statsContainer) return;
 
-    const voituresPublices = listeVoitures.filter(v => v.Statut === 'Public');
-    const publicDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
+            const voituresPublices = listeVoitures.filter(v => v.Statut === 'Public');
+            const publicDisponibles = voituresPublices.filter(v => v.Etats === 'Disponible');
 
-    const total = voituresPublices.length;
-    const dispos = publicDisponibles.length;
-    let pourcentage = 0;
-    statsContainer.textContent = `${dispos}/${total}`;
+            const total = voituresPublices.length;
+            const dispos = publicDisponibles.length;
+            let pourcentage = 0;
+            statsContainer.textContent = `${dispos}/${total}`;
 
-    if (pourcentageContainer) {
-        if (total > 0) {
-            pourcentage = Math.round((dispos / total) * 100);
-            pourcentageContainer.textContent = `+${pourcentage}%`;
-        } else {
-            pourcentageContainer.textContent = "0%";
-        }
-    }
-    if (cercleProgression) {
-        const perimetre = 226;
-        const decalage = perimetre - (pourcentage / 100) * perimetre;
-        cercleProgression.style.strokeDashoffset = decalage;
-    }
-
-}
-
-function mettreAJourAffichageSpecial() {
-    // On récupère toutes les voitures Special
-    const voituresSpecial = listeVoitures.filter(v => v.Statut === 'Special');
-    const totalSpecial = voituresSpecial.length;
-
-    const perimetre = 226;
-
-    // --- 1. Gestion des Réservations (Etats === 'Réservé') ---
-    const specialReserves = voituresSpecial.filter(v => v.Etats === 'Réservé');
-    const countReserves = specialReserves.length;
-
-    if (resSpecialContainer) {
-        resSpecialContainer.textContent = `${countReserves}/${totalSpecial}`;
-    }
-
-    let pourcentageRes = 0;
-    if (totalSpecial > 0) {
-        pourcentageRes = Math.round((countReserves / totalSpecial) * 100);
-    }
-
-    if (resSpecialPourcentage) {
-        resSpecialPourcentage.textContent = `+${pourcentageRes}%`;
-    }
-
-    if (resSpecialCercle) {
-        const decalage = perimetre - (pourcentageRes / 100) * perimetre;
-        resSpecialCercle.style.strokeDashoffset = decalage;
-    }
-
-
-    // --- 2. Gestion de la Disponibilité (Etats === 'Disponible') ---
-    const specialDispos = voituresSpecial.filter(v => v.Etats === 'Disponible');
-    const countDispos = specialDispos.length;
-
-    if (dispSpecialContainer) {
-        dispSpecialContainer.textContent = `${countDispos}/${totalSpecial}`;
-    }
-
-    let pourcentageDisp = 0;
-    if (totalSpecial > 0) {
-        pourcentageDisp = Math.round((countDispos / totalSpecial) * 100);
-    }
-
-    if (dispSpecialPourcentage) {
-        dispSpecialPourcentage.textContent = `+${pourcentageDisp}%`;
-    }
-
-    if (dispSpecialCercle) {
-        const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
-        dispSpecialCercle.style.strokeDashoffset = decalage;
-    }
-
-    //uazbdzabschedddddddddddddddddddddddddddd   h chzsqv ccccccccccccccccccc
-    //sujbzsduxzbauabsssssssssssssssssss
-
-    const SpecialDisponibles = voituresSpecial.filter(v => v.Etats === 'En attente');
-    //const totalSpecial = voituresSpecial.length;
-    const disposSpecial = SpecialDisponibles.length+countDispos;
-    let pourcentageSpecial = 0;
-    statsContainerSpecial.textContent = `${disposSpecial}/${totalSpecial}`;
-
-    if (pourcentageContainerSpecial) {
-        if (totalSpecial > 0) {
-            pourcentageSpecial = Math.round((disposSpecial / totalSpecial) * 100);
-            pourcentageContainerSpecial.textContent = `+${pourcentageSpecial}%`;
-        } else {
-            pourcentageContainerSpecial.textContent = "0%";
-        }
-    }
-    if (cercleProgressionSpecial) {
-        const perimetreSpecial = 226;
-        const decalageSpecial = perimetreSpecial - (pourcentageSpecial / 100) * perimetreSpecial;
-        cercleProgressionSpecial.style.strokeDashoffset = decalageSpecial;
-    }
-}
-
-function mettreAJourAffichagePrive() {
-    // On récupère toutes les voitures Privé (avec accent)
-    const voituresPrive = listeVoitures.filter(v => v.Statut === 'Privé');
-    const totalPrive = voituresPrive.length;
-
-    const perimetre = 226;
-
-    // --- 1. Gestion des Réservations (Etats === 'Réservé') ---
-    const priveReserves = voituresPrive.filter(v => v.Etats === 'Réservé');
-    const countReserves = priveReserves.length;
-
-    if (resPriveContainer) {
-        resPriveContainer.textContent = `${countReserves}/${totalPrive}`;
-    }
-
-    let pourcentageRes = 0;
-    if (totalPrive > 0) {
-        pourcentageRes = Math.round((countReserves / totalPrive) * 100);
-    }
-
-    if (resPrivePourcentage) {
-        resPrivePourcentage.textContent = `+${pourcentageRes}%`;
-    }
-
-    if (resPriveCercle) {
-        const decalage = perimetre - (pourcentageRes / 100) * perimetre;
-        resPriveCercle.style.strokeDashoffset = decalage;
-    }
-
-
-    // --- 2. Gestion de la Disponibilité (Etats === 'Disponible') ---
-    const priveDispos = voituresPrive.filter(v => v.Etats === 'Disponible');
-    const countDispos = priveDispos.length;
-
-    if (dispPriveContainer) {
-        dispPriveContainer.textContent = `${countDispos}/${totalPrive}`;
-    }
-
-    let pourcentageDisp = 0;
-    if (totalPrive > 0) {
-        pourcentageDisp = Math.round((countDispos / totalPrive) * 100);
-    }
-
-    if (dispPrivePourcentage) {
-        dispPrivePourcentage.textContent = `+${pourcentageDisp}%`;
-    }
-
-    if (dispPriveCercle) {
-        const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
-        dispPriveCercle.style.strokeDashoffset = decalage;
-    }
-
-    const PriveDisponibles = voituresPrive.filter(v => v.Etats === 'En attente');
-    // const totalPrive = voituresPrive.length;
-    const disposPrive = PriveDisponibles.length+countDispos;
-    let pourcentagePrive = 0;
-    statsContainerPrive.textContent = `${disposPrive}/${totalPrive}`;
-
-    if (pourcentageContainerPrive) {
-        if (totalPrive > 0) {
-            pourcentagePrive = Math.round((disposPrive / totalPrive) * 100);
-            pourcentageContainerPrive.textContent = `+${pourcentagePrive}%`;
-        } else {
-            pourcentageContainerPrive.textContent = "0%";
-        }
-    }
-    if (cercleProgressionPrive) {
-        const perimetrePrive = 226;
-        const decalagePrive = perimetrePrive - (pourcentagePrive / 100) * perimetrePrive;
-        cercleProgressionPrive.style.strokeDashoffset = decalagePrive;
-    }
-}
-
-async function chargerDonneesInitiales() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('Voiture')
-            .select('*');
-
-        if (error) throw error;
-
-        listeVoitures = data || [];
-            
-        mettreAJourAffichage();
-        mettreAJourAffichageSpecial();
-        mettreAJourAffichagePrive();
-    } catch (err) {
-        console.log("Erreur lors du chargement initial :", err);
-        if (statsContainer) statsContainer.textContent = "Erreur";
-    }
-}
-
-function connecterAuTempsReel() {
-    supabaseClient
-        .channel('changements-voitures')
-        .on(
-            'postgres_changes',
-            { event: '*', schema: 'public', table: 'Voiture' },
-            (payload) => {
-                if (payload.eventType === 'INSERT') {
-                    listeVoitures.push(payload.new);
-                } 
-                else if (payload.eventType === 'UPDATE') {
-                    const index = listeVoitures.findIndex(v => v.id === payload.new.id);
-                    if (index !== -1) {
-                        listeVoitures[index] = payload.new;
-                    }
-                } 
-                else if (payload.eventType === 'DELETE') {
-                    listeVoitures = listeVoitures.filter(v => v.id !== payload.old.id);
+            if (pourcentageContainer) {
+                if (total > 0) {
+                    pourcentage = Math.round((dispos / total) * 100);
+                    pourcentageContainer.textContent = `+${pourcentage}%`;
+                } else {
+                    pourcentageContainer.textContent = "0%";
                 }
+            }
+            if (cercleProgression) {
+                const perimetre = 226;
+                const decalage = perimetre - (pourcentage / 100) * perimetre;
+                cercleProgression.style.strokeDashoffset = decalage;
+            }
 
+        }
+
+        function mettreAJourAffichageSpecial() {
+            const voituresSpecial = listeVoitures.filter(v => v.Statut === 'Special');
+            const totalSpecial = voituresSpecial.length;
+            const perimetre = 226;
+
+            const specialReserves = voituresSpecial.filter(v => v.Etats === 'Réservé');
+            const countReserves = specialReserves.length;
+
+            if (resSpecialContainer) {
+                resSpecialContainer.textContent = `${countReserves}/${totalSpecial}`;
+            }
+
+            let pourcentageRes = 0;
+            if (totalSpecial > 0) {
+                pourcentageRes = Math.round((countReserves / totalSpecial) * 100);
+            }
+
+            if (resSpecialPourcentage) {
+                resSpecialPourcentage.textContent = `+${pourcentageRes}%`;
+            }
+
+            if (resSpecialCercle) {
+                const decalage = perimetre - (pourcentageRes / 100) * perimetre;
+                resSpecialCercle.style.strokeDashoffset = decalage;
+            }
+
+            const specialDispos = voituresSpecial.filter(v => v.Etats === 'Disponible');
+            const countDispos = specialDispos.length;
+
+            if (dispSpecialContainer) {
+                dispSpecialContainer.textContent = `${countDispos}/${totalSpecial}`;
+            }
+
+            let pourcentageDisp = 0;
+            if (totalSpecial > 0) {
+                pourcentageDisp = Math.round((countDispos / totalSpecial) * 100);
+            }
+
+            if (dispSpecialPourcentage) {
+                dispSpecialPourcentage.textContent = `+${pourcentageDisp}%`;
+            }
+
+            if (dispSpecialCercle) {
+                const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
+                dispSpecialCercle.style.strokeDashoffset = decalage;
+            }
+
+            const SpecialDisponibles = voituresSpecial.filter(v => v.Etats === 'En attente');
+            const disposSpecial = SpecialDisponibles.length+countDispos;
+            let pourcentageSpecial = 0;
+            statsContainerSpecial.textContent = `${disposSpecial}/${totalSpecial}`;
+
+            if (pourcentageContainerSpecial) {
+                if (totalSpecial > 0) {
+                    pourcentageSpecial = Math.round((disposSpecial / totalSpecial) * 100);
+                    pourcentageContainerSpecial.textContent = `+${pourcentageSpecial}%`;
+                } else {
+                    pourcentageContainerSpecial.textContent = "0%";
+                }
+            }
+            if (cercleProgressionSpecial) {
+                const perimetreSpecial = 226;
+                const decalageSpecial = perimetreSpecial - (pourcentageSpecial / 100) * perimetreSpecial;
+                cercleProgressionSpecial.style.strokeDashoffset = decalageSpecial;
+            }
+        }
+
+        function mettreAJourAffichagePrive() {
+            const voituresPrive = listeVoitures.filter(v => v.Statut === 'Privé');
+            const totalPrive = voituresPrive.length;
+            const perimetre = 226;
+
+            const priveReserves = voituresPrive.filter(v => v.Etats === 'Réservé');
+            const countReserves = priveReserves.length;
+
+            if (resPriveContainer) {
+                resPriveContainer.textContent = `${countReserves}/${totalPrive}`;
+            }
+
+            let pourcentageRes = 0;
+            if (totalPrive > 0) {
+                pourcentageRes = Math.round((countReserves / totalPrive) * 100);
+            }
+
+            if (resPrivePourcentage) {
+                resPrivePourcentage.textContent = `+${pourcentageRes}%`;
+            }
+
+            if (resPriveCercle) {
+                const decalage = perimetre - (pourcentageRes / 100) * perimetre;
+                resPriveCercle.style.strokeDashoffset = decalage;
+            }
+
+            const priveDispos = voituresPrive.filter(v => v.Etats === 'Disponible');
+            const countDispos = priveDispos.length;
+
+            if (dispPriveContainer) {
+                dispPriveContainer.textContent = `${countDispos}/${totalPrive}`;
+            }
+
+            let pourcentageDisp = 0;
+            if (totalPrive > 0) {
+                pourcentageDisp = Math.round((countDispos / totalPrive) * 100);
+            }
+
+            if (dispPrivePourcentage) {
+                dispPrivePourcentage.textContent = `+${pourcentageDisp}%`;
+            }
+
+            if (dispPriveCercle) {
+                const decalage = perimetre - (pourcentageDisp / 100) * perimetre;
+                dispPriveCercle.style.strokeDashoffset = decalage;
+            }
+
+            const PriveDisponibles = voituresPrive.filter(v => v.Etats === 'En attente');
+            const disposPrive = PriveDisponibles.length+countDispos;
+            let pourcentagePrive = 0;
+            statsContainerPrive.textContent = `${disposPrive}/${totalPrive}`;
+
+            if (pourcentageContainerPrive) {
+                if (totalPrive > 0) {
+                    pourcentagePrive = Math.round((disposPrive / totalPrive) * 100);
+                    pourcentageContainerPrive.textContent = `+${pourcentagePrive}%`;
+                } else {
+                    pourcentageContainerPrive.textContent = "0%";
+                }
+            }
+            if (cercleProgressionPrive) {
+                const perimetrePrive = 226;
+                const decalagePrive = perimetrePrive - (pourcentagePrive / 100) * perimetrePrive;
+                cercleProgressionPrive.style.strokeDashoffset = decalagePrive;
+            }
+        }
+
+        async function chargerDonneesInitiales() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('Voiture')
+                    .select(`
+                        *,
+                        Reservation (
+                            Nb_Place,
+                            Nb_Libre,
+                            Depart,
+                            Destination,
+                            Heure,
+                            Date,
+                            Etat
+                        )
+                    `);
+
+                if (error) throw error;
+
+                listeVoitures = data || [];
+                
                 mettreAJourAffichage();
                 mettreAJourAffichageSpecial();
                 mettreAJourAffichagePrive();
+                genererTableauVoitures(listeVoitures);
+
+            } catch (err) {
+                console.error("Erreur lors du chargement initial :", err);
+                if (statsContainer) statsContainer.textContent = "Erreur";
             }
-        )
-        .subscribe();
-}
+        }
 
-async function chargerDonneesReservations() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('Reservation')
-            .select(`
-                Nb_Place, 
-                Nb_NonLibre, 
-                Nb_Libre,
-                Voiture:ID_Voiture (
-                    Statut
+        function connecterAuTempsReel() {
+            supabaseClient
+                .channel('changements-voitures')
+                .on(
+                    'postgres_changes',
+                    { event: '*', schema: 'public', table: 'Voiture' },
+                    (payload) => {
+                        if (payload.eventType === 'INSERT') {
+                            listeVoitures.push(payload.new);
+                        } 
+                        else if (payload.eventType === 'UPDATE') {
+                            const index = listeVoitures.findIndex(v => v.id === payload.new.id);
+                            if (index !== -1) {
+                                listeVoitures[index] = payload.new;
+                            }
+                        } 
+                        else if (payload.eventType === 'DELETE') {
+                            listeVoitures = listeVoitures.filter(v => v.id !== payload.old.id);
+                        }
+
+                        chargerDonneesInitiales();
+                    }
                 )
-            `)
-            .eq('Voiture.Statut', 'Public');
+                .subscribe();
 
-        if (error) throw error;
+            supabaseClient
+                .channel('changements-reservations')
+                .on(
+                    'postgres_changes',
+                    { event: '*', schema: 'public', table: 'Reservation' },
+                    () => {
 
-        console.log("Données Réservations reçues :", data);
+                        chargerDonneesInitiales();
+                    }
+                )
+                .subscribe();
+        }
 
-        let totalPlaces = 0;
-        let totalPassagers = 0;
-        let totalLibres = 0;
+        async function chargerDonneesReservations() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('Reservation')
+                    .select(`
+                        Nb_Place, 
+                        Nb_NonLibre, 
+                        Nb_Libre,
+                        Voiture:ID_Voiture (
+                            Statut
+                        )
+                    `)
+                    .eq('Voiture.Statut', 'Public');
 
-        if (data && data.length > 0) {
-            data.forEach(reservation => {
-                totalPlaces += Number(reservation.Nb_Place || 0);
-                totalPassagers += Number(reservation.Nb_NonLibre || 0);
-                totalLibres += Number(reservation.Nb_Libre || 0);
+                if (error) throw error;
+
+                console.log("Données Réservations reçues :", data);
+
+                let totalPlaces = 0;
+                let totalPassagers = 0;
+                let totalLibres = 0;
+
+                if (data && data.length > 0) {
+                    data.forEach(reservation => {
+                        totalPlaces += Number(reservation.Nb_Place || 0);
+                        totalPassagers += Number(reservation.Nb_NonLibre || 0);
+                        totalLibres += Number(reservation.Nb_Libre || 0);
+                    });
+                }
+
+                if (nbPlaceContainer) {
+                    nbPlaceContainer.textContent = totalLibres;
+                }
+
+                let pourcentageLibres = 0;
+                if (totalPlaces > 0) {
+                    pourcentageLibres = Math.round((totalLibres / totalPlaces) * 100);
+                }
+
+                if (pourcentagePlaceContainer) {
+                    pourcentagePlaceContainer.textContent = `+${pourcentageLibres}%`;
+                }
+
+                if (cerclePlace) {
+                    const perimetre = 226;
+                    const decalage = perimetre - (pourcentageLibres / 100) * perimetre;
+                    cerclePlace.style.strokeDashoffset = decalage;
+                }
+
+                if (nbPassagerContainer) {
+                    nbPassagerContainer.textContent = totalPassagers;
+                }
+
+                let pourcentagePassagers = 0;
+                if (totalPlaces > 0) {
+                    pourcentagePassagers = Math.round((totalPassagers / totalPlaces) * 100);
+                }
+
+                if (pourcentagePassagerContainer) {
+                    pourcentagePassagerContainer.textContent = `+${pourcentagePassagers}%`;
+                }
+
+                if (cerclePassager) {
+                    const perimetre = 226;
+                    const decalage = perimetre - (pourcentagePassagers / 100) * perimetre;
+                    cerclePassager.style.strokeDashoffset = decalage;
+                }
+
+            } catch (err) {
+                console.error("Erreur lors du chargement des réservations :", err);
+                if (nbPlaceContainer) nbPlaceContainer.textContent = "Erreur";
+                if (nbPassagerContainer) nbPassagerContainer.textContent = "Erreur";
+            }
+        }
+
+        function genererTableauVoitures(voitures) {
+            const tbody = document.getElementById('liste-voitures-body');
+            if (!tbody) return;
+
+            tbody.innerHTML = ''; // On vide le tableau pour repartir sur du propre
+
+            // 🟢 ICI : On filtre pour ne garder UNIQUEMENT les voitures avec le statut "Public"
+            const voituresPublices = voitures.filter(v => v.Statut === 'Public');
+
+            // On boucle uniquement sur les voitures publiques filtrées
+            voituresPublices.forEach(voiture => {
+                // 1. Informations de base (Table 'Voiture')
+                const id = voiture.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const etats = voiture.Etats || "Disponible";
+
+                // 2. Informations de Réservation (Table 'Reservation')
+                const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
+
+                let destination = "Aucune";
+                let nbLibre = 0;
+                let nbPlace = 0;
+                let affichagePlaces = "-";
+
+                if (reservation) {
+                    destination = reservation.Destination || "Non définie";
+                    nbLibre = reservation.Nb_Libre !== null ? reservation.Nb_Libre : 0;
+                    nbPlace = reservation.Nb_Place !== null ? reservation.Nb_Place : 0;
+                    
+                    // Calculer le nombre de places occupées (ex: 12 occupées sur 18 au total)
+                    const placesOccupees = nbPlace - nbLibre;
+                    affichagePlaces = `${placesOccupees} / ${nbPlace}`;
+                }
+
+                // 3. Déterminer la couleur du badge d'état
+                let badgeEtatClass = "badge bg-success-subtle text-success";
+                if (etats === "Réservé") {
+                    badgeEtatClass = "badge bg-warning-subtle text-warning";
+                } else if (etats === "En panne") {
+                    badgeEtatClass = "badge bg-danger-subtle text-danger";
+                }
+
+                // 4. Génération et multiplication de la ligne HTML
+                const row = document.createElement('tr');
+                row.className = "clickable-row";
+                row.style.cursor = "pointer";
+                row.setAttribute('data-id', id);
+                row.setAttribute('data-marque', marque);
+                row.setAttribute('data-gamme', "Public");
+                row.setAttribute('data-immat', immatriculation);
+                if (reservation) {
+                    row.setAttribute('data-depart', reservation.Depart || "");
+                    row.setAttribute('data-destination', destination);
+                }
+
+                row.innerHTML = `
+                    <td class="ps-4 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="fas fa-bus"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 fw-semibold">${marque}</h6>
+                                <small class="text-secondary">Public</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="fw-medium">${immatriculation}</td>
+                    <td>${destination}</td>
+                    <td class="text-center">
+                        <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-semibold">${affichagePlaces}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="${badgeEtatClass} rounded-pill px-3 py-1 fw-semibold">${etats}</span>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
             });
         }
 
-        if (nbPlaceContainer) {
-            nbPlaceContainer.textContent = totalLibres;
-        }
-
-        let pourcentageLibres = 0;
-        if (totalPlaces > 0) {
-            pourcentageLibres = Math.round((totalLibres / totalPlaces) * 100);
-        }
-
-        if (pourcentagePlaceContainer) {
-            pourcentagePlaceContainer.textContent = `+${pourcentageLibres}%`;
-        }
-
-        if (cerclePlace) {
-            const perimetre = 226;
-            const decalage = perimetre - (pourcentageLibres / 100) * perimetre;
-            cerclePlace.style.strokeDashoffset = decalage;
-        }
-
-        if (nbPassagerContainer) {
-            nbPassagerContainer.textContent = totalPassagers;
-        }
-
-        let pourcentagePassagers = 0;
-        if (totalPlaces > 0) {
-            pourcentagePassagers = Math.round((totalPassagers / totalPlaces) * 100);
-        }
-
-        if (pourcentagePassagerContainer) {
-            pourcentagePassagerContainer.textContent = `+${pourcentagePassagers}%`;
-        }
-
-        if (cerclePassager) {
-            const perimetre = 226;
-            const decalage = perimetre - (pourcentagePassagers / 100) * perimetre;
-            cerclePassager.style.strokeDashoffset = decalage;
-        }
-
-    } catch (err) {
-        console.error("Erreur lors du chargement des réservations :", err);
-        if (nbPlaceContainer) nbPlaceContainer.textContent = "Erreur";
-        if (nbPassagerContainer) nbPassagerContainer.textContent = "Erreur";
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    chargerDonneesInitiales();
-    chargerDonneesReservations();
-    connecterAuTempsReel();
-});
+        document.addEventListener("DOMContentLoaded", () => {
+            chargerDonneesInitiales();
+            chargerDonneesReservations();
+            connecterAuTempsReel();
+        });
     </script>
 </body>
  
