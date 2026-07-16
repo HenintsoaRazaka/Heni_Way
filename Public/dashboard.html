@@ -1868,8 +1868,9 @@ function mettreAJourAffichageSpecial() {
         dispSpecialCercle.style.strokeDashoffset = decalage;
     }
 
+    const specialDisponible = voituresSpecial.filter(v => v.Etats === 'En attente');
     //const totalSpecial = voituresSpecial.length;
-    const disposSpecial = SpecialDisponibles.length;
+    const disposSpecial = SpecialDisponibles.length+countDispos;
     let pourcentageSpecial = 0;
     statsContainerSpecial.textContent = `${disposSpecial}/${totalSpecial}`;
 
@@ -1940,8 +1941,9 @@ function mettreAJourAffichagePrive() {
         dispPriveCercle.style.strokeDashoffset = decalage;
     }
 
+    const PriveDisponible = voituresPrive.filter(v => v.Etats === 'En attente');
     // const totalPrive = voituresPrive.length;
-    const disposPrive = PriveDisponibles.length;
+    const disposPrive = PriveDisponibles.length+countDispos;
     let pourcentagePrive = 0;
     statsContainerPrive.textContent = `${disposPrive}/${totalPrive}`;
 
@@ -2089,4 +2091,55 @@ document.addEventListener("DOMContentLoaded", () => {
 });
     </script>
 </body>
- 
+ function mettreAJourAffichageSpecial() {
+    if (!statsContainerSpecial) return;
+
+    const voituresSpecial = listeVoitures.filter(v => v.Statut === 'Special');
+    const SpecialDisponibles = voituresSpecial.filter(v => v.Etats === 'Disponible');
+
+    const totalSpecial = voituresSpecial.length;
+    const disposSpecial = SpecialDisponibles.length;
+    let pourcentageSpecial = 0;
+    statsContainerSpecial.textContent = `${disposSpecial}/${totalSpecial}`;
+
+    if (pourcentageContainerSpecial) {
+        if (totalSpecial > 0) {
+            pourcentageSpecial = Math.round((disposSpecial / totalSpecial) * 100);
+            pourcentageContainerSpecial.textContent = `+${pourcentageSpecial}%`;
+        } else {
+            pourcentageContainerSpecial.textContent = "0%";
+        }
+    }
+    if (cercleProgressionSpecial) {
+        const perimetreSpecial = 226;
+        const decalageSpecial = perimetreSpecial - (pourcentageSpecial / 100) * perimetreSpecial;
+        cercleProgressionSpecial.style.strokeDashoffset = decalageSpecial;
+    }
+
+}
+
+function mettreAJourAffichagePrive() {
+    if (!statsContainerPrive) return;
+
+    const voituresPrive = listeVoitures.filter(v => v.Statut === 'Privé');
+    const PriveDisponibles = voituresPrive.filter(v => v.Etats === 'Disponible');
+
+    const totalPrive = voituresPrive.length;
+    const disposPrive = PriveDisponibles.length;
+    let pourcentagePrive = 0;
+    statsContainerPrive.textContent = `${disposPrive}/${totalPrive}`;
+
+    if (pourcentageContainerPrive) {
+        if (totalPrive > 0) {
+            pourcentagePrive = Math.round((disposPrive / totalPrive) * 100);
+            pourcentageContainerPrive.textContent = `+${pourcentagePrive}%`;
+        } else {
+            pourcentageContainerPrive.textContent = "0%";
+        }
+    }
+    if (cercleProgressionPrive) {
+        const perimetrePrive = 226;
+        const decalagePrive = perimetrePrive - (pourcentagePrive / 100) * perimetrePrive;
+        cercleProgressionPrive.style.strokeDashoffset = decalagePrive;
+    }
+}
