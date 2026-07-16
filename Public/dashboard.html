@@ -1695,6 +1695,62 @@
             }
         });
 
+const formAddVehicle = document.getElementById('formAddVehicle');
+const addVehicleModalEl = document.getElementById('addVehicleModal');
+
+if (formAddVehicle) {
+    formAddVehicle.addEventListener('submit', async function(e) {
+        // 1. On empêche le rechargement natif de la page
+        e.preventDefault(); 
+
+        // 2. On extrait les données du formulaire automatiquement grâce aux attributs "name"
+        const formData = new FormData(formAddVehicle);
+        
+        // On transforme les paires clé/valeur en un objet JSON simple
+        const donneesFormulaire = Object.fromEntries(formData.entries());
+
+        try {
+            // 3. Envoi des données vers ta route Express (/api/auth/voitures)
+            const response = await fetch('/api/auth/voitures', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(donneesFormulaire)
+            });
+
+            const result = await response.json();
+
+            // 4. Si le serveur répond avec une erreur
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || "Une erreur est survenue lors de l'enregistrement");
+            }
+
+            // 5. Succès !
+            console.log("Données enregistrées :", result.data);
+            alert(result.message);
+
+            // Réinitialisation des champs du formulaire
+            formAddVehicle.reset();
+
+            // Fermeture automatique du modal Bootstrap
+            if (addVehicleModalEl) {
+                const modalInstance = bootstrap.Modal.getOrCreateInstance(addVehicleModalEl);
+                modalInstance.hide();
+            }
+
+            // Optionnel : Recharger la liste de tes voitures sans recharger la page
+            if (typeof chargerDonneesInitiales === 'function') {
+                await chargerDonneesInitiales();
+            }
+
+        } catch (err) {
+            console.error("Erreur d'envoi fetch :", err.message);
+            alert("Impossible d'enregistrer le véhicule : " + err.message);
+        }
+    });
+}
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
         const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
