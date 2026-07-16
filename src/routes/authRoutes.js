@@ -7,6 +7,6 @@ const Insertion = require ('../controllers/Insert');
 router.post('/inscription', authController.inscription);
 router.post('/connexion', authController.connexion);
 router.post('/Administrateur', authController.connexionAdministrateur);
-router.post('/voitures', Insertion.Insert);
+router.post('/voitures', Insertion.ajouterVoiture);
 
 module.exports = router;
