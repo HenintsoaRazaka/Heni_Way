@@ -46,7 +46,61 @@ const VoitureController = {
                 message: "Erreur lors de l'enregistrement : " + error.message
             });
         }
-    }
+    },
+
+    ajouterPublication: async (req, res) => {
+            try {
+                const { statut, immat, depart, destination, heure } = req.body;
+
+                // 1. Validation rapide des données requises
+                if (!statut || !immat || !depart || !destination || !heure) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Veuillez remplir tous les champs obligatoires."
+                    });
+                }
+
+                // 2. Recherche de la voiture correspondante dans la table 'Voiture' via son Immatriculation
+                const { data: voiture, error: voitureError } = await supabaseService
+                    .from('Voiture')
+                    .select('id')
+                    .eq('Immatriculation', immat)
+                    .single();
+
+                if (voitureError || !voiture) {
+                    return res.status(404).json({
+                        success: false,
+                        message: `Aucun véhicule trouvé avec l'immatriculation : ${immat}. Veuillez d'abord l'enregistrer.`
+                    });
+                }
+
+                // 3. Préparation des données pour la table 'Reservation'
+                const nouvellePublication = {
+                    ID_Voiture: voiture.id,
+                    Depart: depart,
+                    Destination: destination,
+                    Heure: heure,
+                    Etat: "Disponible", // Valeur par défaut
+                    Date: new Date().toISOString().split('T')[0] // Optionnel : Date du jour au format YYYY-MM-DD
+                };
+
+                // 4. Appel du modèle pour l'insertion
+                const publicationEnregistree = await PublicationModel.create(nouvellePublication);
+
+                return res.status(201).json({
+                    success: true,
+                    message: "Publication en ligne avec succès !",
+                    data: publicationEnregistree
+                });
+
+            } catch (error) {
+                console.error("Erreur dans PublicationController :", error.message);
+                return res.status(500).json({
+                    success: false,
+                    message: "Erreur lors de la publication : " + error.message
+                });
+            }
+        }
 };
 
 module.exports = VoitureController;

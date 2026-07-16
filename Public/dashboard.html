@@ -1387,7 +1387,7 @@
                 </div>
                 
                 <div class="modal-body py-4">
-                    <form id="formAddPublication">
+                    <form id="formAddPublication" action="/api/auth/Publication" method="POST" enctype="application/json">
                         
                         <div class="mb-3">
                             <label for="pubStatus" class="form-label small fw-semibold text-secondary">Statut / Catégorie</label>
@@ -1751,6 +1751,52 @@ if (formAddVehicle) {
     });
 }
 
+const formAddPublication = document.getElementById('formAddPublication');
+const addPublicationModalEl = document.getElementById('addPublicationModal'); // ID de ton modal de publication
+
+if (formAddPublication) {
+    formAddPublication.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(formAddPublication);
+        const donneesFormulaire = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/api/auth/Publication', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(donneesFormulaire)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || "Une erreur est survenue");
+            }
+
+            alert(result.message);
+            formAddPublication.reset();
+
+            // Fermeture du modal
+            if (addPublicationModalEl) {
+                const modalInstance = bootstrap.Modal.getOrCreateInstance(addPublicationModalEl);
+                modalInstance.hide();
+            }
+
+            // Rafraîchir l'affichage de tes publications publiques
+            if (typeof chargerPublications === 'function') {
+                await chargerPublications();
+            }
+
+        } catch (err) {
+            console.error("Erreur fetch publication :", err.message);
+            alert("Impossible de publier : " + err.message);
+        }
+    });
+}
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
         const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
@@ -2099,6 +2145,37 @@ if (formAddVehicle) {
             }
         }
 
+        async function chargerPublications() {
+            try {
+                // On cible la table 'Reservation' et on imbrique les colonnes de la table 'Voiture'
+                const { data, error } = await supabaseService
+                    .from('Reservation')
+                    .select(`
+                        id,
+                        Depart,
+                        Destination,
+                        Heure,
+                        Date,
+                        Etat,
+                        Voiture (
+                            id,
+                            Marque,
+                            Immatriculation,
+                            Statut,
+                            Etats
+                        )
+                    `);
+
+                if (error) throw error;
+
+                // On envoie les données reçues à notre fonction de génération
+                genererPublicationsPublic(data || []);
+
+            } catch (err) {
+                console.error("Erreur lors du chargement des publications :", err.message);
+            }
+        }
+
         function genererTableauVoitures(voitures) {
             const tbody = document.getElementById('liste-voitures-body');
             if (!tbody) return;
@@ -2343,6 +2420,77 @@ if (formAddVehicle) {
         `;
 
         tbody.appendChild(row);
+    });
+}
+
+function genererPublicationsPublic(reservations) {
+    const containerPublic = document.getElementById('Public');
+    if (!containerPublic) return;
+
+    containerPublic.innerHTML = ''; // Vide le conteneur avant d'ajouter les éléments
+
+    // 1. Filtrer les réservations pour ne garder que celles dont la voiture est de gamme "Public"
+    const reservationsPublic = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Public');
+
+    if (reservationsPublic.length === 0) {
+        containerPublic.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication active pour le moment.</div>`;
+        return;
+    }
+
+    // 2. Parcourir chaque réservation pour injecter le HTML
+    reservationsPublic.forEach(reservation => {
+        const voiture = reservation.Voiture;
+        
+        const idReservation = reservation.id;
+        const marque = voiture.Marque || "Inconnu";
+        const immatriculation = voiture.Immatriculation || "N/A";
+        const depart = reservation.Depart || "Non défini";
+        const destination = reservation.Destination || "Non définie";
+        const heure = reservation.Heure || "--:--";
+
+        // 3. Création du bloc de carte de publication
+        const card = document.createElement('div');
+        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
+        card.setAttribute('data-reservation-id', idReservation);
+
+        card.innerHTML = `
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                        <i class="fas fa-bus fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
+                        <small class="text-secondary fw-medium">Public</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
+                        <span class="fw-semibold text-body small">${depart}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                        <span class="fw-semibold text-primary small">${destination}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                        <i class="fa-regular fa-clock text-warning"></i>
+                        <span>${heure}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <button class="btn btn-sm btn-outline-danger rounded-3 px-3 py-2 fw-medium d-flex align-items-center gap-2 btn-annuler-pub" onclick="annulerReservation(${idReservation})">
+                        <i class="fa-regular fa-circle-xmark"></i>
+                        <span>Annuler</span>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        containerPublic.appendChild(card);
     });
 }
         
