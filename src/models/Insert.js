@@ -2,7 +2,7 @@ const subabase = require('../config/supabase');
 
 const createVoiture =  {
     create: async (voitureData) => {
-            const { data, error } = await supabase.supabasecreateClient
+            const { data, error } = await supabase.supabaseService
                 .from('Voiture')
                 .insert([voitureData])
                 .select();
