@@ -1177,7 +1177,7 @@
                             <span class="fw-semibold fs-5" id="infoImmat">---</span>
                         </div>
                         <div class="col-6">
-                            <small class="text-secondary d-block">Chauffeur</small>
+                            <small class="text-secondary d-block">Couleur</small>
                             <span class="fw-semibold fs-5" id="infoChauffeur">---</span>
                         </div>
                         <hr class="my-2 opacity-25">
@@ -1236,7 +1236,7 @@
                             <span class="fw-semibold fs-5" id="infoSImmat">---</span>
                         </div>
                         <div class="col-6">
-                            <small class="text-secondary d-block">Chauffeur</small>
+                            <small class="text-secondary d-block">Couleur</small>
                             <span class="fw-semibold fs-5" id="infoSChauffeur">---</span>
                         </div>
                         <hr class="my-2 opacity-25">
@@ -1362,7 +1362,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="vehicleChauffeur" class="form-label small fw-semibold text-secondary" id="labelChauffeur">Chauffeur</label>
+                            <label for="vehicleChauffeur" class="form-label small fw-semibold text-secondary" id="labelChauffeur">Couleur</label>
                             <input type="text" class="form-control bg-body border rounded-3" id="vehicleChauffeur" placeholder="Nom du chauffeur" required>
                         </div>
 
@@ -2045,20 +2045,18 @@
             const tbody = document.getElementById('liste-voitures-body');
             if (!tbody) return;
 
-            tbody.innerHTML = ''; // On vide le tableau pour repartir sur du propre
+            tbody.innerHTML = ''; 
 
-            // 🟢 ICI : On filtre pour ne garder UNIQUEMENT les voitures avec le statut "Public"
             const voituresPublices = voitures.filter(v => v.Statut === 'Public');
 
-            // On boucle uniquement sur les voitures publiques filtrées
             voituresPublices.forEach(voiture => {
-                // 1. Informations de base (Table 'Voiture')
                 const id = voiture.id;
                 const marque = voiture.Marque || "Inconnu";
                 const immatriculation = voiture.Immatriculation || "N/A";
                 const etats = voiture.Etats || "Disponible";
+                const couleur = voiture.Couleur;
+                row.set
 
-                // 2. Informations de Réservation (Table 'Reservation')
                 const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
 
                 let destination = "Aucune";
@@ -2071,12 +2069,10 @@
                     nbLibre = reservation.Nb_Libre !== null ? reservation.Nb_Libre : 0;
                     nbPlace = reservation.Nb_Place !== null ? reservation.Nb_Place : 0;
                     
-                    // Calculer le nombre de places occupées (ex: 12 occupées sur 18 au total)
                     const placesOccupees = nbPlace - nbLibre;
                     affichagePlaces = `${placesOccupees} / ${nbPlace}`;
                 }
 
-                // 3. Déterminer la couleur du badge d'état
                 let badgeEtatClass = "badge bg-success-subtle text-success";
                 if (etats === "Réservé") {
                     badgeEtatClass = "badge bg-warning-subtle text-warning";
@@ -2084,7 +2080,6 @@
                     badgeEtatClass = "badge bg-danger-subtle text-danger";
                 }
 
-                // 4. Génération et multiplication de la ligne HTML
                 const row = document.createElement('tr');
                 row.className = "clickable-row";
                 row.style.cursor = "pointer";
@@ -2092,6 +2087,7 @@
                 row.setAttribute('data-marque', marque);
                 row.setAttribute('data-gamme', "Public");
                 row.setAttribute('data-immat', immatriculation);
+                row.setAttribute('data-chauffeur', couleur)
                 if (reservation) {
                     row.setAttribute('data-depart', reservation.Depart || "");
                     row.setAttribute('data-destination', destination);
@@ -2129,71 +2125,65 @@
             connecterAuTempsReel();
         });
 
-// Récupération de l'élément parent stable dans le HTML
-const tbodyVoitures = document.getElementById('liste-voitures-body');
+        const tbodyVoitures = document.getElementById('liste-voitures-body');
 
-if (tbodyVoitures) {
-    // 🟢 On écoute le clic sur le tbody global
-    tbodyVoitures.addEventListener('click', function(event) {
-        // On récupère la ligne <tr> cliquée, même si le clic s'est fait sur une icône ou un texte à l'intérieur
-        const row = event.target.closest('.clickable-row');
-        
-        if (row) {
-            // Lecture des attributs de données de la ligne cliquée
-            const marque = row.getAttribute('data-marque');
-            const gamme = row.getAttribute('data-gamme');
-            const immat = row.getAttribute('data-immat');
-            const chauffeur = row.getAttribute('data-chauffeur') || "Aucun";
-            const dispo = row.getAttribute('data-dispo') || "0";
-            const occupe = row.getAttribute('data-occupe') || "0";
-            const total = row.getAttribute('data-total') || "0";
-            const depart = row.getAttribute('data-depart') || "Aucun";
-            const destination = row.getAttribute('data-destination') || "Aucune";
-            const presence = row.getAttribute('data-Presence') || "Absent";
-            const proprietaire = row.getAttribute('data-Propri') || "Non défini";
-            const delait = row.getAttribute('data-Delait') || "N/A";
-            const numero = row.getAttribute('data-Num') || "N/A";
+        if (tbodyVoitures) {
+            tbodyVoitures.addEventListener('click', function(event) {
+                const row = event.target.closest('.clickable-row');
+                
+                if (row) {
+                    const marque = row.getAttribute('data-marque');
+                    const gamme = row.getAttribute('data-gamme');
+                    const immat = row.getAttribute('data-immat');
+                    const chauffeur = row.getAttribute('data-chauffeur') || "Aucun";
+                    const dispo = row.getAttribute('data-dispo') || "0";
+                    const occupe = row.getAttribute('data-occupe') || "0";
+                    const total = row.getAttribute('data-total') || "0";
+                    const depart = row.getAttribute('data-depart') || "Aucun";
+                    const destination = row.getAttribute('data-destination') || "Aucune";
+                    const presence = row.getAttribute('data-Presence') || "Absent";
+                    const proprietaire = row.getAttribute('data-Propri') || "Non défini";
+                    const delait = row.getAttribute('data-Delait') || "N/A";
+                    const numero = row.getAttribute('data-Num') || "N/A";
 
-            // Affichage et remplissage des modaux selon la gamme
-            if (gamme === 'Public') {
-                document.getElementById('infoMarque').innerText = marque;
-                document.getElementById('infoGamme').innerText = gamme;
-                document.getElementById('infoImmat').innerText = immat;
-                document.getElementById('infoChauffeur').innerText = chauffeur;
-                document.getElementById('infoOccupe').innerText = `${occupe} place(s)`;
-                document.getElementById('infoDispo').innerText = `${dispo} / ${total}`;
-                document.getElementById('infoDepart').innerText = depart;
-                document.getElementById('infoDestination').innerText = destination;
+                    if (gamme === 'Public') {
+                        document.getElementById('infoMarque').innerText = marque;
+                        document.getElementById('infoGamme').innerText = gamme;
+                        document.getElementById('infoImmat').innerText = immat;
+                        document.getElementById('infoChauffeur').innerText = chauffeur;
+                        document.getElementById('infoOccupe').innerText = `${occupe} place(s)`;
+                        document.getElementById('infoDispo').innerText = `${dispo} / ${total}`;
+                        document.getElementById('infoDepart').innerText = depart;
+                        document.getElementById('infoDestination').innerText = destination;
 
-                vehicleModal.show();
-            } 
-            else if (gamme === 'Special' || gamme === 'Spécial') { // On gère les deux orthographes au cas où !
-                document.getElementById('infoSMarque').innerText = marque;
-                document.getElementById('infoSGamme').innerText = gamme;
-                document.getElementById('infoSImmat').innerText = immat;
-                document.getElementById('infoSChauffeur').innerText = chauffeur;
-                document.getElementById('infoSOccupe').innerText = occupe;
-                document.getElementById('infoSPresence').innerText = presence;
-                document.getElementById('infoSDepart').innerText = depart;
-                document.getElementById('infoSDestination').innerText = destination;
+                        vehicleModal.show();
+                    } 
+                    else if (gamme === 'Special' || gamme === 'Spécial') { 
+                        document.getElementById('infoSMarque').innerText = marque;
+                        document.getElementById('infoSGamme').innerText = gamme;
+                        document.getElementById('infoSImmat').innerText = immat;
+                        document.getElementById('infoSChauffeur').innerText = chauffeur;
+                        document.getElementById('infoSOccupe').innerText = occupe;
+                        document.getElementById('infoSPresence').innerText = presence;
+                        document.getElementById('infoSDepart').innerText = depart;
+                        document.getElementById('infoSDestination').innerText = destination;
 
-                vehicleModalSpecial.show();
-            } 
-            else if (gamme === 'Privé' || gamme === 'Prive') {
-                document.getElementById('infoPMarque').innerText = marque;
-                document.getElementById('infoPGamme').innerText = gamme;
-                document.getElementById('infoPImmat').innerText = immat;
-                document.getElementById('infoPProprietaire').innerText = proprietaire;
-                document.getElementById('infoPOccupe').innerText = occupe;
-                document.getElementById('infoPPresence').innerText = presence;
-                document.getElementById('infoPDelait').innerText = delait;
-                document.getElementById('infoPNumero').innerText = numero;
+                        vehicleModalSpecial.show();
+                    } 
+                    else if (gamme === 'Privé' || gamme === 'Prive') {
+                        document.getElementById('infoPMarque').innerText = marque;
+                        document.getElementById('infoPGamme').innerText = gamme;
+                        document.getElementById('infoPImmat').innerText = immat;
+                        document.getElementById('infoPProprietaire').innerText = proprietaire;
+                        document.getElementById('infoPOccupe').innerText = occupe;
+                        document.getElementById('infoPPresence').innerText = presence;
+                        document.getElementById('infoPDelait').innerText = delait;
+                        document.getElementById('infoPNumero').innerText = numero;
 
-                vehicleModalPrive.show();
-            }
+                        vehicleModalPrive.show();
+                    }
+                }
+            });
         }
-    });
-}
     </script>
 </body>
-   <!-- nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnsbcudzyuzdbvcyzvbye -->
