@@ -1804,7 +1804,7 @@ async function annulerReservation(idReservation) {
 
     try {
         // Envoi des données vers le contrôleur via fetch
-        const response = await fetch(`/api/reservations/annuler`, {
+        const response = await fetch(`/api/auth/Annulation`, {
             method: 'POST', // ou DELETE selon tes routes
             headers: {
                 'Content-Type': 'application/json'
