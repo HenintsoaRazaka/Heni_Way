@@ -1628,18 +1628,19 @@
         const passagerTabLinks = document.querySelectorAll('#passagerNav .tab-link');
 
         passagerTabLinks.forEach(tab => {
-            tab.addEventListener('click', function() {        passagerTabLinks.forEach(item => {
+            tab.addEventListener('click', function() {        
+                passagerTabLinks.forEach(item => {
                     item.classList.remove('active-tab');
                     item.classList.add('text-secondary', 'opacity-75');
                 });
                 this.classList.add('active-tab');
                 this.classList.remove('text-secondary', 'opacity-75');
 
-                const selectedTab = this.getAttribute('data-tab')
-                        const passagerContainers = [
-                    document.querySelector('#Passager #Public'),
-                    document.querySelector('#Passager #Special'),
-                    document.querySelector('#Passager #Prive')
+                const selectedTab = this.getAttribute('data-tab');
+                const passagerContainers = [
+                    document.querySelector('#Passager #PublicPa'),
+                    document.querySelector('#Passager #SpecialPa'),
+                    document.querySelector('#Passager #PrivePa')
                 ];
 
                 passagerContainers.forEach(container => {
