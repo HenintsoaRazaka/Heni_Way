@@ -2508,14 +2508,15 @@ function genererPublicationsSpecial(reservations) {
     containerSpecial.innerHTML = ''; // Vide le contenu statique/d'exemple
 
     // 1. Filtrer les réservations pour ne garder que la gamme "Spécial"
-    const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Spécial');
+    const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Special');
 
     if (reservationsSpecial.length === 0) {
         containerSpecial.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication spéciale active pour le moment.</div>`;
         return;
     }
 
-    // 2. Parcourir chaque réservation "Spécial" et générer le HTML
+    // 2. Parcourir chaque réservation "Spécial" et générer le HTMLjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+    //nnnnnnnnnnnnnnnnnnnnnnnnnnnhybbbyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
     reservationsSpecial.forEach(reservation => {
         const voiture = reservation.Voiture;
         
