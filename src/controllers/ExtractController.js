@@ -16,6 +16,24 @@ const ExtractController = {
                 message: error.message
             });
         }
+    },
+
+    Supprime: async (req, res) => {
+        try {
+            const idReservation = req.body.id;
+
+            if (!idReservation) {
+                return res.status(400).json({ success: false, message: "ID de réservation manquant." });
+            }
+
+            await ExtractModel.Supprimer(idReservation);
+
+            return res.status(200).json({ success: true, message: "Réservation annulée avec succès." });
+
+        } catch (err) {
+            console.error("Erreur dans le contrôleur :", err.message);
+            return res.status(500).json({ success: false, message: err.message });
+        }
     }
 };
 

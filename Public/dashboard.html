@@ -1798,6 +1798,39 @@ if (formAddPublication) {
     });
 }
 
+async function annulerReservation(idReservation) {
+    const confirmation = confirm("Êtes-vous sûr de vouloir annuler cette publication ? Cette action est irréversible.");
+    if (!confirmation) return;
+
+    try {
+        // Envoi des données vers le contrôleur via fetch
+        const response = await fetch(`/api/reservations/annuler`, {
+            method: 'POST', // ou DELETE selon tes routes
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: idReservation }) // Envoi de l'ID dans le corps de la requête
+        });
+
+        const resultat = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultat.message || "Une erreur est survenue.");
+        }
+
+        alert("La publication a bien été annulée.");
+
+        // Rafraîchir l'affichage global
+        if (typeof chargerPublications === 'function') {
+            await chargerPublications();
+        }
+
+    } catch (err) {
+        console.error("Erreur lors de l'envoi fetch :", err.message);
+        alert("Impossible d'annuler : " + err.message);
+    }
+}
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
         const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 

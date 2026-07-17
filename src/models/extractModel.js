@@ -13,7 +13,35 @@ const extraction = {
         }
 
         return data;
+    }, 
+
+    Supprimer: async (Id) => {  
+        const { data: reservation, error: fetchError } = await subabase.supabaseService
+            .from('Reservation')
+            .select('id_voiture')
+            .eq('id', Id)
+            .single();
+
+        if (fetchError) throw fetchError;
+
+        if (reservation && reservation.id_voiture) {
+            // 2. Mettre à jour l'état de la voiture en 'Disponible'
+            const { error: vehicleError } = await subabase.supabaseService
+                .from('Voiture')
+                .update({ Etats: 'Disponible' }) // Modifie la colonne 'Etats' de ta table Voiture
+                .eq('id', reservation.id_voiture);
+
+            if (vehicleError) throw vehicleError;
+        }
+        const { data, error } = await subabase.supabaseService
+            .from('Reservation')
+            .delete()
+            .eq('id', Id);
+
+        if (error) throw error;
+        return data;
     }
+
 }
 
 module.exports = extraction;
