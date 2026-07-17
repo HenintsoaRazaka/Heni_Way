@@ -86,7 +86,7 @@ const VoitureController = {
                 };
 
                 // 4. Appel du modèle pour l'insertion
-                const publicationEnregistree = await PublicationModel.create(nouvellePublication);
+                const publicationEnregistree = await VoitureModel.create(nouvellePublication);
 
                 return res.status(201).json({
                     success: true,
