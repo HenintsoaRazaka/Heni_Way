@@ -1,4 +1,4 @@
-const ExtractModel = require('../controllers/ExtractModel');
+const ExtractModel = require('../models/ExtractModel');
 
 const ExtractController = {
     extraction: async (req, res) => {
