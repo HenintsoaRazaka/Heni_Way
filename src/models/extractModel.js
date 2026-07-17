@@ -18,13 +18,18 @@ const extraction = {
     Supprimer: async (Id) => {  
         const { data: reservation, error: fetchError } = await subabase.supabaseService
             .from('Reservation')
-            .select('id_voiture')
+            .select('ID_Voiture')
             .eq('id', Id)
             .single();
 
         if (fetchError) throw fetchError;
 
         if (reservation && reservation.id_voiture) {
+            // 2. Mettre à jour l'état de la voiture en 'Disponible'
+            // 2. Mettre à jour l'état de la voiture en 'Disponible'
+            // 2. Mettre à jour l'état de la voiture en 'Disponible'
+            // 2. Mettre à jour l'état de la voiture en 'Disponible'
+            // 2. Mettre à jour l'état de la voiture en 'Disponible'
             // 2. Mettre à jour l'état de la voiture en 'Disponible'
             const { error: vehicleError } = await subabase.supabaseService
                 .from('Voiture')
