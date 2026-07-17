@@ -2160,6 +2160,9 @@ if (formAddPublication) {
                         Nb_Place,
                         Nb_NonLibre,
                         Etat,
+                        NomPrive,
+                        NumPrive,
+                        Duree
                         Voiture (
                             id,
                             Marque,
@@ -2179,6 +2182,7 @@ if (formAddPublication) {
                 genererPublicationsPrive(data || []);
                 genererPassagersPublic(data || []);
                 genererPassagersSpecial(data || []);
+                genererPassagersPrive(data || [])
 
             } catch (err) {
                 console.error("Erreur lors du chargement des publications :", err.message);
@@ -2817,6 +2821,81 @@ function genererPassagersSpecial(reservations) {
         `;
 
         containerPassagerSpecial.appendChild(card);
+    });
+}
+
+function genererPassagersPrive(reservations) {
+    const containerPassagerPrive = document.getElementById('PrivePa');
+    if (!containerPassagerPrive) return;
+
+    containerPassagerPrive.innerHTML = ''; // Vide l'exemple statique du Mazda E2200
+
+    // 1. Filtrer pour ne garder que les véhicules de statut "Privé"
+    const reservationsPrive = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Privé');
+
+    if (reservationsPrive.length === 0) {
+        containerPassagerPrive.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation privée en cours.</div>`;
+        return;
+    }
+
+    // 2. Générer les cartes de suivi privées
+    reservationsPrive.forEach(reservation => {
+        const voiture = reservation.Voiture;
+        
+        // Récupérer la ligne liée dans la table "Place"
+        const placeDetails = reservation.Place ? reservation.Place[0] : null;
+
+        // Extraction des données de "Place" d'après ta base de données
+        const proprio = placeDetails && placeDetails.NomPrivé ? placeDetails.NomPrivé : "Non spécifié";
+        const numero = placeDetails && placeDetails.NumePrivé ? placeDetails.NumePrivé : "Non spécifié";
+        const dureeRestante = placeDetails && placeDetails.Duree ? placeDetails.Duree : "--";
+
+        const idReservation = reservation.id;
+        const marque = voiture.Marque || "Inconnu";
+        const immatriculation = voiture.Immatriculation || "N/A";
+
+        // 3. Création du HTML dynamique
+        const card = document.createElement('div');
+        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item";
+        
+        card.innerHTML = `
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                        <i class="fas fa-bus fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                            <span class="badge bg-danger-subtle text-danger rounded-pill px-2 py-0.5 small fw-semibold" style="font-size: 0.7rem;">Privé</span>
+                        </div>
+                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small>
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-user me-1 text-success"></i> Proprio :</small>
+                        <span class="fw-semibold text-body small">${proprio}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-phone me-1 text-danger"></i> Numéro :</small>
+                        <span class="fw-semibold text-primary small">${numero}</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 bg-body px-3 py-2 rounded-3 border text-center" style="min-width: 110px;">
+                    <div class="w-100">
+                        <span class="d-block text-warning fw-bold m-0" style="font-size: 1.1rem;"><i class="fa-regular fa-hourglass-half me-1"></i> ${dureeRestante}</span>
+                        <small class="text-secondary" style="font-size: 0.7rem;">Délai restant</small>
+                    </div>
+                </div>
+
+            </div>
+        `;
+
+        containerPassagerPrive.appendChild(card);
     });
 }
         
