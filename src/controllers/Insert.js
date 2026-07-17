@@ -49,11 +49,13 @@ const VoitureController = {
         try {
             const { statut, Date, immat, depart, destination, heure } = req.body;
 
-            if (!statut || !immat || !depart || !destination || !heure) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Veuillez remplir tous les champs obligatoires."
-                });
+            if (statut !== "Privé"){
+                if (!statut || !immat || !depart || !destination || !heure) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Veuillez remplir tous les champs obligatoires."
+                    });
+                }
             }
 
             const { data: voiture, error: voitureError } = await supabase.supabaseService
