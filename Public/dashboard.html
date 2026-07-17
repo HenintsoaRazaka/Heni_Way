@@ -1391,37 +1391,37 @@
                         
                         <div class="mb-3">
                             <label for="pubStatus" class="form-label small fw-semibold text-secondary">Statut / Catégorie</label>
-                            <select class="form-select bg-body border rounded-3" id="pubStatus" required>
+                            <select name="statut" class="form-select bg-body border rounded-3" id="pubStatus" required>
                                 <option value="Public" selected>Public</option>
                                 <option value="Spécial">Spécial</option>
                                 <option value="Privé">Privé</option>
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="pubMarque" class="form-label small fw-semibold text-secondary">Marque / Modèle</label>
-                            <input type="text" class="form-control bg-body border rounded-3" id="pubMarque" placeholder="Ex: Mercedes Sprinter" required>
-                        </div>
+                            <input type="text" class="form-control bg-body border rounded-3" name="immat" id="pubMarque" placeholder="Ex: Mercedes Sprinter" required>
+                        </div> -->
 
                         <div class="mb-3">
                             <label for="pubImmat" class="form-label small fw-semibold text-secondary">Immatriculation</label>
-                            <input type="text" class="form-control bg-body border rounded-3" id="pubImmat" placeholder="Ex: 1245 TAB" required>
+                            <input type="text" class="form-control bg-body border rounded-3" name="immat" id="pubImmat" placeholder="Ex: 1245 TAB" required>
                         </div>
 
                         <div id="dynamicPubFields">
                             <div class="mb-3">
                                 <label for="pubDepart" class="form-label small fw-semibold text-secondary">Ville de départ</label>
-                                <input type="text" class="form-control bg-body border rounded-3" id="pubDepart" placeholder="Ex: Antananarivo" required>
+                                <input type="text" class="form-control bg-body border rounded-3" name="depart" id="pubDepart" placeholder="Ex: Antananarivo" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="pubDestination" class="form-label small fw-semibold text-secondary">Destination</label>
-                                <input type="text" class="form-control bg-body border rounded-3" id="pubDestination" placeholder="Ex: Mahajanga" required>
+                                <input type="text" class="form-control bg-body border rounded-3" name="destination" id="pubDestination" placeholder="Ex: Mahajanga" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="pubHeure" class="form-label small fw-semibold text-secondary">Heure de départ</label>
-                                <input type="time" class="form-control bg-body border rounded-3" id="pubHeure" required>
+                                <input type="time" class="form-control bg-body border rounded-3" name="heure" id="pubHeure" required>
                             </div>
                         </div>
 
