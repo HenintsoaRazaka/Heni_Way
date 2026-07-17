@@ -2149,6 +2149,15 @@ if (formAddPublication) {
         async function chargerPublications() {
             try {
                 // On cible la table 'Reservation' et on imbrique les colonnes de la table 'Voiture'
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
                 const { data, error } = await supabaseClient
                     .from('Reservation')
                     .select(`
@@ -2162,7 +2171,7 @@ if (formAddPublication) {
                         Etat,
                         NomPrive,
                         NumPrive,
-                        Duree
+                        Duree,
                         Voiture (
                             id,
                             Marque,
