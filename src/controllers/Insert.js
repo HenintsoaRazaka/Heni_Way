@@ -1,4 +1,5 @@
 const VoitureModel = require('../models/Insert');
+const supabase = require ('../config/supabase');
 
 const VoitureController = {
     ajouterVoiture: async (req, res) => {
@@ -61,7 +62,7 @@ const VoitureController = {
                 }
 
                 // 2. Recherche de la voiture correspondante dans la table 'Voiture' via son Immatriculation
-                const { data: voiture, error: voitureError } = await supabaseService
+                const { data: voiture, error: voitureError } = await supabase.supabaseService
                     .from('Voiture')
                     .select('id')
                     .eq('Immatriculation', immat)
