@@ -712,7 +712,7 @@
                     <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link text-secondary opacity-75" data-tab="Prive">Privé</button>
                 </div>
 
-                <div id="Public" class="d-flex flex-column gap-3">
+                <div id="PublicP" class="d-flex flex-column gap-3">
                     <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div class="d-flex align-items-center gap-3">
@@ -2424,10 +2424,11 @@ if (formAddPublication) {
 }
 
 function genererPublicationsPublic(reservations) {
-    const containerPublic = document.getElementById('Public');
+    const containerPublic = document.getElementById('PublicP');
     if (!containerPublic) return;
 
-    containerPublic.innerHTML = ''; // Vide le conteneur avant d'ajouter les éléments
+    containerPublic.innerHTML = ''; // Vide le conteneur avant d'ajouter les élémentsbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    //jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
 
     // 1. Filtrer les réservations pour ne garder que celles dont la voiture est de gamme "Public"
     const reservationsPublic = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Public');
@@ -2497,8 +2498,8 @@ function genererPublicationsPublic(reservations) {
         document.addEventListener("DOMContentLoaded", () => {
             chargerDonneesInitiales();
             chargerDonneesReservations();
-            connecterAuTempsReel();
             chargerPublications()
+            connecterAuTempsReel();
         });
 
         //jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjvgjvvvvvvvvvvvvvvvvvvvvvv,hhvsfbg
