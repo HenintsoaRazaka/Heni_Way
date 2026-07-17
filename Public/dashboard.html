@@ -2148,7 +2148,7 @@ if (formAddPublication) {
         async function chargerPublications() {
             try {
                 // On cible la table 'Reservation' et on imbrique les colonnes de la table 'Voiture'
-                const { data, error } = await supabaseService
+                const { data, error } = await supabaseClient
                     .from('Reservation')
                     .select(`
                         id,
@@ -2169,6 +2169,8 @@ if (formAddPublication) {
                 if (error) throw error;
 
                 // On envoie les données reçues à notre fonction de génération
+                //incefbfhbhe hzbffahzfaaaaaaaaaaaaaaaaahzdavvvvvvvvv
+                ////nzdajnnnnnnnnnnnnnnnnnnnnnn
                 genererPublicationsPublic(data || []);
 
             } catch (err) {
