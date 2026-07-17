@@ -1573,9 +1573,9 @@
                 const selectedTab = this.getAttribute('data-tab');
                 
                 const pubContainers = [
-                    document.querySelector('#Publication #Public'),
-                    document.querySelector('#Publication #Special'),
-                    document.querySelector('#Publication #Prive')
+                    document.querySelector('#Publication #PublicP'),
+                    document.querySelector('#Publication #SpecialP'),
+                    document.querySelector('#Publication #PriveP')
                 ];
 
                 pubContainers.forEach(container => {
@@ -2468,7 +2468,7 @@ function genererPublicationsPublic(reservations) {
                     <div>
                         <h6 class="m-0 fw-bold text-body">${marque}</h6>
                         <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
-                        <small class="text-secondary fw-medium">Public</small>
+                        <small class="text-secondary fw-medium">Public</small><br>
                         <small class="text-secondary fw-medium">${Date}</small>
                     </div>
                 </div>
