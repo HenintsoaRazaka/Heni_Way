@@ -837,7 +837,7 @@
                     <button class="btn btn-sm fw-semibold p-0 bg-transparent tab-link text-secondary opacity-75" data-tab="Prive">Privé</button>
                 </div>
 
-                <div id="Public" class="d-flex flex-column gap-3">
+                <div id="PublicPa" class="d-flex flex-column gap-3">
                     <div class="card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item" 
                         style="cursor: pointer;"
                         data-bs-toggle="modal" 
@@ -2156,6 +2156,8 @@ if (formAddPublication) {
                         Destination,
                         Heure,
                         Date,
+                        Nb_Place,
+                        Nb_NonLibre,
                         Etat,
                         Voiture (
                             id,
@@ -2174,6 +2176,7 @@ if (formAddPublication) {
                 genererPublicationsPublic(data || []);
                 genererPublicationsSpecial(data || []);
                 genererPublicationsPrive(data || []);
+                genererPassagersPublic(data || []);
 
             } catch (err) {
                 console.error("Erreur lors du chargement des publications :", err.message);
@@ -2625,6 +2628,103 @@ function genererPublicationsPrive(reservations) {
         containerPrive.appendChild(card);
     });
 }
+
+function genererPassagersPublic(reservations) {
+    const containerPassager = document.getElementById('PublicPa');
+    if (!containerPassager) return;
+
+    containerPassager.innerHTML = ''; // Vide l'exemple statique
+
+    // 1. Filtrer pour exclure les véhicules "Privé"
+    const reservationsPassager = reservations.filter(res => res.Voiture && res.Voiture.Statut == 'Public');
+
+    if (reservationsPassager.length === 0) {
+        containerPassager.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation de passagers en cours.</div>`;
+        return;
+    }
+
+    // 2. Générer les cartes de suivi des passagers
+    reservationsPassager.forEach(reservation => {
+        const voiture = reservation.Voiture;
+        
+        // 🟢 Récupération directe des colonnes de la table Reservation
+        const totalPlaces = reservation.Nb_Place || 0;
+        const placesOccupees = reservation.Nb_NonLibre || 0;
+        
+        // Calcul des places libres : Total - Occupées
+        // (Si tu as une colonne 'Nb_Libre' directement, tu peux utiliser : reservation.Nb_Libre)
+        const placesLibres = totalPlaces - placesOccupees; 
+
+        const idReservation = reservation.id;
+        const marque = voiture.Marque || "Inconnu";
+        const immatriculation = voiture.Immatriculation || "N/A";
+        const statut = voiture.Statut || "Public";
+        const depart = reservation.Depart || "Non défini";
+        const destination = reservation.Destination || "Non définie";
+        const heure = reservation.Heure || "--:--";
+
+        // 3. Création du HTML
+        const card = document.createElement('div');
+        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item";
+        card.style.cursor = "pointer";
+        card.setAttribute('data-bs-toggle', 'modal');
+        card.setAttribute('data-bs-target', '#passengersListModal');
+        card.setAttribute('data-reservation-id', idReservation);
+        
+        // Au clic, on passe directement l'ID de la réservation au modal
+        card.addEventListener('click', () => {
+            if (typeof preparerModalPassagers === 'function') {
+                preparerModalPassagers(idReservation);
+            }
+        });
+
+        card.innerHTML = `
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                        <i class="fas fa-bus fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
+                        <small class="text-secondary fw-medium">${statut}</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
+                        <span class="fw-semibold text-body small">${depart}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                        <span class="fw-semibold text-primary small">${destination}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                        <i class="fa-regular fa-clock text-warning"></i>
+                        <span>${heure}</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
+                        <div class="text-center px-2 border-end">
+                            <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">${placesLibres}</span>
+                            <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
+                        </div>
+                        <div class="text-center px-2">
+                            <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">${placesOccupees}</span>
+                            <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-secondary small"></i>
+                </div>
+            </div>
+        `;
+
+        containerPassager.appendChild(card);
+    });
+}
         
         document.addEventListener("DOMContentLoaded", () => {
             chargerDonneesInitiales();
@@ -2728,6 +2828,4 @@ function genererPublicationsPrive(reservations) {
 //kz,kdn"ndu"ndunéz
     </script>
 </body>
-
-
-
+
