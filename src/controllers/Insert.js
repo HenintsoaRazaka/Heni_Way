@@ -51,7 +51,7 @@ const VoitureController = {
 
     ajouterPublication: async (req, res) => {
             try {
-                const { statut, immat, depart, destination, heure } = req.body;
+                const { statut, Date, immat, depart, destination, heure } = req.body;
 
                 // 1. Validation rapide des données requises
                 if (!statut || !immat || !depart || !destination || !heure) {
@@ -81,12 +81,13 @@ const VoitureController = {
                     Depart: depart,
                     Destination: destination,
                     Heure: heure,
-                    Etat: "Disponible", // Valeur par défaut
-                    Date: new Date().toISOString().split('T')[0] // Optionnel : Date du jour au format YYYY-MM-DD
+                    Etat: "Reserver", // Valeur par défaut
+                    Date: Date // Optionnel : Date du jour au format YYYY-MM-DD
                 };
 
-                // 4. Appel du modèle pour l'insertion
-                const publicationEnregistree = await VoitureModel.create(nouvellePublication);
+                // 4. Appel du modèle pour l'insertion gggggggggggggggggggggggggggggggggggg
+                //vvvvvvgggggggggggggggggggggggggggggggggggggggggggggggggg
+                const publicationEnregistree = await VoitureModel.createP(nouvellePublication);
 
                 return res.status(201).json({
                     success: true,
