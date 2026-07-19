@@ -2807,7 +2807,7 @@ function genererPassagersPublic(reservations) {
                 
                 // 🟢 Requête Supabase : Récupérer les téléphones correspondants dans la table Passagers
                 if (nomsAObtenir.length > 0) {
-                    const { data: passagers, error } = await supabase
+                    const { data: passagers, error } = await supabaseClient
                         .from('Passagers')
                         .select('Nom, Pseudo, Telephone')
                         .or(`Nom.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')}),Pseudo.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')})`);
