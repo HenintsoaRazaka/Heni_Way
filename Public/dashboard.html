@@ -2658,6 +2658,78 @@ function genererPublicationsPrive(reservations) {
     });
 }
 
+async function preparerModalPassagers(idReservation) {
+    const modalBody = document.querySelector('#passengersListModal .modal-body');
+    if (!modalBody) return;
+
+    // 1. Afficher un indicateur de chargement (Spinner) pendant qu'on récupère les données
+    modalBody.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="text-secondary mt-2 small">Récupération de la liste des passagers...</p>
+        </div>
+    `;
+
+    try {
+        // 2. Requête Supabase pour récupérer les passagers liés à cette réservation
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        const { data: passagers, error } = await supabase
+            .from('Passagers')
+            .select('Nom, Pseudo, Telephone')
+            .eq('id_reservation', idReservation); // <-- Mets ici le vrai nom de ta colonne de liaison
+
+        if (error) throw error;
+
+        // 3. Si aucun passager n'est trouvé
+        if (!passagers || passagers.length === 0) {
+            modalBody.innerHTML = `<div class="text-center text-secondary py-3">Aucun passager enregistré pour cette réservation.</div>`;
+            return;
+        }
+
+        // 4. Générer le code HTML de la liste des passagers
+        let htmlContent = '<div class="list-group list-group-flush">';
+        
+        passagers.forEach(passager => {
+            const nom = passager.Nom || "Nom non renseigné";
+            const pseudo = passager.Pseudo ? `@${passager.Pseudo}` : "";
+            const telephone = passager.Telephone || "Aucun numéro";
+
+            htmlContent += `
+                <div class="list-group-item px-0 py-3 d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 2.8rem; height: 2.8rem;">
+                            ${nom.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h6 class="m-0 fw-bold text-body">${nom} <small class="text-muted fw-normal ms-1">${pseudo}</small></h6>
+                            <small class="text-secondary"><i class="fa-solid fa-phone me-1 text-danger small"></i> ${telephone}</small>
+                        </div>
+                    </div>
+                    <a href="tel:${telephone}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                        <i class="fa-solid fa-phone"></i> Appeler
+                    </a>
+                </div>
+            `;
+        });
+
+        htmlContent += '</div>';
+        
+        // 5. Injecter la liste finale dans le modal
+        modalBody.innerHTML = htmlContent;
+
+    } catch (err) {
+        console.error("Erreur lors de la récupération des passagers :", err);
+        modalBody.innerHTML = `
+            <div class="text-center text-danger py-3">
+                <i class="fa-solid fa-circle-exclamation fs-4 mb-2"></i>
+                <p class="m-0 small">Une erreur est survenue lors du chargement des données.</p>
+            </div>
+        `;
+    }
+}
+
 function genererPassagersPublic(reservations) {
     const containerPassager = document.getElementById('PublicPa');
     if (!containerPassager) return;
@@ -2759,7 +2831,7 @@ function genererPassagersPublic(reservations) {
                         const numeroPlaceFormate = numeroPlaceRaw.padStart(2, '0');
 
                         // Trouver la correspondance dans les détails récupérés (soit par le Nom, soit par le Pseudo)
-                        const infoPassager = listePassagersDetails.find(p => p.Nom === valeurPlace || p.Pseudo === valeurPlace);
+                        const infoPassager = listePassagersDetails.find(p => p.Nom === valeurPlace);
                         const telephonePassager = infoPassager ? infoPassager.Telephone : "Non renseigné";
 
                         const itemPassager = document.createElement('div');
@@ -2848,7 +2920,7 @@ function genererPassagersSpecial(reservations) {
     const containerPassagerSpecial = document.getElementById('SpecialPa');
     if (!containerPassagerSpecial) return;
 
-    containerPassagerSpecial.innerHTML = ''; // On vide l'exemple statique du Toyota Hiace
+    containerPassagerSpecial.innerHTML = ''; // On vide le conteneur statique
 
     // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
     const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Spécial');
@@ -2862,7 +2934,7 @@ function genererPassagersSpecial(reservations) {
     reservationsSpecial.forEach(reservation => {
         const voiture = reservation.Voiture;
         
-        // Récupération directe des colonnes de la réservation
+        // Récupération des colonnes de la réservation
         const totalPlaces = reservation.Nb_Place || 0;
         const placesOccupees = reservation.Nb_NonLibre || 0;
         const placesLibres = totalPlaces - placesOccupees;
@@ -2874,14 +2946,15 @@ function genererPassagersSpecial(reservations) {
         const destination = reservation.Destination || "Non définie";
         const heure = reservation.Heure || "--:--";
 
-        // 3. Création du HTML dynamique
+        // 3. Création de la carte HTML
         const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item";
+        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item mb-3"; // Ajout d'un petit mb-3 pour l'espace
         card.style.cursor = "pointer";
         card.setAttribute('data-bs-toggle', 'modal');
         card.setAttribute('data-bs-target', '#passengersListModal');
         card.setAttribute('data-reservation-id', idReservation);
         
+        // C'est ici qu'on prépare l'affichage des passagers au clic
         card.addEventListener('click', () => {
             if (typeof preparerModalPassagers === 'function') {
                 preparerModalPassagers(idReservation);
@@ -2935,7 +3008,6 @@ function genererPassagersSpecial(reservations) {
         containerPassagerSpecial.appendChild(card);
     });
 }
-
 function genererPassagersPrive(reservations) {
     const containerPassagerPrive = document.getElementById('PrivePa');
     if (!containerPassagerPrive) return;
