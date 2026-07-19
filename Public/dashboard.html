@@ -2662,7 +2662,7 @@ async function preparerModalPassagers(idReservation) {
     const modalBody = document.querySelector('#passengersListModal .modal-body');
     if (!modalBody) return;
 
-    // 1. Afficher un indicateur de chargement (Spinner) pendant qu'on récupère les données
+    // 1. Afficher un indicateur de chargement (Spinner)
     modalBody.innerHTML = `
         <div class="text-center py-4">
             <div class="spinner-border text-primary" role="status">
@@ -2673,20 +2673,51 @@ async function preparerModalPassagers(idReservation) {
     `;
 
     try {
-        const { data: passagers, error } = await supabaseClient
-            .from('Passagers')
-            .select('Nom, Pseudo, Telephone')
-            .or(`Nom.in.(${listeFormatee}),Pseudo.in.(${listeFormatee})`);
+        // REMPLACE 'NomDeTaTableActuelle' par le vrai nom de la table visible sur ta capture d'écran
+        const nomTableLiaison = 'Reservations'; 
 
-        if (error) throw error;
+        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
+        const { data: ligneReservation, error: errorLigne } = await supabaseClient
+            .from(Place)
+            .select('*') // Récupère toutes les colonnes (N_27, N_28, etc.)
+            .eq('ID_Reservation', idReservation)
+            .maybeSingle(); // Récupère un seul objet ou null
 
-        // 3. Si aucun passager n'est trouvé
-        if (!passagers || passagers.length === 0) {
+        if (errorLigne) throw errorLigne;
+
+        // Si la réservation n'existe pas ou n'a pas de données
+        if (!ligneReservation) {
+            modalBody.innerHTML = `<div class="text-center text-secondary py-3">Aucune donnée trouvée pour cette réservation.</div>`;
+            return;
+        }
+
+        // Extraire dynamiquement tous les noms/pseudos des colonnes qui commencent par "N_" et qui ne sont pas NULL
+        const listeNoms = Object.keys(ligneReservation)
+            .filter(cle => cle.startsWith('N_') && ligneReservation[cle] !== null)
+            .map(cle => ligneReservation[cle].trim());
+
+        // Si aucune colonne N_xx ne contient de passager
+        if (listeNoms.length === 0) {
             modalBody.innerHTML = `<div class="text-center text-secondary py-3">Aucun passager enregistré pour cette réservation.</div>`;
             return;
         }
 
-        // 4. Générer le code HTML de la liste des passagers
+        // 3. ÉTAPE 2 : Chercher ces noms dans la table 'Passagers'
+        // On cherche si la valeur correspond soit au Nom, soit au Pseudo
+        const { data: passagers, error: errorPassagers } = await supabaseClient
+            .from('Passagers')
+            .select('Nom, Pseudo, Telephone')
+            .or(`Nom.in.(${listeNoms.map(n => `"${n}"`).join(',')}),Pseudo.in.(${listeNoms.map(n => `"${n}"`).join(',')})`);
+
+        if (errorPassagers) throw errorPassagers;
+
+        // 4. Si aucun profil passager correspondant n'est trouvé dans la table Passagers
+        if (!passagers || passagers.length === 0) {
+            modalBody.innerHTML = `<div class="text-center text-secondary py-3">Les passagers ont été trouvés mais leurs profils détaillés sont introuvables.</div>`;
+            return;
+        }
+
+        // 5. Générer le code HTML de la liste des passagers
         let htmlContent = '<div class="list-group list-group-flush">';
         
         passagers.forEach(passager => {
@@ -2705,7 +2736,7 @@ async function preparerModalPassagers(idReservation) {
                             <small class="text-secondary"><i class="fa-solid fa-phone me-1 text-danger small"></i> ${telephone}</small>
                         </div>
                     </div>
-                    <a href="tel:${telephone}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                    <a href="tel:${telephone}" class="btn btn-sm btn-outline-primary rounded-pill px-3 ${passager.Telephone ? '' : 'disabled'}">
                         <i class="fa-solid fa-phone"></i> Appeler
                     </a>
                 </div>
@@ -2713,12 +2744,10 @@ async function preparerModalPassagers(idReservation) {
         });
 
         htmlContent += '</div>';
-        
-        // 5. Injecter la liste finale dans le modal
         modalBody.innerHTML = htmlContent;
 
     } catch (err) {
-        console.error("Erreur lors de la récupération des passagers :", err);
+        console.error("Erreur complète :", err);
         modalBody.innerHTML = `
             <div class="text-center text-danger py-3">
                 <i class="fa-solid fa-circle-exclamation fs-4 mb-2"></i>
