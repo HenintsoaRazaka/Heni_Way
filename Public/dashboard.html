@@ -3130,7 +3130,7 @@ async function chargerDerniersVoyages() {
         // 1. Récupérer les 2 derniers voyages triés par date/création décroissante
         // REMPLACE 'Reservations' par le nom exact de ta table de trajets
         const { data: voyages, error } = await supabaseClient
-            .from('Reservations') 
+            .from('Reservation') 
             .select('*') // Prends les colonnes nécessaires (ex: Depart, Destination, Heure, etc.)
             .order('created_at', { ascending: false }) // Trie du plus récent au plus ancien
             .limit(2); // Récupère uniquement les deux derniers
@@ -3147,6 +3147,10 @@ async function chargerDerniersVoyages() {
         let htmlContent = '';
 
         voyages.forEach((voyage, index) => {
+            // Exemple de données (adapte avec tes vraies colonnes Supabase)
+            // Exemple de données (adapte avec tes vraies colonnes Supabase)
+            // Exemple de données (adapte avec tes vraies colonnes Supabase)
+            // Exemple de données (adapte avec tes vraies colonnes Supabase)
             // Exemple de données (adapte avec tes vraies colonnes Supabase)
             const titre = `${voyage.Depart || 'Voyage'} → ${voyage.Destination || ''}`;
             const horaire = voyage.HeureVoyage || "Horaire non précisé"; 
