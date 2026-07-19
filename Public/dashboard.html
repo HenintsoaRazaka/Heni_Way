@@ -2677,8 +2677,12 @@ async function preparerModalPassagers(idReservation) {
         const nomTableLiaison = 'Reservations'; 
 
         // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
+        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
+        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
+        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
+        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
         const { data: ligneReservation, error: errorLigne } = await supabaseClient
-            .from(Place)
+            .from('Place')
             .select('*') // Récupère toutes les colonnes (N_27, N_28, etc.)
             .eq('ID_Reservation', idReservation)
             .maybeSingle(); // Récupère un seul objet ou null
