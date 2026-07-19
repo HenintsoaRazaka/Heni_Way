@@ -2675,10 +2675,19 @@ async function preparerModalPassagers(idReservation) {
     try {
         // 2. Requête Supabase pour récupérer les passagers liés à cette réservation
         // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
+        // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
         const { data: passagers, error } = await supabaseClient
             .from('Passagers')
             .select('Nom, Pseudo, Telephone')
-            .eq('ID_reservation', idReservation); // <-- Mets ici le vrai nom de ta colonne de liaison
+            .eq('ID_Reservation', idReservation); // <-- Mets ici le vrai nom de ta colonne de liaison
 
         if (error) throw error;
 
@@ -3192,4 +3201,6 @@ function genererPassagersPrive(reservations) {
 //kz,kdn"ndu"ndunéz
     </script>
 </body>
+
+
 
