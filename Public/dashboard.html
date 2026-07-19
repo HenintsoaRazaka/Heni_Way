@@ -3153,7 +3153,7 @@ async function chargerDerniersVoyages() {
             // Exemple de données (adapte avec tes vraies colonnes Supabase)
             // Exemple de données (adapte avec tes vraies colonnes Supabase)
             const titre = `${voyage.Depart || 'Voyage'} → ${voyage.Destination || ''}`;
-            const horaire = voyage.HeureVoyage || "Horaire non précisé"; 
+            const horaire = voyage.Heure || "Horaire non précisé"; 
             
             // Alternance de style ou d'icône selon l'index (0 pour le 1er, 1 pour le 2e)
             const iconBg = index === 0 ? 'bg-success' : 'bg-danger';
