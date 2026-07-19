@@ -1017,7 +1017,7 @@
                         
                         <div class="modal-header border-0 pb-0">
                             <div>
-                                <h5 class="modal-title fw-bold" id="passengersListModalLabel">Passagers à bord</h5>
+                                <h5 class="modal-title fw-bold" id="passengersListModalLabel">      gers à bord</h5>
                                 <small class="text-secondary fw-medium" id="modalVehicleInfo">Mercedes Sprinter — 1245 TAB</small>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -2739,7 +2739,9 @@ function genererPassagersPublic(reservations) {
                         <i class="fas fa-bus fs-5"></i>
                     </div>
                     <div>
-                        <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                        <div class="d-flex align-items-center gap-2">
+                            <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                        </div>
                         <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
                         <small class="text-secondary fw-medium">${statut}</small>
                     </div>
