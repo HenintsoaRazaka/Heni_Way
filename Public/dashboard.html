@@ -1039,17 +1039,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="d-flex flex-column gap-1 bg-body-tertiary px-3 py-2 rounded-3 border small" style="min-width: 230px;">
-                                        <div class="d-flex align-items-center gap-2 text-body">
-                                            <i class="fa-solid fa-phone text-success small" style="width: 14px;"></i>
-                                            <span class="fw-medium">034 12 345 67</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2 text-secondary border-top pt-1 mt-1">
-                                            <i class="fa-regular fa-envelope small" style="width: 14px;"></i>
-                                            <span>exemple@gmail.com</span>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
 
@@ -2194,27 +2183,13 @@ async function annulerReservation(idReservation) {
                 const { data, error } = await supabaseClient
                     .from('Reservation')
                     .select(`
-                        id,
-                        Depart,
-                        Destination,
-                        Heure,
-                        Date,
-                        Nb_Place,
-                        Nb_NonLibre,
-                        Etat,
-                        NomPrive,
-                        NumPrive,
-                        Duree,
-                        Voiture (
-                            id,
-                            Marque,
-                            Immatriculation,
-                            Statut,
-                            Etats
-                        )
+                        *,
+                        Voiture (*),
+                        Place(*)
                     `);
 
                 if (error) throw error;
+                window.currentReservations = data;
 
                 // On envoie les données reçues à notre fonction de génération
                 //incefbfhbhe hzbffahzfaaaaaaaaaaaaaaaaahzdavvvvvvvvv
@@ -2701,12 +2676,11 @@ function genererPassagersPublic(reservations) {
     reservationsPassager.forEach(reservation => {
         const voiture = reservation.Voiture;
         
-        // 🟢 Récupération directe des colonnes de la table Reservation
+        // Récupération directe des colonnes de la table Reservation
         const totalPlaces = reservation.Nb_Place || 0;
         const placesOccupees = reservation.Nb_NonLibre || 0;
         
         // Calcul des places libres : Total - Occupées
-        // (Si tu as une colonne 'Nb_Libre' directement, tu peux utiliser : reservation.Nb_Libre)
         const placesLibres = totalPlaces - placesOccupees; 
 
         const idReservation = reservation.id;
@@ -2719,16 +2693,105 @@ function genererPassagersPublic(reservations) {
 
         // 3. Création du HTML
         const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item";
+        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item mb-3";
         card.style.cursor = "pointer";
         card.setAttribute('data-bs-toggle', 'modal');
         card.setAttribute('data-bs-target', '#passengersListModal');
         card.setAttribute('data-reservation-id', idReservation);
         
-        // Au clic, on passe directement l'ID de la réservation au modal
-        card.addEventListener('click', () => {
-            if (typeof preparerModalPassagers === 'function') {
-                preparerModalPassagers(idReservation);
+        // 🟢 On rend la fonction async pour aller chercher les infos dans la table Passagers au clic
+        card.addEventListener('click', async () => {
+            // A. Remplir les informations du véhicule en haut du modal
+            const modalTitleInfo = document.getElementById('modalVehicleInfo');
+            if (modalTitleInfo) {
+                modalTitleInfo.innerText = `${marque} — ${immatriculation}`;
+            }
+
+            // B. Sélectionner et vider le conteneur interne du modal
+            const containerModal = document.getElementById('modalPassengersContainer');
+            if (containerModal) {
+                containerModal.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm" role="status"></div> Chargement...</div>`;
+
+                // Sécurité s'il n'y a pas de table Place liée
+                if (!reservation.Place || reservation.Place.length === 0) {
+                    containerModal.innerHTML = `<div class="text-center text-secondary py-4">Aucun passager enregistré à bord.</div>`;
+                    return;
+                }
+
+                const dataPlace = reservation.Place[0]; // Ligne associée dans la table Place
+                
+                // C. Filtrer et trier les colonnes N_1, N_2... de la table Place
+                const clesPlaces = Object.keys(dataPlace)
+                    .filter(key => key.startsWith('N_'))
+                    .sort((a, b) => parseInt(a.replace('N_', '')) - parseInt(b.replace('N_', '')));
+
+                // Récupérer la liste de tous les noms présents dans cette réservation pour faire une seule requête groupée
+                const nomsAObtenir = clesPlaces
+                    .map(cle => dataPlace[cle])
+                    .filter(nom => nom && nom.trim() !== '');
+
+                let listePassagersDetails = [];
+                
+                // 🟢 Requête Supabase : Récupérer les téléphones correspondants dans la table Passagers
+                if (nomsAObtenir.length > 0) {
+                    const { data: passagers, error } = await supabase
+                        .from('Passagers')
+                        .select('Nom, Pseudo, Telephone')
+                        .or(`Nom.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')}),Pseudo.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')})`);
+                    
+                    if (!error && passagers) {
+                        listePassagersDetails = passagers;
+                    }
+                }
+
+                containerModal.innerHTML = ''; // Enlever le spinner de chargement
+                let passagersTrouves = false;
+
+                // D. Générer le HTML de chaque passager présent
+                clesPlaces.forEach(cle => {
+                    const valeurPlace = dataPlace[cle]; // Peut être un Nom ou un Pseudo selon ce que tu stockes
+
+                    if (valeurPlace && valeurPlace.trim() !== '') {
+                        passagersTrouves = true;
+
+                        // Formater le numéro de place (ex: N_4 -> 04)
+                        const numeroPlaceRaw = cle.replace('N_', '');
+                        const numeroPlaceFormate = numeroPlaceRaw.padStart(2, '0');
+
+                        // Trouver la correspondance dans les détails récupérés (soit par le Nom, soit par le Pseudo)
+                        const infoPassager = listePassagersDetails.find(p => p.Nom === valeurPlace || p.Pseudo === valeurPlace);
+                        const telephonePassager = infoPassager ? infoPassager.Telephone : "Non renseigné";
+
+                        const itemPassager = document.createElement('div');
+                        itemPassager.className = "card border-0 shadow-sm p-3 mb-2 bg-body rounded-3 border-start border-primary border-3";
+
+                        itemPassager.innerHTML = `
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
+                                         style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem; background-color: var(--color-primary) !important;">
+                                        ${numeroPlaceFormate}
+                                    </div>
+                                    <div>
+                                        <h6 class="m-0 fw-bold text-body">${valeurPlace}</h6>
+                                        <div class="d-flex flex-column gap-1 mt-1 text-secondary" style="font-size: 0.8rem;">
+                                            <span><i class="fa-solid fa-phone me-1 text-muted"></i> Tél : ${telephonePassager || 'Aucun'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-secondary fw-semibold">Statut : <span class="text-success">Confirmé</span></small>
+                                </div>
+                            </div>
+                        `;
+                        containerModal.appendChild(itemPassager);
+                    }
+                });
+
+                // Si aucune colonne N_x ne contenait de nom
+                if (!passagersTrouves) {
+                    containerModal.innerHTML = `<div class="text-center text-secondary py-4">Aucun passager à bord pour le moment.</div>`;
+                }
             }
         });
 
@@ -2781,7 +2844,6 @@ function genererPassagersPublic(reservations) {
         containerPassager.appendChild(card);
     });
 }
-
 function genererPassagersSpecial(reservations) {
     const containerPassagerSpecial = document.getElementById('SpecialPa');
     if (!containerPassagerSpecial) return;
