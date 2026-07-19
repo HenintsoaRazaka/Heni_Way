@@ -2678,7 +2678,7 @@ async function preparerModalPassagers(idReservation) {
         const { data: passagers, error } = await supabaseClient
             .from('Passagers')
             .select('Nom, Pseudo, Telephone')
-            .eq('id_reservation', idReservation); // <-- Mets ici le vrai nom de ta colonne de liaison
+            .eq('ID_reservation', idReservation); // <-- Mets ici le vrai nom de ta colonne de liaison
 
         if (error) throw error;
 
@@ -3192,6 +3192,4 @@ function genererPassagersPrive(reservations) {
 //kz,kdn"ndu"ndunéz
     </script>
 </body>
-
-
 
