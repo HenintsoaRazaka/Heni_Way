@@ -2675,7 +2675,7 @@ async function preparerModalPassagers(idReservation) {
     try {
         // 2. Requête Supabase pour récupérer les passagers liés à cette réservation
         // /!\ IMPORTANT : Adapte le nom de la colonne de liaison (ex: id_reservation ou reservation_id)
-        const { data: passagers, error } = await supabase
+        const { data: passagers, error } = await supabaseClient
             .from('Passagers')
             .select('Nom, Pseudo, Telephone')
             .eq('id_reservation', idReservation); // <-- Mets ici le vrai nom de ta colonne de liaison
@@ -2771,6 +2771,7 @@ function genererPassagersPublic(reservations) {
         card.setAttribute('data-bs-target', '#passengersListModal');
         card.setAttribute('data-reservation-id', idReservation);
         
+        // 🟢 On rend la fonction async pour aller chercher les infos dans la table Passagers au clic
         // 🟢 On rend la fonction async pour aller chercher les infos dans la table Passagers au clic
         card.addEventListener('click', async () => {
             // A. Remplir les informations du véhicule en haut du modal
