@@ -2924,7 +2924,12 @@ function genererPassagersSpecial(reservations) {
     containerPassagerSpecial.innerHTML = ''; // On vide le conteneur statique
 
     // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
-    const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Spécial');
+    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
+    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
+    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
+    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
+    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
+    const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Special');
 
     if (reservationsSpecial.length === 0) {
         containerPassagerSpecial.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation spéciale en cours.</div>`;
