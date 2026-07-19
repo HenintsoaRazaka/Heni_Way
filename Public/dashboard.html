@@ -1113,8 +1113,8 @@
                         <h2 class="h5 fw-bold text-body m-0">Recent</h2>
                     </div>
 
-                    <div class="card border-0 shadow-sm p-3 mb-2 bg-body-tertiary rounded-3">
-                        <div class="d-flex align-items-center gap-3">
+                    <div id="recentTripsContainer" class="card border-0 shadow-sm p-3 mb-2 bg-body-tertiary rounded-3">
+                        <!-- <div class="d-flex align-items-center gap-3">
                             <div class="bg-success text-white rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
                                 <i class="fa-solid fa-volume-high"></i>
                             </div>
@@ -1122,10 +1122,11 @@
                                 <h3 class="m-0 fs-6 fw-semibold text-body">Workshop</h3>
                                 <small class="text-secondary">08:00 AM - 12:00 PM</small>
                             </div>
-                        </div>
+                        </div> -->
+                        <div class="text-center py-3 text-secondary small">Chargement de l'historique...</div>
                     </div>
 
-                    <div class="card border-0 shadow-sm p-3 mb-2 bg-body-tertiary rounded-3">
+                    <!-- <div class="card border-0 shadow-sm p-3 mb-2 bg-body-tertiary rounded-3">
                         <div class="d-flex align-items-center gap-3">
                             <div class="bg-danger text-white rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
                                 <i class="fa-regular fa-pen-to-square"></i>
@@ -1135,7 +1136,7 @@
                                 <small class="text-secondary">08:00 AM - 12:00 PM</small>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -3120,12 +3121,72 @@ function genererPassagersPrive(reservations) {
         containerPassagerPrive.appendChild(card);
     });
 }
+
+async function chargerDerniersVoyages() {
+    const container = document.getElementById('recentTripsContainer');
+    if (!container) return;
+
+    try {
+        // 1. Récupérer les 2 derniers voyages triés par date/création décroissante
+        // REMPLACE 'Reservations' par le nom exact de ta table de trajets
+        const { data: voyages, error } = await supabaseClient
+            .from('Reservations') 
+            .select('*') // Prends les colonnes nécessaires (ex: Depart, Destination, Heure, etc.)
+            .order('created_at', { ascending: false }) // Trie du plus récent au plus ancien
+            .limit(2); // Récupère uniquement les deux derniers
+
+        if (error) throw error;
+
+        // 2. Si l'historique est vide
+        if (!voyages || voyages.length === 0) {
+            container.innerHTML = `<div class="text-center text-secondary py-3 small">Aucun voyage récent.</div>`;
+            return;
+        }
+
+        // 3. Générer le HTML dynamiquement
+        let htmlContent = '';
+
+        voyages.forEach((voyage, index) => {
+            // Exemple de données (adapte avec tes vraies colonnes Supabase)
+            const titre = `${voyage.Depart || 'Voyage'} → ${voyage.Destination || ''}`;
+            const horaire = voyage.HeureVoyage || "Horaire non précisé"; 
+            
+            // Alternance de style ou d'icône selon l'index (0 pour le 1er, 1 pour le 2e)
+            const iconBg = index === 0 ? 'bg-success' : 'bg-danger';
+            const iconClass = index === 0 ? 'fa-solid fa-volume-high' : 'fa-regular fa-pen-to-square';
+
+            htmlContent += `
+                <div class="card border-0 shadow-sm p-3 mb-2 bg-body-tertiary rounded-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="${iconBg} text-white rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
+                            <i class="${iconClass}"></i>
+                        </div>
+                        <div>
+                            <h3 class="m-0 fs-6 fw-semibold text-body">${titre}</h3>
+                            <small class="text-secondary">${horaire}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // 4. Injecter les cartes dans le conteneur
+        container.innerHTML = htmlContent;
+
+    } catch (err) {
+        console.error("Erreur lors du chargement de l'historique :", err);
+        container.innerHTML = `<div class="text-center text-danger py-3 small">Impossible de charger l'historique.</div>`;
+    }
+}
+
+// Appelle la fonction au chargement de la page
         
         document.addEventListener("DOMContentLoaded", () => {
             chargerDonneesInitiales();
             chargerDonneesReservations();
             chargerPublications()
             connecterAuTempsReel();
+            chargerDerniersVoyages;
         });
 
         //jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjvgjvvvvvvvvvvvvvvvvvvvvvv,hhvsfbg
