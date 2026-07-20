@@ -5,31 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heni Way</title>
     
-    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 🔍 On vérifie si le jeton de connexion existe
         const token = localStorage.getItem('Token_HeniWay');
         
         if (!token) {
-            // 🚨 Pas de jeton ? Redirection immédiate vers la page de login !
             alert("Accès refusé. Veuillez vous connecter.");
-            window.location.href = '/Ins'; // Ajuste le chemin selon ton projet
+            window.location.href = '/Ins';
         }
     </script>
 
     <style>
-        /* ==========================================================================
-           CHARTE GRAPHIQUE ADAPTATIVE (SANS FOND COCKPIT)
-           ========================================================================== */
-:root, [data-bs-theme="dark"] {
+        :root, [data-bs-theme="dark"] {
             --bleu-ocean: #6C9BCF;  
             --vert-neon: #1B9C85;
             --rouge-neon: #FF0060;
@@ -62,9 +55,6 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* ==========================================================================
-           NAVBAR HORIZONTALE
-           ========================================================================== */
         .custom-navbar {
             background: rgba(10, 28, 51, 0.5) !important;
             backdrop-filter: blur(20px);
@@ -115,7 +105,6 @@
             color: #fff !important;
         }
 
-        /* --- TOGGLE DARK MODE --- */
         .dark-mode-toggle {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--glass-border);
@@ -155,9 +144,6 @@
             transform: translateX(1.4rem);
         }
 
-        /* ==========================================================================
-           COMPOSANTS GLASSMORPHISM CLEAN
-           ========================================================================== */
         .main-display {
             position: relative;
             z-index: 10;
@@ -226,16 +212,14 @@
 </head>
 <body>
 
-    <!-- NAVBAR SUPÉRIEURE HORIZONTALE -->
     <nav class="navbar navbar-expand-lg custom-navbar fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <img src="../image/Logo.png" alt="Logo Heni Way" style="width: 2.5rem; height: 2.5rem; border-radius: 50%; object-fit: contain;" onerror="this.style.display='none';">
+                <img src="https://jzyunzjhjamoosctqoor.supabase.co/storage/v1/object/public/Image_Heni-Way/Logo.png" alt="Logo Heni Way" style="width: 2.5rem; height: 2.5rem; border-radius: 50%; object-fit: contain;" onerror="this.style.display='none';">
                 <span>Heni<span class="text-danger">Way</span></span>
             </a>
             
             <div class="d-flex align-items-center gap-3 d-lg-none ms-auto me-2">
-                <!-- Dark Mode Mobile -->
                 <div class="dark-mode-toggle" id="themeToggleMobile">
                     <i class="fa-solid fa-sun"></i>
                     <i class="fa-solid fa-moon"></i>
@@ -248,22 +232,18 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto gap-2 align-items-lg-center">
-                    <!-- Réservation -->
                     <li class="nav-item custom-nav-item active" data-screen="screenReservation">
                         <span class="nav-link custom-nav-link"><i class="fa-solid fa-ticket"></i> Réservation</span>
                     </li>
-                    <!-- Historique -->
                     <li class="nav-item custom-nav-item" data-screen="screenHistorique">
                         <span class="nav-link custom-nav-link"><i class="fa-solid fa-clock-rotate-left"></i> Historique</span>
                     </li>
-                    <!-- Commutateur Thème Bureau -->
                     <li class="nav-item d-none d-lg-block mx-2">
                         <div class="dark-mode-toggle" id="themeToggleDesktop">
                             <i class="fa-solid fa-sun"></i>
                             <i class="fa-solid fa-moon"></i>
                         </div>
                     </li>
-                    <!-- Déconnexion -->
                     <li class="nav-item custom-nav-item" data-screen="screenDeconnexion">
                         <span class="nav-link custom-nav-link nav-link-logout"><i class="fa-solid fa-power-off"></i> Déconnexion</span>
                     </li>
@@ -272,13 +252,10 @@
         </div>
     </nav>
 
-    <!-- CONTAINER CENTRAL SANS BACKDROP AUTOMOBILE -->
     <div class="container main-display my-4">
         
-        <!-- ÉCRAN : RÉSERVATION -->
         <main id="screenReservation" class="app-screen" style="display: block;">
             <div class="row g-4">
-                <!-- Panneau Voyageur Gauche -->
                 <div class="col-lg-4">
                     <div class="glass-panel d-flex flex-column gap-3">
                         <div>
@@ -308,12 +285,9 @@
                     </div>
                 </div>
 
-                <!-- Section Principale Droite -->
-                <!-- Section Principale Droite -->
                 <div class="col-lg-8">
                     <div class="glass-panel d-flex flex-column gap-4">
                         
-                        <!-- Recherche simplifiée (Input unique) -->
                         <div class="p-3 rounded-4" style="background: rgba(0,0,0,0.05); border: 1px solid var(--glass-border);">
                             <form id="searchTripForm">
                                 <div class="input-group">
@@ -323,8 +297,6 @@
                             </form>
                         </div>
 
-                        <!-- Navigation Interne (Filtres de publication) -->
-                        <!-- Navigation Interne -->
                         <ul class="nav nav-pills gap-2 p-1 rounded-4" style="background: rgba(0, 0, 0, 0.15); border: 1px solid var(--glass-border);">
                             <li class="nav-item flex-fill text-center">
                                 <button class="nav-link active w-100 rounded-3 small fw-medium text-reset" data-target="PubPublic">Public</button>
@@ -337,15 +309,12 @@
                             </li>
                         </ul>
 
-                        <!-- En-tête de section -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="fw-bold m-0" style="font-size: 1rem; opacity: 0.85;">Offres de voyage disponibles</h5>
                             <span class="badge rounded-pill px-3 py-1 text-white" style="background: var(--bleu-ocean);">Actif</span>
                         </div>
 
-                        <!-- Publication de voyage / Ticket actif -->
                         <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubPublic" style="display:block">
-                            <!-- Gauche : Infos Véhicule -->
                             <div class="d-flex align-items-center gap-3">
                                 <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
                                 <div>
@@ -354,14 +323,12 @@
                                 </div>
                             </div>
                             
-                            <!-- Centre : Trajet, Date & Places Restantes -->
                             <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
                                 <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span>
                                 <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small>
                                 <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
                             </div>
 
-                            <!-- Droite : Uniquement le bouton Ajouter -->
                             <div class="d-flex align-items-center">
                                 <button onclick="ouvrirModalSieges()" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
                                     <i class="fa-solid fa-plus me-1"></i> Ajouter
@@ -369,9 +336,7 @@
                             </div>
                         </div>
 
-
                         <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubSpecial" style="display:none !important">
-                            <!-- Gauche : Infos Véhicule -->
                             <div class="d-flex align-items-center gap-3">
                                 <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
                                 <div>
@@ -380,14 +345,12 @@
                                 </div>
                             </div>
                             
-                            <!-- Centre : Trajet, Date & Places Restantes -->
                             <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
                                 <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span>
                                 <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small>
                                 <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
                             </div>
 
-                            <!-- Droite : Uniquement le bouton Ajouter -->
                             <div class="d-flex align-items-center">
                                 <button class="btn btn-sm px-4 py-2 rounded-3 fw-medium" style="background-color: var(--vert-neon);">
                                     <i class="fa-solid fa-plus me-1"></i> Ajouter
@@ -396,7 +359,6 @@
                         </div>
 
                         <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubPrive" style="display:none !important">
-                            <!-- Gauche : Infos Véhicule -->
                             <div class="d-flex align-items-center gap-3">
                                 <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
                                 <div>
@@ -405,14 +367,10 @@
                                 </div>
                             </div>
                             
-                            <!-- Centre : Trajet, Date & Places Restantes -->
                             <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                                <!-- <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span> -->
-                                <!-- <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small> -->
                                 <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
                             </div>
 
-                            <!-- Droite : Uniquement le bouton Ajouter -->
                             <div class="d-flex align-items-center">
                                 <button class="btn btn-sm px-4 py-2 rounded-3 fw-medium" style="background-color: var(--vert-neon);">
                                     <i class="fa-solid fa-plus me-1"></i> Ajouter
@@ -425,7 +383,6 @@
             </div>
         </main>
 
-        <!-- ÉCRAN : HISTORIQUE -->
         <main id="screenHistorique" class="app-screen" style="display: none;">
             <div class="glass-panel">
                 <h5 class="fw-bold mb-4" style="font-size: 1.1rem; opacity: 0.85;"><i class="fa-solid fa-clock-rotate-left me-2 text-info"></i>Historique global de vos déplacements</h5>
@@ -461,7 +418,6 @@
             </div>
         </main>
 
-        <!-- ÉCRAN : DÉCONNEXION -->
         <main id="screenDeconnexion" class="app-screen col-md-6 mx-auto" style="display: none;">
             <div class="glass-panel text-center p-4">
                 <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4 text-danger" style="background: rgba(255,0,96,0.15); width: 4.5rem; height: 4.5rem;">
@@ -478,8 +434,6 @@
         </main>
 
     </div>
-
-    <!-- popup -->
 
     <div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-labelledby="confirmCancelModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -508,63 +462,52 @@
         </div>
     </div>
 
-<div class="modal fade" id="seatSelectionModal" tabindex="-1" aria-labelledby="seatSelectionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content border-0 shadow rounded-4" style="background: var(--glass-card) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border) !important;">
-            
-            <div class="modal-header border-0 pb-0 justify-content-between px-4 pt-1">
-                <div>
-                    <h5 class="fw-bold m-0 pt-3" id="seatSelectionModalLabel" style="font-size: 1.1rem;">Choisir votre place</h5>
-                    <small class="opacity-60">Sélectionnez un siège libre à bord du véhicule</small>
+    <div class="modal fade" id="seatSelectionModal" tabindex="-1" aria-labelledby="seatSelectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content border-0 shadow rounded-4" style="background: var(--glass-card) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border) !important;">
+                
+                <div class="modal-header border-0 pb-0 justify-content-between px-4 pt-1">
+                    <div>
+                        <h5 class="fw-bold m-0 pt-3" id="seatSelectionModalLabel" style="font-size: 1.1rem;">Choisir votre place</h5>
+                        <small class="opacity-60">Sélectionnez un siège libre à bord du véhicule</small>
+                    </div>
+                    <button type="button" class="btn-close btn-close opacity-50" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <button type="button" class="btn-close btn-close opacity-50" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
 
-<!-- Plan intérieur du véhicule (Configuration 27 places alignée) -->
-<div class="mx-auto p-3 rounded-4 border border-secondary-subtle" style="max-width: 300px; background: rgba(0,0,0,0.2); margin-top: 20px;">
-    <!-- Avant du véhicule -->
-    <div class="text-center border-bottom border-secondary-subtle pb-2 mb-3">
-        <small class="opacity-50 fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">Avant du véhicule</small>
-    </div>
+                <div class="mx-auto p-3 rounded-4 border border-secondary-subtle" style="max-width: 300px; background: rgba(0,0,0,0.2); margin-top: 20px;">
+                    <div class="text-center border-bottom border-secondary-subtle pb-2 mb-3">
+                        <small class="opacity-50 fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">Avant du véhicule</small>
+                    </div>
 
-    <!-- Rangée 1 : Chauffeur + Couloir + 2 places (01 et 02) à droite -->
-    <div class="d-flex align-items-center mb-2">
-        <!-- Chauffeur fixe à gauche (Position 1) -->
-        <div class="d-flex justify-content-center" style="width: 20%;">
-            <div class="d-flex flex-column align-items-center justify-content-center border border-secondary-subtle rounded-3 text-muted" style="width: 45px; height: 45px; background: rgba(255,255,255,0.02); cursor: not-allowed;" title="Chauffeur">
-                <i class="fa-solid fa-id-card-clip" style="font-size: 0.9rem;"></i>
-                <span style="font-size: 0.55rem; font-weight: 600;">Volant</span>
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="d-flex justify-content-center" style="width: 20%;">
+                            <div class="d-flex flex-column align-items-center justify-content-center border border-secondary-subtle rounded-3 text-muted" style="width: 45px; height: 45px; background: rgba(255,255,255,0.02); cursor: not-allowed;" title="Chauffeur">
+                                <i class="fa-solid fa-id-card-clip" style="font-size: 0.9rem;"></i>
+                                <span style="font-size: 0.55rem; font-weight: 600;">Volant</span>
+                            </div>
+                        </div>
+                        <div style="width: 20%;"></div>
+                        <div style="width: 20%;"></div>
+                        <div class="d-flex justify-content-center" style="width: 20%;" id="slot-siege-1"></div>
+                        <div class="d-flex justify-content-center" style="width: 20%;" id="slot-siege-2"></div>
+                    </div>
+
+                    <div id="sprinterBodyRows" class="d-flex flex-column gap-2"></div>
+                </div>
+                <div class="text-center mt-4">
+                    <button id="btnValiderSiege" class="btn btn-sm px-4 py-2 rounded-3 fw-medium w-100" style="background-color: var(--vert-neon);" disabled>
+                        Confirmer les sièges <span id="selectedSeatNumber" class="badge bg-dark ms-1">-</span>
+                    </button>
+                </div>
+
             </div>
         </div>
-        <!-- Position 2 (Vide) -->
-        <div style="width: 20%;"></div>
-        <!-- Position 3 (Couloir central) -->
-        <div style="width: 20%;"></div>
-        <!-- Sièges 1 et 2 à droite (Positions 4 et 5) -->
-        <div class="d-flex justify-content-center" style="width: 20%;" id="slot-siege-1"></div>
-        <div class="d-flex justify-content-center" style="width: 20%;" id="slot-siege-2"></div>
     </div>
 
-    <!-- Les autres rangées du milieu et du fond injectées ici -->
-    <div id="sprinterBodyRows" class="d-flex flex-column gap-2"></div>
-</div>
-<div class="text-center mt-4">
-    <!-- L'ID ici doit être strictement "btnValiderSiege" -->
-    <button id="btnValiderSiege" class="btn btn-sm px-4 py-2 rounded-3 fw-medium w-100" style="background-color: var(--vert-neon);" disabled>
-        Confirmer les sièges <span id="selectedSeatNumber" class="badge bg-dark ms-1">-</span>
-    </button>
-</div>
-
-        </div>
-    </div>
-</div>
-
-    <!-- Bootstrap 5.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Logique de changement de thème (Dark/Light)
             const toggles = [document.getElementById('themeToggleDesktop'), document.getElementById('themeToggleMobile')];
             toggles.forEach(toggle => {
                 if(toggle) {
@@ -576,7 +519,6 @@
                 }
             });
 
-            // Logique de navigation SPA (Changement d'écran)
             const navItems = document.querySelectorAll('.custom-nav-item');
             const screens = document.querySelectorAll('.app-screen');
 
@@ -600,7 +542,6 @@
                 });
             });
 
-            // Bouton Annuler Déconnexion
             const cancelBtn = document.getElementById('cancelLogoutBtn');
             if(cancelBtn) {
                 cancelBtn.addEventListener('click', () => {
@@ -610,216 +551,328 @@
             }
         });
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. On sélectionne tous les boutons d'onglets possédant l'attribut data-target
-    const tabButtons = document.querySelectorAll('.nav-pills [data-target]');
-    
-    // 2. On regroupe les éléments de publication par leur ID
-    const sections = {
-        PubPublic: document.getElementById('PubPublic'),
-        PubSpecial: document.getElementById('PubSpecial'),
-        PubPrive: document.getElementById('PubPrive')
-    };
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.nav-pills [data-target]');
+            
+            const sections = {
+                PubPublic: document.getElementById('PubPublic'),
+                PubSpecial: document.getElementById('PubSpecial'),
+                PubPrive: document.getElementById('PubPrive')
+            };
 
-    // 3. Fonction pour basculer les affichages et la classe active
-    function togglePublications(targetId) {
-        // Gérer l'affichage des div de statut (flex pour garder le style Bootstrap)
-        Object.keys(sections).forEach(id => {
-            if (sections[id]) {
-                if (id === targetId) {
-                    sections[id].style.setProperty('display', 'flex', 'important');
-                } else {
-                    sections[id].style.setProperty('display', 'none', 'important');
-                }
+            function togglePublications(targetId) {
+                Object.keys(sections).forEach(id => {
+                    if (sections[id]) {
+                        if (id === targetId) {
+                            sections[id].style.setProperty('display', 'flex', 'important');
+                        } else {
+                            sections[id].style.setProperty('display', 'none', 'important');
+                        }
+                    }
+                });
+
+                tabButtons.forEach(btn => {
+                    if (btn.getAttribute('data-target') === targetId) {
+                        btn.classList.add('active');
+                        btn.style.setProperty('--bs-nav-pills-link-active-bg', 'var(--bleu-ocean)');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
             }
-        });
 
-        // Gérer le style actif sur les boutons
-        tabButtons.forEach(btn => {
-            if (btn.getAttribute('data-target') === targetId) {
-                btn.classList.add('active');
-                // S'assure que la couleur d'arrière-plan personnalisée reste appliquée
-                btn.style.setProperty('--bs-nav-pills-link-active-bg', 'var(--bleu-ocean)');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-    }
-
-    // 4. Ajouter l'écouteur d'événement de clic sur chaque bouton
-    tabButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = button.getAttribute('data-target');
-            togglePublications(targetId);
-        });
-    });
-});
-
-// Fonction pour ouvrir la pop-up de confirmation d'annulation
-function afficherPopUpAnnulation() {
-    // 1. On récupère l'élément HTML de la modale par son ID
-    const modaleElement = document.getElementById('confirmCancelModal');
-    
-    if (modaleElement) {
-        // 2. On crée ou récupère l'instance de la modale Bootstrap
-        const maModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
-        
-        // 3. On l'affiche à l'écran
-        maModale.show();
-    }
-}
-
-
-// Données simulées (statut 1 = déjà pris dans ta base de données, 0 = disponible)
-const donneesSiegesExemple = [
-    { numero: 1, statut: 1 }, { numero: 2, statut: 0 }, { numero: 3, statut: 0 }, { numero: 4, statut: 1 },
-    { numero: 5, statut: 0 }, { numero: 6, statut: 0 }, { numero: 7, statut: 1 }, { numero: 8, statut: 0 },
-    { numero: 9, statut: 0 }, { numero: 10, statut: 0 }, { numero: 11, statut: 0 }, { numero: 12, statut: 0 },
-    { numero: 13, statut: 1 }, { numero: 14, statut: 0 }, { numero: 15, statut: 0 }, { numero: 16, statut: 0 },
-    { numero: 17, statut: 1 }, { numero: 18, statut: 0 }, { numero: 19, statut: 0 }, { numero: 20, statut: 0 },
-    { numero: 21, statut: 1 }, { numero: 22, statut: 0 }, { numero: 23, statut: 0 }, { numero: 24, statut: 0 },
-    { numero: 25, statut: 1 }, { numero: 26, statut: 0 }, { numero: 27, statut: 0 }
-];
-
-let siegeSelectionneActuel = null;
-
-// Fonction appelée pour charger les données et ouvrir la pop-up
-function ouvrirModalSieges() {
-    const modaleElement = document.getElementById('seatSelectionModal');
-    if (modaleElement) {
-        // Génère la disposition des chaises
-        genererPlanDesSieges(donneesSiegesExemple);
-        
-        // Affiche la pop-up à l'écran via l'API Bootstrap
-        const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
-        instanceModale.show();
-    }
-}
-
-// Tableau pour stocker les numéros des sièges sélectionnés par le passager
-let siegesSelectionnesActuels = [];
-
-function genererPlanDesSieges(listeSieges) {
-    const slot1 = document.getElementById('slot-siege-1');
-    const slot2 = document.getElementById('slot-siege-2');
-    const bodyRows = document.getElementById('sprinterBodyRows');
-    const btnValider = document.getElementById('btnValiderSiege');
-    const badgeNumero = document.getElementById('selectedSeatNumber');
-    
-    // Nettoyage complet
-    slot1.innerHTML = '';
-    slot2.innerHTML = '';
-    bodyRows.innerHTML = '';
-    siegesSelectionnesActuels = [];
-    btnValider.disabled = true;
-    badgeNumero.textContent = '-';
-
-    // Fonction interne pour fabriquer le bouton d'un siège
-    function creerBoutonSiege(siege) {
-        const btnSiege = document.createElement('button');
-        btnSiege.type = 'button';
-        btnSiege.className = 'btn d-flex flex-column align-items-center justify-content-center p-1 rounded-3';
-        btnSiege.style.width = '45px';
-        btnSiege.style.height = '45px';
-        btnSiege.style.transition = 'all 0.2s';
-        
-        btnSiege.innerHTML = `
-            <i class="fa-solid fa-chair" style="font-size: 0.9rem;"></i>
-            <span style="font-size: 0.6rem; font-weight: 600; margin-top: 1px;">${siege.numero.toString().padStart(2, '0')}</span>
-        `;
-
-        if (siege.statut === 1) {
-            btnSiege.disabled = true; 
-            btnSiege.classList.add('btn-danger', 'opacity-25');
-            btnSiege.style.cursor = 'not-allowed';
-        } else {
-            btnSiege.classList.add('btn-outline-secondary', 'text-white-50');
-
-            btnSiege.addEventListener('click', () => {
-                const index = siegesSelectionnesActuels.indexOf(siege.numero);
-                if (index > -1) {
-                    siegesSelectionnesActuels.splice(index, 1);
-                    btnSiege.style.background = '';
-                    btnSiege.classList.remove('text-dark');
-                } else {
-                    siegesSelectionnesActuels.push(siege.numero);
-                    btnSiege.style.background = 'var(--bleu-ocean)';
-                    btnSiege.classList.add('text-dark');
-                }
-
-                siegesSelectionnesActuels.sort((a, b) => a - b);
-
-                if (siegesSelectionnesActuels.length > 0) {
-                    badgeNumero.textContent = siegesSelectionnesActuels.map(n => n.toString().padStart(2, '0')).join(', ');
-                    btnValider.disabled = false;
-                } else {
-                    badgeNumero.textContent = '-';
-                    btnValider.disabled = true;
-                }
+            tabButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = button.getAttribute('data-target');
+                    togglePublications(targetId);
+                });
             });
-        }
-        return btnSiege;
-    }
+        });
 
-    // 1. Placement des sièges de l'avant (01 et 02)
-    const s1 = listeSieges.find(s => s.numero === 1);
-    const s2 = listeSieges.find(s => s.numero === 2);
-    if(s1) slot1.appendChild(creerBoutonSiege(s1));
-    if(s2) slot2.appendChild(creerBoutonSiege(s2));
-
-    // 2. Génération des rangées du milieu (Sièges 03 à 22)
-    // Structure stricte : [Siège] [Siège] [Couloir] [Siège] [Siège] -> chacun fait 20%
-    let indexSiege = 3;
-    while (indexSiege <= 22) {
-        const row = document.createElement('div');
-        row.className = 'd-flex align-items-center';
-
-        // 2 places à gauche
-        for (let i = 0; i < 2; i++) {
-            const col = document.createElement('div');
-            col.style.width = '20%';
-            col.className = 'd-flex justify-content-center';
-            const s = listeSieges.find(s => s.numero === indexSiege);
-            if (s) col.appendChild(creerBoutonSiege(s));
-            row.appendChild(col);
-            indexSiege++;
+        function afficherPopUpAnnulation() {
+            const modaleElement = document.getElementById('confirmCancelModal');
+            
+            if (modaleElement) {
+                const maModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
+                
+                maModale.show();
+            }
         }
 
-        // Couloir central (Milieu)
-        const couloir = document.createElement('div');
-        couloir.style.width = '20%';
-        row.appendChild(couloir);
+        const donneesSiegesExemple = [
+            { numero: 1, statut: 1 }, { numero: 2, statut: 0 }, { numero: 3, statut: 0 }, { numero: 4, statut: 1 },
+            { numero: 5, statut: 0 }, { numero: 6, statut: 0 }, { numero: 7, statut: 1 }, { numero: 8, statut: 0 },
+            { numero: 9, statut: 0 }, { numero: 10, statut: 0 }, { numero: 11, statut: 0 }, { numero: 12, statut: 0 },
+            { numero: 13, statut: 1 }, { numero: 14, statut: 0 }, { numero: 15, statut: 0 }, { numero: 16, statut: 0 },
+            { numero: 17, statut: 1 }, { numero: 18, statut: 0 }, { numero: 19, statut: 0 }, { numero: 20, statut: 0 },
+            { numero: 21, statut: 1 }, { numero: 22, statut: 0 }, { numero: 23, statut: 0 }, { numero: 24, statut: 0 },
+            { numero: 25, statut: 1 }, { numero: 26, statut: 0 }, { numero: 27, statut: 0 }
+        ];
 
-        // 2 places à droite
-        for (let i = 0; i < 2; i++) {
-            if (indexSiege <= 22) {
+        let siegeSelectionneActuel = null;
+
+        function ouvrirModalSieges() {
+            const modaleElement = document.getElementById('seatSelectionModal');
+            if (modaleElement) {
+                genererPlanDesSieges(donneesSiegesExemple);
+                
+                const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
+                instanceModale.show();
+            }
+        }
+
+        let siegesSelectionnesActuels = [];
+
+        function genererPlanDesSieges(listeSieges) {
+            const slot1 = document.getElementById('slot-siege-1');
+            const slot2 = document.getElementById('slot-siege-2');
+            const bodyRows = document.getElementById('sprinterBodyRows');
+            const btnValider = document.getElementById('btnValiderSiege');
+            const badgeNumero = document.getElementById('selectedSeatNumber');
+            
+            slot1.innerHTML = '';
+            slot2.innerHTML = '';
+            bodyRows.innerHTML = '';
+            siegesSelectionnesActuels = [];
+            btnValider.disabled = true;
+            badgeNumero.textContent = '-';
+
+            function creerBoutonSiege(siege) {
+                const btnSiege = document.createElement('button');
+                btnSiege.type = 'button';
+                btnSiege.className = 'btn d-flex flex-column align-items-center justify-content-center p-1 rounded-3';
+                btnSiege.style.width = '45px';
+                btnSiege.style.height = '45px';
+                btnSiege.style.transition = 'all 0.2s';
+                
+                btnSiege.innerHTML = `
+                    <i class="fa-solid fa-chair" style="font-size: 0.9rem;"></i>
+                    <span style="font-size: 0.6rem; font-weight: 600; margin-top: 1px;">${siege.numero.toString().padStart(2, '0')}</span>
+                `;
+
+                if (siege.statut === 1) {
+                    btnSiege.disabled = true; 
+                    btnSiege.classList.add('btn-danger', 'opacity-25');
+                    btnSiege.style.cursor = 'not-allowed';
+                } else {
+                    btnSiege.classList.add('btn-outline-secondary', 'text-white-50');
+
+                    btnSiege.addEventListener('click', () => {
+                        const index = siegesSelectionnesActuels.indexOf(siege.numero);
+                        if (index > -1) {
+                            siegesSelectionnesActuels.splice(index, 1);
+                            btnSiege.style.background = '';
+                            btnSiege.classList.remove('text-dark');
+                        } else {
+                            siegesSelectionnesActuels.push(siege.numero);
+                            btnSiege.style.background = 'var(--bleu-ocean)';
+                            btnSiege.classList.add('text-dark');
+                        }
+
+                        siegesSelectionnesActuels.sort((a, b) => a - b);
+
+                        if (siegesSelectionnesActuels.length > 0) {
+                            badgeNumero.textContent = siegesSelectionnesActuels.map(n => n.toString().padStart(2, '0')).join(', ');
+                            btnValider.disabled = false;
+                        } else {
+                            badgeNumero.textContent = '-';
+                            btnValider.disabled = true;
+                        }
+                    });
+                }
+                return btnSiege;
+            }
+
+            const s1 = listeSieges.find(s => s.numero === 1);
+            const s2 = listeSieges.find(s => s.numero === 2);
+            if(s1) slot1.appendChild(creerBoutonSiege(s1));
+            if(s2) slot2.appendChild(creerBoutonSiege(s2));
+
+            let indexSiege = 3;
+            while (indexSiege <= 22) {
+                const row = document.createElement('div');
+                row.className = 'd-flex align-items-center';
+
+                for (let i = 0; i < 2; i++) {
+                    const col = document.createElement('div');
+                    col.style.width = '20%';
+                    col.className = 'd-flex justify-content-center';
+                    const s = listeSieges.find(s => s.numero === indexSiege);
+                    if (s) col.appendChild(creerBoutonSiege(s));
+                    row.appendChild(col);
+                    indexSiege++;
+                }
+
+                const couloir = document.createElement('div');
+                couloir.style.width = '20%';
+                row.appendChild(couloir);
+
+                for (let i = 0; i < 2; i++) {
+                    if (indexSiege <= 22) {
+                        const col = document.createElement('div');
+                        col.style.width = '20%';
+                        col.className = 'd-flex justify-content-center';
+                        const s = listeSieges.find(s => s.numero === indexSiege);
+                        if (s) col.appendChild(creerBoutonSiege(s));
+                        row.appendChild(col);
+                        indexSiege++;
+                    }
+                }
+                bodyRows.appendChild(row);
+            }
+
+            const lastRow = document.createElement('div');
+            lastRow.className = 'd-flex align-items-center mt-1';
+            
+            for (let n = 23; n <= 27; n++) {
                 const col = document.createElement('div');
                 col.style.width = '20%';
                 col.className = 'd-flex justify-content-center';
-                const s = listeSieges.find(s => s.numero === indexSiege);
+                const s = listeSieges.find(s => s.numero === n);
                 if (s) col.appendChild(creerBoutonSiege(s));
-                row.appendChild(col);
-                indexSiege++;
+                lastRow.appendChild(col);
             }
+            bodyRows.appendChild(lastRow);
         }
-        bodyRows.appendChild(row);
-    }
 
-    // 3. Dernière rangée du fond : Banquette complète de 5 places (Sièges 23 à 27)
-    const lastRow = document.createElement('div');
-    lastRow.className = 'd-flex align-items-center mt-1';
-    
-    for (let n = 23; n <= 27; n++) {
-        const col = document.createElement('div');
-        col.style.width = '20%';
-        col.className = 'd-flex justify-content-center';
-        const s = listeSieges.find(s => s.numero === n);
-        if (s) col.appendChild(creerBoutonSiege(s));
-        lastRow.appendChild(col);
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+        const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function chargerPublicationsPassager() {
+    const container = document.getElementById('publicationsPassagerContainer');
+    if (!container) return;
+
+    try {
+        // 1. EXTRACTION : On interroge 'Reservation' ET on joint 'Voiture'
+        const { data: reservations, error } = await supabaseClient
+            .from('Reservation')
+            .select(`
+                id,
+                Depart,
+                Destination,
+                Nb_Place,
+                Nb_Libre,
+                created_at,
+                Voiture (
+                    Nom,
+                    Immatriculation
+                )
+            `)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        // 2. Si la table est vide
+        if (!reservations || reservations.length === 0) {
+            container.innerHTML = `
+                <div class="text-center text-secondary py-4">
+                    <i class="fa-solid fa-bus-simple fs-3 mb-2"></i>
+                    <p class="m-0 small">Aucun voyage disponible pour le moment.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // 3. Génération dynamique du HTML
+        let htmlContent = '';
+
+        reservations.forEach(item => {
+            // Extraction des données de la voiture via la relation
+            const voiture = item.Voiture || {};
+            const nomVehicule = voiture.Nom || "Mercedes Sprinter"; 
+            const immat = voiture.Immatriculation || "Non renseignée";
+
+            // Extraction des données de la réservation
+            const depart = item.Depart || "Non précisé";
+            const destination = item.Destination || "Non précisée";
+            
+            // Calcul des places
+            const placesRestantes = item.Nb_Libre ?? item.Nb_Place ?? 0;
+            const placesFormatees = String(placesRestantes).padStart(2, '0');
+
+            // Formatage de la date à partir de created_at
+            const dateObj = new Date(item.created_at);
+            const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+            // Condition d'affichage (si Trajet renseigné ou non)
+            let infoCentraleHTML = '';
+            if (item.Depart && item.Destination) {
+                infoCentraleHTML = `
+                    <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                        <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
+                        <small class="text-warning d-block" style="font-size: 0.75rem;">
+                            <i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}
+                        </small>
+                        <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes
+                        </small>
+                    </div>
+                `;
+            } else {
+                // Pour les trajets spéciaux/privés sans départ/destination spécifiés
+                infoCentraleHTML = `
+                    <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                        <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes
+                        </small>
+                    </div>
+                `;
+            }
+
+            // Assemblage de la carte
+            htmlContent += `
+                <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    
+                    <!-- Bloc 1 : Voiture -->
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="widget-icon text-white d-flex align-items-center justify-content-center rounded-circle" style="width: 2.8rem; height: 2.8rem; background: var(--bleu-ocean, #0d6efd);">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <div>
+                            <h6 class="m-0 fw-bold">${nomVehicule}</h6>
+                            <small class="opacity-60">Immatriculation : ${immat}</small>
+                        </div>
+                    </div>
+
+                    <!-- Bloc 2 : Infos Trajet -->
+                    ${infoCentraleHTML}
+
+                    <!-- Bloc 3 : Bouton Ajouter -->
+                    <div class="d-flex align-items-center">
+                        <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon, #198754);">
+                            <i class="fa-solid fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+
+                </div>
+            `;
+        });
+
+        container.innerHTML = htmlContent;
+
+    } catch (err) {
+        console.error("Erreur lors de la récupération des données :", err);
+        container.innerHTML = `
+            <div class="text-center text-danger py-4 small">
+                <i class="fa-solid fa-triangle-exclamation fs-4 mb-2"></i>
+                <p class="m-0">Une erreur est survenue lors du chargement des voyages.</p>
+            </div>
+        `;
     }
-    bodyRows.appendChild(lastRow);
 }
-</script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+            chargerDonneesInitiales();
+            chargerDonneesReservations();
+            chargerPublications();
+            connecterAuTempsReel();
+            chargerDerniersVoyages();
+            initialiserDeconnexion();
+        });
+    </script>
 </body>
 </html>
