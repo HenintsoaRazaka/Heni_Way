@@ -811,6 +811,7 @@
                 Voiture (
                     Marque,
                     Immatriculation
+                    Statut
                 )
             `)
             .order('created_at', { ascending: false });
@@ -841,12 +842,17 @@
             const placesFormatees = String(placesRestantes).padStart(2, '0');
 
             // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
             const dateObj = new Date(item.created_at);
             const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
             const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
             // Déterminer le type (Si la colonne Type existe, sinon par défaut selon la présence de départ/destination)
-            const typeVoyage = (item.Type || (item.Depart ? 'Public' : 'Prive')).toLowerCase();
+            const typeVoyage = (item.Statut || (item.Depart ? 'Public' : 'Prive')).toLowerCase();
 
             // Génération du template de la carte
             if (typeVoyage.includes('public')) {
