@@ -286,6 +286,56 @@
                 </div>
 
                 <div class="col-lg-8">
+    <div class="glass-panel d-flex flex-column gap-4">
+        
+        <!-- BARRE DE RECHERCHE -->
+        <div class="p-3 rounded-4" style="background: rgba(0,0,0,0.05); border: 1px solid var(--glass-border);">
+            <form id="searchTripForm">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-0 opacity-70"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" class="form-control search-bar-input rounded-3" placeholder="Rechercher un trajet, une destination, un axe...">
+                </div>
+            </form>
+        </div>
+
+        <!-- ONGLET DE NAVIGATION (Inchangé) -->
+        <ul class="nav nav-pills gap-2 p-1 rounded-4" style="background: rgba(0, 0, 0, 0.15); border: 1px solid var(--glass-border);">
+            <li class="nav-item flex-fill text-center">
+                <button class="nav-link active w-100 rounded-3 small fw-medium text-reset" data-target="PubPublic">Public</button>
+            </li>
+            <li class="nav-item flex-fill text-center">
+                <button class="nav-link w-100 rounded-3 small fw-medium text-reset" data-target="PubSpecial">Spécial</button>
+            </li>
+            <li class="nav-item flex-fill text-center">
+                <button class="nav-link w-100 rounded-3 small fw-medium text-reset" data-target="PubPrive">Privé</button>
+            </li>
+        </ul>
+
+        <!-- TITRE -->
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold m-0" style="font-size: 1rem; opacity: 0.85;">Offres de voyage disponibles</h5>
+            <span class="badge rounded-pill px-3 py-1 text-white" style="background: var(--bleu-ocean);">Actif</span>
+        </div>
+
+        <!-- CONTENEUR PUBLIC -->
+        <div id="PubPublic" class="d-flex flex-column gap-3" style="display:block">
+            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
+        </div>
+
+        <!-- CONTENEUR SPÉCIAL -->
+        <div id="PubSpecial" class="d-flex flex-column gap-3" style="display:none !important">
+            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
+        </div>
+
+        <!-- CONTENEUR PRIVÉ -->
+        <div id="PubPrive" class="d-flex flex-column gap-3" style="display:none !important">
+            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
+        </div>
+
+    </div>
+</div>
+
+                <!-- <div class="col-lg-8">
                     <div class="glass-panel d-flex flex-column gap-4">
                         
                         <div class="p-3 rounded-4" style="background: rgba(0,0,0,0.05); border: 1px solid var(--glass-border);">
@@ -379,7 +429,7 @@
                         </div>
 
                     </div>
-                </div>
+                </div> -->
             </div>
         </main>
 
@@ -741,12 +791,13 @@
         const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    async function chargerPublicationsPassager() {
-    const container = document.getElementById('publicationsPassagerContainer');
-    if (!container) return;
+    async function chargerPublicationsDansOnglets() {
+    const elPublic = document.getElementById('PubPublic');
+    const elSpecial = document.getElementById('PubSpecial');
+    const elPrive = document.getElementById('PubPrive');
 
     try {
-        // 1. EXTRACTION : On interroge 'Reservation' ET on joint 'Voiture'
+        // 1. Requete Supabase avec jointure sur la table Voiture
         const { data: reservations, error } = await supabaseClient
             .from('Reservation')
             .select(`
@@ -755,6 +806,7 @@
                 Destination,
                 Nb_Place,
                 Nb_Libre,
+                Type,
                 created_at,
                 Voiture (
                     Nom,
@@ -765,110 +817,119 @@
 
         if (error) throw error;
 
-        console.log(reservations);
-
-        // 2. Si la table est vide
-        // 2. Si la table est vide
-        // 2. Si la table est vide
-        // 2. Si la table est vide
-        // 2. Si la table est vide
+        // Variables pour accumuler le HTML de chaque onglet
+        let htmlPublic = '';
+        let htmlSpecial = '';
+        let htmlPrive = '';
 
         if (!reservations || reservations.length === 0) {
-            container.innerHTML = `
-                <div class="text-center text-secondary py-4">
-                    <i class="fa-solid fa-bus-simple fs-3 mb-2"></i>
-                    <p class="m-0 small">Aucun voyage disponible pour le moment.</p>
-                </div>
-            `;
+            const emptyMsg = `<div class="text-center text-secondary py-3 small">Aucune offre disponible.</div>`;
+            if (elPublic) elPublic.innerHTML = emptyMsg;
+            if (elSpecial) elSpecial.innerHTML = emptyMsg;
+            if (elPrive) elPrive.innerHTML = emptyMsg;
             return;
         }
 
-        // 3. Génération dynamique du HTML
-        let htmlContent = '';
-
+        // 2. Traitement et tri par type de publication
         reservations.forEach(item => {
-            // Extraction des données de la voiture via la relation
             const voiture = item.Voiture || {};
-            const nomVehicule = voiture.Nom || "Mercedes Sprinter"; 
+            const nomVehicule = voiture.Nom || "Mercedes Sprinter";
             const immat = voiture.Immatriculation || "Non renseignée";
 
-            // Extraction des données de la réservation
             const depart = item.Depart || "Non précisé";
             const destination = item.Destination || "Non précisée";
-            
-            // Calcul des places
+
             const placesRestantes = item.Nb_Libre ?? item.Nb_Place ?? 0;
             const placesFormatees = String(placesRestantes).padStart(2, '0');
 
-            // Formatage de la date à partir de created_at
+            // Formatage date/heure
             const dateObj = new Date(item.created_at);
             const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
             const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
-            // Condition d'affichage (si Trajet renseigné ou non)
-            let infoCentraleHTML = '';
-            if (item.Depart && item.Destination) {
-                infoCentraleHTML = `
-                    <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                        <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
-                        <small class="text-warning d-block" style="font-size: 0.75rem;">
-                            <i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}
-                        </small>
-                        <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;">
-                            <i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes
-                        </small>
+            // Déterminer le type (Si la colonne Type existe, sinon par défaut selon la présence de départ/destination)
+            const typeVoyage = (item.Type || (item.Depart ? 'Public' : 'Prive')).toLowerCase();
+
+            // Génération du template de la carte
+            if (typeVoyage.includes('public')) {
+                htmlPublic += `
+                    <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                            <div>
+                                <h6 class="m-0 fw-bold">${nomVehicule}</h6>
+                                <small class="opacity-60">Immatriculation : ${immat}</small>
+                            </div>
+                        </div>
+                        <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                            <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
+                            <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}</small>
+                            <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                                <i class="fa-solid fa-plus me-1"></i> Ajouter
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (typeVoyage.includes('special') || typeVoyage.includes('spécial')) {
+                htmlSpecial += `
+                    <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                            <div>
+                                <h6 class="m-0 fw-bold">${nomVehicule}</h6>
+                                <small class="opacity-60">Immatriculation : ${immat}</small>
+                            </div>
+                        </div>
+                        <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                            <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
+                            <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}</small>
+                            <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                                <i class="fa-solid fa-plus me-1"></i> Ajouter
+                            </button>
+                        </div>
                     </div>
                 `;
             } else {
-                // Pour les trajets spéciaux/privés sans départ/destination spécifiés
-                infoCentraleHTML = `
-                    <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                        <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;">
-                            <i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes
-                        </small>
+                // Vue Privé
+                htmlPrive += `
+                    <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                            <div>
+                                <h6 class="m-0 fw-bold">${nomVehicule}</h6>
+                                <small class="opacity-60">Immatriculation : ${immat}</small>
+                            </div>
+                        </div>
+                        <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                            <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                                <i class="fa-solid fa-plus me-1"></i> Ajouter
+                            </button>
+                        </div>
                     </div>
                 `;
             }
-
-            // Assemblage de la carte
-            htmlContent += `
-                <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                    
-                    <!-- Bloc 1 : Voiture -->
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="widget-icon text-white d-flex align-items-center justify-content-center rounded-circle" style="width: 2.8rem; height: 2.8rem; background: var(--bleu-ocean, #0d6efd);">
-                            <i class="fas fa-bus"></i>
-                        </div>
-                        <div>
-                            <h6 class="m-0 fw-bold">${nomVehicule}</h6>
-                            <small class="opacity-60">Immatriculation : ${immat}</small>
-                        </div>
-                    </div>
-
-                    <!-- Bloc 2 : Infos Trajet -->
-                    ${infoCentraleHTML}
-
-                    <!-- Bloc 3 : Bouton Ajouter -->
-                    <div class="d-flex align-items-center">
-                        <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon, #198754);">
-                            <i class="fa-solid fa-plus me-1"></i> Ajouter
-                        </button>
-                    </div>
-
-                </div>
-            `;
         });
 
-        container.innerHTML = htmlContent;
+        // 3. Injection dans les 3 divs d'onglets
+        if (elPublic) elPublic.innerHTML = htmlPublic || `<div class="text-center text-secondary py-3 small">Aucune offre publique.</div>`;
+        if (elSpecial) elSpecial.innerHTML = htmlSpecial || `<div class="text-center text-secondary py-3 small">Aucune offre spéciale.</div>`;
+        if (elPrive) elPrive.innerHTML = htmlPrive || `<div class="text-center text-secondary py-3 small">Aucune offre privée.</div>`;
 
     } catch (err) {
-        console.error("Erreur lors de la récupération des données :", err);
-        container.innerHTML = `
-            <div class="text-center text-danger py-4 small">
-                <i class="fa-solid fa-triangle-exclamation fs-4 mb-2"></i>
-                <p class="m-0">Une erreur est survenue lors du chargement des voyages.</p>
-            </div>
-        `;
+        console.error("Erreur lors de la récupération :", err);
+        const errMsg = `<div class="text-center text-danger py-3 small">Erreur de chargement des données.</div>`;
+        if (elPublic) elPublic.innerHTML = errMsg;
+        if (elSpecial) elSpecial.innerHTML = errMsg;
+        if (elPrive) elPrive.innerHTML = errMsg;
     }
 }
 
