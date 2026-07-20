@@ -1358,7 +1358,7 @@ async function chargerReservationEnCours() {
     const containerWidget = document.querySelector('.glass-panel');
     if (!containerWidget) return;
 
-    const nomUtilisateur = obtenirNomUtilisateurHeniway();
+    const nomUtilisateur = obtenirUtilisateurConnecte();
 
     if (!nomUtilisateur) {
         // Aucun utilisateur identifié
@@ -1372,6 +1372,9 @@ async function chargerReservationEnCours() {
         // -------------------------------------------------------------
         // 1. RECHERCHE DANS LA TABLE 'Place' (Public / Spécial)
         // -------------------------------------------------------------
+        // On récupère toutes les places et leurs réservations liées
+        // On récupère toutes les places et leurs réservations liées
+        // On récupère toutes les places et leurs réservations liées
         // On récupère toutes les places et leurs réservations liées
         const { data: places, error: placeError } = await supabaseClient
             .from('Place')
@@ -1491,12 +1494,4 @@ document.addEventListener("DOMContentLoaded", () => {
         chargerPublicationsDansOnglets();
     }
 
-    const btnValider = document.getElementById('btnValiderSiege');
-    if (btnValider) {
-        btnValider.addEventListener('click', validerEtEnvoyerReservation);
-    }
-   chargerReservationEnCours();
-});
-    </script>
-</body>
-</html>
+    const btnValider 
