@@ -918,7 +918,7 @@
                             <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
                         </div>
                         <div class="d-flex align-items-center">
-                            <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                            <button onclick="reserverOffrePrivee(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
                                 <i class="fa-solid fa-plus me-1"></i> Ajouter
                             </button>
                         </div>
@@ -943,13 +943,91 @@
         if (elSpecial) elSpecial.innerHTML = errMsg;
         if (elPrive) elPrive.innerHTML = errMsg;
     }
+
 }
-// Variables globales pour stocker l'état
+
 let reservationIdActuelle = null;
 let siegesSelectionnesActuels = [];
 
 /**
- * 1. Ouvre la modale et lance la récupération des sièges
+ * Récupère les infos de l'utilisateur connecté depuis le navigateur
+ */
+function obtenirUtilisateurConnecte() {
+    try {
+        const rawUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+        if (rawUser) {
+            const user = JSON.parse(rawUser);
+            return {
+                nom: user.nom_complet || user.full_name || `${user.nom || ''} ${user.prenom || ''}`.trim() || user.email || 'Passager',
+                telephone: user.telephone || user.phone || user.num || ''
+            };
+        }
+    } catch (e) {
+        console.warn("Impossible de lire les infos utilisateur depuis le stockage local", e);
+    }
+    return { nom: "Passager", telephone: "" };
+}
+
+// ==========================================
+// 1. FLUX PRIVÉ (Direct sans modale)
+// ==========================================
+
+/**
+ * Réserve directement une offre Privée sans ouvrir la modale de sièges
+ * @param {number|string} reservationId 
+ */
+async function reserverOffrePrivee(reservationId) {
+    const confirmation = confirm("Voulez-vous réserver cette offre privée ?");
+    if (!confirmation) return;
+
+    try {
+        const user = obtenirUtilisateurConnecte();
+
+        // 1. Récupération de la capacité totale de la réservation
+        const { data: resData, error: fetchErr } = await supabaseClient
+            .from('Reservation')
+            .select('Nb_Place')
+            .eq('id', reservationId)
+            .single();
+
+        if (fetchErr) throw fetchErr;
+
+        const totalPlaces = resData?.Nb_Place || 27;
+
+        // 2. Mise à jour directe de la ligne dans 'Reservation'
+        const { error: updateError } = await supabaseClient
+            .from('Reservation')
+            .update({
+                NomPrive: user.nom,
+                NumPrive: user.telephone,
+                Etat: 'Réservé',
+                Nb_Libre: 0,
+                Nb_NonLibre: totalPlaces
+            })
+            .eq('id', reservationId);
+
+        if (updateError) throw updateError;
+
+        alert(`Offre privée réservée avec succès au nom de ${user.nom} !`);
+
+        // Rafraîchissement des onglets
+        if (typeof chargerPublicationsDansOnglets === 'function') {
+            await chargerPublicationsDansOnglets();
+        }
+
+    } catch (err) {
+        console.error("Erreur réservation privée :", err);
+        alert("Une erreur est survenue lors de la réservation privée.");
+    }
+}
+
+
+// ==========================================
+// 2. FLUX PUBLIC & SPÉCIAL (Avec modale)
+// ==========================================
+
+/**
+ * Ouvre la modale pour Public et Spécial
  */
 async function ouvrirModalSieges(reservationId) {
     reservationIdActuelle = reservationId;
@@ -957,19 +1035,15 @@ async function ouvrirModalSieges(reservationId) {
     
     if (!modaleElement) return;
 
-    // Récupération des sièges occupés/libres
     const listeSieges = await chargerEtatSieges(reservationId);
-
-    // Génération du plan visuel
     genererPlanDesSieges(listeSieges);
 
-    // Affichage de la modale
     const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
     instanceModale.show();
 }
 
 /**
- * 2. Fetch Supabase sur la table 'Place'
+ * Récupère l'état des sièges dans la table 'Place'
  */
 async function chargerEtatSieges(reservationId) {
     try {
@@ -977,38 +1051,30 @@ async function chargerEtatSieges(reservationId) {
             .from('Place')
             .select('*')
             .eq('ID_Reservation', reservationId)
-            .maybeSingle(); // Évite une erreur si aucune ligne n'existe encore
+            .maybeSingle();
 
         if (error) throw error;
 
         const listeComplete = [];
-
-        // Boucle sur les colonnes N_1 à N_27
         for (let i = 1; i <= 27; i++) {
             const nomColonne = `N_${i}`;
             const occupant = data ? data[nomColonne] : null;
 
             listeComplete.push({
                 numero: i,
-                // Occupé (1) si du texte est présent dans la colonne N_x, Libre (0) sinon
                 statut: (occupant !== null && occupant !== undefined && occupant.trim() !== '') ? 1 : 0
             });
         }
-
         return listeComplete;
 
     } catch (err) {
         console.error("Erreur lors de la récupération des places :", err);
-        // Fallback : retourne tous les sièges comme libres
-        return Array.from({ length: 27 }, (_, index) => ({
-            numero: index + 1,
-            statut: 0
-        }));
+        return Array.from({ length: 27 }, (_, index) => ({ numero: index + 1, statut: 0 }));
     }
 }
 
 /**
- * 3. Génération visuelle des sièges (Sprinter)
+ * Rendu visuel du Sprinter
  */
 function genererPlanDesSieges(listeSieges) {
     const slot1 = document.getElementById('slot-siege-1');
@@ -1071,13 +1137,13 @@ function genererPlanDesSieges(listeSieges) {
         return btnSiege;
     }
 
-    // Places de devant (1 et 2)
+    // Devant
     const s1 = listeSieges.find(s => s.numero === 1);
     const s2 = listeSieges.find(s => s.numero === 2);
     if (s1 && slot1) slot1.appendChild(creerBoutonSiege(s1));
     if (s2 && slot2) slot2.appendChild(creerBoutonSiege(s2));
 
-    // Rangées du milieu (3 à 22)
+    // Milieu (3 à 22)
     let indexSiege = 3;
     while (indexSiege <= 22) {
         const row = document.createElement('div');
@@ -1111,7 +1177,7 @@ function genererPlanDesSieges(listeSieges) {
         if (bodyRows) bodyRows.appendChild(row);
     }
 
-    // Rangée arrière (23 à 27)
+    // Arrière (23 à 27)
     const lastRow = document.createElement('div');
     lastRow.className = 'd-flex align-items-center mt-1';
     
@@ -1127,10 +1193,7 @@ function genererPlanDesSieges(listeSieges) {
 }
 
 /**
- * 4. Envoi de la sélection vers Supabase (Table 'Place' + mise à jour 'Reservation')
- */
-/**
- * 4. Envoi de la sélection vers Supabase (Table 'Place' + mise à jour 'Reservation')
+ * Validation de la modale pour Public & Spécial
  */
 async function validerEtEnvoyerReservation() {
     if (!reservationIdActuelle || siegesSelectionnesActuels.length === 0) {
@@ -1142,19 +1205,15 @@ async function validerEtEnvoyerReservation() {
     if (btnValider) btnValider.disabled = true;
 
     try {
-        // Optionnel : Récupération du nom du passager depuis un input s'il existe
-        const inputNom = document.getElementById('nomPassagerInput');
-        const nomPassager = inputNom ? inputNom.value.trim() : 'Occupé';
-
+        const user = obtenirUtilisateurConnecte();
         const nbSiegesChoisis = siegesSelectionnesActuels.length;
 
-        // 1. Préparation des colonnes N_x à mettre à jour dans 'Place'
+        // 1. Update de la table 'Place' avec le NOM du passager
         const updatePayload = {};
         siegesSelectionnesActuels.forEach(num => {
-            updatePayload[`N_${num}`] = nomPassager;
+            updatePayload[`N_${num}`] = user.nom;
         });
 
-        // 2. Mise à jour dans la table 'Place'
         const { error: placeError } = await supabaseClient
             .from('Place')
             .update(updatePayload)
@@ -1162,7 +1221,7 @@ async function validerEtEnvoyerReservation() {
 
         if (placeError) throw placeError;
 
-        // 3. Récupération des compteurs actuels dans 'Reservation'
+        // 2. Update de 'Reservation' (Nb_Libre et Nb_NonLibre)
         const { data: resData, error: fetchError } = await supabaseClient
             .from('Reservation')
             .select('Nb_Libre, Nb_NonLibre, Nb_Place')
@@ -1171,54 +1230,47 @@ async function validerEtEnvoyerReservation() {
 
         if (fetchError) throw fetchError;
 
-        // Calculs sécurisés des places libres et non-libres (en gérant le cas NULL)
-        const totalPlaces = resData.Nb_Place || 27; // 27 par défaut pour Sprinter
+        const totalPlaces = resData.Nb_Place || 27;
         const nbLibreActuel = resData.Nb_Libre ?? totalPlaces;
         const nbNonLibreActuel = resData.Nb_NonLibre ?? 0;
 
-        const nouveauNbLibre = Math.max(0, nbLibreActuel - nbSiegesChoisis);
-        const nouveauNbNonLibre = nbNonLibreActuel + nbSiegesChoisis;
-
-        // 4. Mise à jour simultanée de Nb_Libre et Nb_NonLibre dans 'Reservation'
         const { error: updateResError } = await supabaseClient
             .from('Reservation')
             .update({ 
-                Nb_Libre: nouveauNbLibre,
-                Nb_NonLibre: nouveauNbNonLibre 
+                Nb_Libre: Math.max(0, nbLibreActuel - nbSiegesChoisis),
+                Nb_NonLibre: nbNonLibreActuel + nbSiegesChoisis 
             })
             .eq('id', reservationIdActuelle);
 
         if (updateResError) throw updateResError;
 
-        // 5. Fermeture de la modale Bootstrap
+        // 3. Fermeture modale
         const modaleElement = document.getElementById('seatSelectionModal');
         if (modaleElement) {
             const instanceModale = bootstrap.Modal.getInstance(modaleElement);
             if (instanceModale) instanceModale.hide();
         }
 
-        // 6. Rafraîchissement des cartes de voyage
         if (typeof chargerPublicationsDansOnglets === 'function') {
             await chargerPublicationsDansOnglets();
         }
 
-        alert("Siège(s) réservé(s) avec succès !");
+        alert(`Siège(s) réservé(s) avec succès pour ${user.nom} !`);
 
     } catch (err) {
-        console.error("Erreur lors de l'envoi de la réservation :", err);
-        alert("Une erreur est survenue lors de l'enregistrement de votre réservation.");
+        console.error("Erreur validation :", err);
+        alert("Une erreur est survenue lors de l'enregistrement.");
     } finally {
         if (btnValider) btnValider.disabled = false;
     }
 }
-// Initialisation au chargement du DOM
+
+// Listeners
 document.addEventListener("DOMContentLoaded", () => {
-    // Chargement initial des publications
     if (typeof chargerPublicationsDansOnglets === 'function') {
         chargerPublicationsDansOnglets();
     }
 
-    // Écouteur sur le bouton de validation de la modale
     const btnValider = document.getElementById('btnValiderSiege');
     if (btnValider) {
         btnValider.addEventListener('click', validerEtEnvoyerReservation);
