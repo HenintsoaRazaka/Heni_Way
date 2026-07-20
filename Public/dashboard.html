@@ -3133,7 +3133,7 @@ async function chargerDerniersVoyages() {
             .from('Reservation') 
             .select('*') // Prends les colonnes nécessaires (ex: Depart, Destination, Heure, etc.)
             .order('created_at', { ascending: false }) // Trie du plus récent au plus ancien
-            .limit(3); // Récupère uniquement les deux derniers
+            .limit(2); // Récupère uniquement les deux derniers
 
         if (error) throw error;
 
@@ -3146,8 +3146,9 @@ async function chargerDerniersVoyages() {
 
         voyages.forEach((voyage, index) => {
             // Exemple de données (adapte avec tes vraies colonnes Supabase)
-            const titre = `${voyage.Depart || 'Voyage'} → ${voyage.Destination || ''}`;
-            const horaire = voyage.Heure || "Horaire non précisé"; 
+            const titre = `${voyage.Depart || 'Privé'} → ${voyage.Destination || ''}`;
+            const horaire = voyage.Heure || "Horaire non précisé
+            ; 
             
             // Alternance de style ou d'icône selon l'index (0 pour le 1er, 1 pour le 2e)
             const iconBg = index === 0 ? 'bg-success' : 'bg-danger';
@@ -3179,13 +3180,71 @@ async function chargerDerniersVoyages() {
 
 // Appelle la fonction au chargement de la page
         
-        document.addEventListener("DOMContentLoaded", () => {
-            chargerDonneesInitiales();
-            chargerDonneesReservations();
-            chargerPublications()
-            connecterAuTempsReel();
-            chargerDerniersVoyages();
+document.addEventListener("DOMContentLoaded", () => {
+    chargerDonneesInitiales();
+    chargerDonneesReservations();
+    chargerPublications();
+    connecterAuTempsReel();
+    chargerDerniersVoyages();
+    
+    // Initialisation de la gestion de la déconnexion
+    initialiserDeconnexion();
+});
+
+function initialiserDeconnexion() {
+    const confirmBtn = document.getElementById('confirmLogout');
+    const cancelBtn = document.getElementById('cancelLogout');
+    const deconnexionSection = document.getElementById('deconnexion');
+
+    // 1. Bouton "Se déconnecter"
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async () => {
+            try {
+                // Indicateur de chargement sur le bouton
+                confirmBtn.disabled = true;
+                confirmBtn.innerHTML = `
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Déconnexion...
+                `;
+
+                // Déconnexion de la session Supabase
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) throw error;
+
+                // Nettoyage du stockage local
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // Redirection vers la page de connexion
+                window.location.href = 'login.html'; // 👈 Ajuste le nom si ta page s'appelle index.html ou conn.html
+
+            } catch (err) {
+                console.error("Erreur de déconnexion :", err);
+                alert("Impossible de vous déconnecter. Veuillez réessayer.");
+                
+                // Réinitialisation en cas d'erreur
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-2"></i>Se déconnecter`;
+            }
         });
+    }
+
+    // 2. Bouton "Annuler"
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            // Masquer la vue de confirmation
+            if (deconnexionSection) {
+                deconnexionSection.style.display = 'none';
+            }
+
+            // Optionnel : réafficher le bloc principal s'il a un ID particulier (ex: #accueil)
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) {
+                mainContent.style.display = 'block';
+            }
+        });
+    }
+}
 
         //jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjvgjvvvvvvvvvvvvvvvvvvvvvv,hhvsfbg
         //jbcbchbbche
