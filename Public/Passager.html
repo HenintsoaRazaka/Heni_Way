@@ -853,7 +853,11 @@
             const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
             // Déterminer le type (Si la colonne Type existe, sinon par défaut selon la présence de départ/destination)
-            const typeVoyage = (item.Statut || (item.Depart ? 'Public' : 'Prive')).toLowerCase();
+            const statutBrut = voiture.Statut || item.Statut || (item.Depart ? 'Public' : 'Prive');
+            const typeVoyage = statutBrut
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
 
             // Génération du template de la carte
             if (typeVoyage.includes('public')) {
@@ -878,7 +882,7 @@
                         </div>
                     </div>
                 `;
-            } else if (typeVoyage.includes('special') || typeVoyage.includes('spécial')) {
+            } else if (typeVoyage.includes('special')) {
                 htmlSpecial += `
                     <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div class="d-flex align-items-center gap-3">
@@ -901,13 +905,6 @@
                     </div>
                 `;
             } else {
-                // Vue Privé
-                // Vue Privé
-                // Vue Privé
-                // Vue Privé
-                // Vue Privé
-                // Vue Privé
-                // Vue Privé
                 htmlPrive += `
                     <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div class="d-flex align-items-center gap-3">
