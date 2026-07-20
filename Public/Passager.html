@@ -650,7 +650,7 @@
             }
         }
 
-        const donneesSiegesExemple = [
+      /*  const donneesSiegesExemple = [
             { numero: 1, statut: 1 }, { numero: 2, statut: 0 }, { numero: 3, statut: 0 }, { numero: 4, statut: 1 },
             { numero: 5, statut: 0 }, { numero: 6, statut: 0 }, { numero: 7, statut: 1 }, { numero: 8, statut: 0 },
             { numero: 9, statut: 0 }, { numero: 10, statut: 0 }, { numero: 11, statut: 0 }, { numero: 12, statut: 0 },
@@ -784,7 +784,7 @@
                 lastRow.appendChild(col);
             }
             bodyRows.appendChild(lastRow);
-        }
+        } */
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
         const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
@@ -944,10 +944,286 @@
         if (elPrive) elPrive.innerHTML = errMsg;
     }
 }
+// Variables globales pour stocker l'état
+let reservationIdActuelle = null;
+let siegesSelectionnesActuels = [];
 
-        document.addEventListener("DOMContentLoaded", () => {
-            chargerPublicationsDansOnglets();
+/**
+ * 1. Ouvre la modale et lance la récupération des sièges
+ */
+async function ouvrirModalSieges(reservationId) {
+    reservationIdActuelle = reservationId;
+    const modaleElement = document.getElementById('seatSelectionModal');
+    
+    if (!modaleElement) return;
+
+    // Récupération des sièges occupés/libres
+    const listeSieges = await chargerEtatSieges(reservationId);
+
+    // Génération du plan visuel
+    genererPlanDesSieges(listeSieges);
+
+    // Affichage de la modale
+    const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
+    instanceModale.show();
+}
+
+/**
+ * 2. Fetch Supabase sur la table 'Place'
+ */
+async function chargerEtatSieges(reservationId) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('Place')
+            .select('*')
+            .eq('ID_Reservation', reservationId)
+            .maybeSingle(); // Évite une erreur si aucune ligne n'existe encore
+
+        if (error) throw error;
+
+        const listeComplete = [];
+
+        // Boucle sur les colonnes N_1 à N_27
+        for (let i = 1; i <= 27; i++) {
+            const nomColonne = `N_${i}`;
+            const occupant = data ? data[nomColonne] : null;
+
+            listeComplete.push({
+                numero: i,
+                // Occupé (1) si du texte est présent dans la colonne N_x, Libre (0) sinon
+                statut: (occupant !== null && occupant !== undefined && occupant.trim() !== '') ? 1 : 0
+            });
+        }
+
+        return listeComplete;
+
+    } catch (err) {
+        console.error("Erreur lors de la récupération des places :", err);
+        // Fallback : retourne tous les sièges comme libres
+        return Array.from({ length: 27 }, (_, index) => ({
+            numero: index + 1,
+            statut: 0
+        }));
+    }
+}
+
+/**
+ * 3. Génération visuelle des sièges (Sprinter)
+ */
+function genererPlanDesSieges(listeSieges) {
+    const slot1 = document.getElementById('slot-siege-1');
+    const slot2 = document.getElementById('slot-siege-2');
+    const bodyRows = document.getElementById('sprinterBodyRows');
+    const btnValider = document.getElementById('btnValiderSiege');
+    const badgeNumero = document.getElementById('selectedSeatNumber');
+    
+    if (slot1) slot1.innerHTML = '';
+    if (slot2) slot2.innerHTML = '';
+    if (bodyRows) bodyRows.innerHTML = '';
+    
+    siegesSelectionnesActuels = [];
+    if (btnValider) btnValider.disabled = true;
+    if (badgeNumero) badgeNumero.textContent = '-';
+
+    function creerBoutonSiege(siege) {
+        const btnSiege = document.createElement('button');
+        btnSiege.type = 'button';
+        btnSiege.className = 'btn d-flex flex-column align-items-center justify-content-center p-1 rounded-3';
+        btnSiege.style.width = '45px';
+        btnSiege.style.height = '45px';
+        btnSiege.style.transition = 'all 0.2s';
+        
+        btnSiege.innerHTML = `
+            <i class="fa-solid fa-chair" style="font-size: 0.9rem;"></i>
+            <span style="font-size: 0.6rem; font-weight: 600; margin-top: 1px;">${siege.numero.toString().padStart(2, '0')}</span>
+        `;
+
+        if (siege.statut === 1) {
+            btnSiege.disabled = true; 
+            btnSiege.classList.add('btn-danger', 'opacity-25');
+            btnSiege.style.cursor = 'not-allowed';
+        } else {
+            btnSiege.classList.add('btn-outline-secondary', 'text-white-50');
+
+            btnSiege.addEventListener('click', () => {
+                const index = siegesSelectionnesActuels.indexOf(siege.numero);
+                if (index > -1) {
+                    siegesSelectionnesActuels.splice(index, 1);
+                    btnSiege.style.background = '';
+                    btnSiege.classList.remove('text-dark');
+                } else {
+                    siegesSelectionnesActuels.push(siege.numero);
+                    btnSiege.style.background = 'var(--bleu-ocean)';
+                    btnSiege.classList.add('text-dark');
+                }
+
+                siegesSelectionnesActuels.sort((a, b) => a - b);
+
+                if (siegesSelectionnesActuels.length > 0) {
+                    badgeNumero.textContent = siegesSelectionnesActuels.map(n => n.toString().padStart(2, '0')).join(', ');
+                    btnValider.disabled = false;
+                } else {
+                    badgeNumero.textContent = '-';
+                    btnValider.disabled = true;
+                }
+            });
+        }
+        return btnSiege;
+    }
+
+    // Places de devant (1 et 2)
+    const s1 = listeSieges.find(s => s.numero === 1);
+    const s2 = listeSieges.find(s => s.numero === 2);
+    if (s1 && slot1) slot1.appendChild(creerBoutonSiege(s1));
+    if (s2 && slot2) slot2.appendChild(creerBoutonSiege(s2));
+
+    // Rangées du milieu (3 à 22)
+    let indexSiege = 3;
+    while (indexSiege <= 22) {
+        const row = document.createElement('div');
+        row.className = 'd-flex align-items-center mb-1';
+
+        for (let i = 0; i < 2; i++) {
+            const col = document.createElement('div');
+            col.style.width = '20%';
+            col.className = 'd-flex justify-content-center';
+            const s = listeSieges.find(s => s.numero === indexSiege);
+            if (s) col.appendChild(creerBoutonSiege(s));
+            row.appendChild(col);
+            indexSiege++;
+        }
+
+        const couloir = document.createElement('div');
+        couloir.style.width = '20%';
+        row.appendChild(couloir);
+
+        for (let i = 0; i < 2; i++) {
+            if (indexSiege <= 22) {
+                const col = document.createElement('div');
+                col.style.width = '20%';
+                col.className = 'd-flex justify-content-center';
+                const s = listeSieges.find(s => s.numero === indexSiege);
+                if (s) col.appendChild(creerBoutonSiege(s));
+                row.appendChild(col);
+                indexSiege++;
+            }
+        }
+        if (bodyRows) bodyRows.appendChild(row);
+    }
+
+    // Rangée arrière (23 à 27)
+    const lastRow = document.createElement('div');
+    lastRow.className = 'd-flex align-items-center mt-1';
+    
+    for (let n = 23; n <= 27; n++) {
+        const col = document.createElement('div');
+        col.style.width = '20%';
+        col.className = 'd-flex justify-content-center';
+        const s = listeSieges.find(s => s.numero === n);
+        if (s) col.appendChild(creerBoutonSiege(s));
+        lastRow.appendChild(col);
+    }
+    if (bodyRows) bodyRows.appendChild(lastRow);
+}
+
+/**
+ * 4. Envoi de la sélection vers Supabase (Table 'Place' + mise à jour 'Reservation')
+ */
+/**
+ * 4. Envoi de la sélection vers Supabase (Table 'Place' + mise à jour 'Reservation')
+ */
+async function validerEtEnvoyerReservation() {
+    if (!reservationIdActuelle || siegesSelectionnesActuels.length === 0) {
+        alert("Veuillez sélectionner au moins un siège.");
+        return;
+    }
+
+    const btnValider = document.getElementById('btnValiderSiege');
+    if (btnValider) btnValider.disabled = true;
+
+    try {
+        // Optionnel : Récupération du nom du passager depuis un input s'il existe
+        const inputNom = document.getElementById('nomPassagerInput');
+        const nomPassager = inputNom ? inputNom.value.trim() : 'Occupé';
+
+        const nbSiegesChoisis = siegesSelectionnesActuels.length;
+
+        // 1. Préparation des colonnes N_x à mettre à jour dans 'Place'
+        const updatePayload = {};
+        siegesSelectionnesActuels.forEach(num => {
+            updatePayload[`N_${num}`] = nomPassager;
         });
+
+        // 2. Mise à jour dans la table 'Place'
+        const { error: placeError } = await supabaseClient
+            .from('Place')
+            .update(updatePayload)
+            .eq('ID_Reservation', reservationIdActuelle);
+
+        if (placeError) throw placeError;
+
+        // 3. Récupération des compteurs actuels dans 'Reservation'
+        const { data: resData, error: fetchError } = await supabaseClient
+            .from('Reservation')
+            .select('Nb_Libre, Nb_NonLibre, Nb_Place')
+            .eq('id', reservationIdActuelle)
+            .single();
+
+        if (fetchError) throw fetchError;
+
+        // Calculs sécurisés des places libres et non-libres (en gérant le cas NULL)
+        const totalPlaces = resData.Nb_Place || 27; // 27 par défaut pour Sprinter
+        const nbLibreActuel = resData.Nb_Libre ?? totalPlaces;
+        const nbNonLibreActuel = resData.Nb_NonLibre ?? 0;
+
+        const nouveauNbLibre = Math.max(0, nbLibreActuel - nbSiegesChoisis);
+        const nouveauNbNonLibre = nbNonLibreActuel + nbSiegesChoisis;
+
+        // 4. Mise à jour simultanée de Nb_Libre et Nb_NonLibre dans 'Reservation'
+        const { error: updateResError } = await supabaseClient
+            .from('Reservation')
+            .update({ 
+                Nb_Libre: nouveauNbLibre,
+                Nb_NonLibre: nouveauNbNonLibre 
+            })
+            .eq('id', reservationIdActuelle);
+
+        if (updateResError) throw updateResError;
+
+        // 5. Fermeture de la modale Bootstrap
+        const modaleElement = document.getElementById('seatSelectionModal');
+        if (modaleElement) {
+            const instanceModale = bootstrap.Modal.getInstance(modaleElement);
+            if (instanceModale) instanceModale.hide();
+        }
+
+        // 6. Rafraîchissement des cartes de voyage
+        if (typeof chargerPublicationsDansOnglets === 'function') {
+            await chargerPublicationsDansOnglets();
+        }
+
+        alert("Siège(s) réservé(s) avec succès !");
+
+    } catch (err) {
+        console.error("Erreur lors de l'envoi de la réservation :", err);
+        alert("Une erreur est survenue lors de l'enregistrement de votre réservation.");
+    } finally {
+        if (btnValider) btnValider.disabled = false;
+    }
+}
+// Initialisation au chargement du DOM
+document.addEventListener("DOMContentLoaded", () => {
+    // Chargement initial des publications
+    if (typeof chargerPublicationsDansOnglets === 'function') {
+        chargerPublicationsDansOnglets();
+    }
+
+    // Écouteur sur le bouton de validation de la modale
+    const btnValider = document.getElementById('btnValiderSiege');
+    if (btnValider) {
+        btnValider.addEventListener('click', validerEtEnvoyerReservation);
+    }
+});
     </script>
 </body>
 </html>
