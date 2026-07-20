@@ -1358,9 +1358,13 @@ async function chargerReservationEnCours() {
     const containerWidget = document.querySelector('.glass-panel');
     if (!containerWidget) return;
 
-    const nomUtilisateur = obtenirNomUtilisateurHeniway();
+    const nomUtilisateur = obtenirUtilisateurConnecte();
 
     if (!nomUtilisateur) {
+        // Aucun utilisateur identifié
+        // Aucun utilisateur identifié
+        // Aucun utilisateur identifié
+        // Aucun utilisateur identifié
         // Aucun utilisateur identifié
         afficherWidgetVide(containerWidget, "Bonjour 👋", "Connectez-vous pour voir vos réservations.");
         return;
