@@ -1532,22 +1532,6 @@
 
         const vehicleStatusSelect = document.getElementById('vehicleStatus');
         const vehicleChauffeurInput = document.getElementById('vehicleChauffeur');
-
-        /*vehicleStatusSelect.addEventListener('change', function() {
-            if (this.value === 'Privé') {
-                vehicleChauffeurInput.disabled = true;
-                vehicleChauffeurInput.required = false;
-                vehicleChauffeurInput.value = '';
-                vehicleChauffeurInput.placeholder = 'Non applicable (Véhicule Privé)';
-                vehicleChauffeurInput.classList.add('bg-secondary-subtle');
-            } else {
-                vehicleChauffeurInput.disabled = false;
-                vehicleChauffeurInput.required = true;
-                vehicleChauffeurInput.placeholder = 'Nom du chauffeur';
-                vehicleChauffeurInput.classList.remove('bg-secondary-subtle');
-            }
-        });*/
-
         const pubTabLinks = document.querySelectorAll('#pubNav .tab-link');
 
         pubTabLinks.forEach(tab => {
@@ -1686,140 +1670,125 @@
             }
         });
 
-const formAddVehicle = document.getElementById('formAddVehicle');
-const addVehicleModalEl = document.getElementById('addVehicleModal');
+        const formAddVehicle = document.getElementById('formAddVehicle');
+        const addVehicleModalEl = document.getElementById('addVehicleModal');
 
-if (formAddVehicle) {
-    formAddVehicle.addEventListener('submit', async function(e) {
-        // 1. On empêche le rechargement natif de la page
-        e.preventDefault(); 
+        if (formAddVehicle) {
+            formAddVehicle.addEventListener('submit', async function(e) {
+                e.preventDefault(); 
 
-        // 2. On extrait les données du formulaire automatiquement grâce aux attributs "name"
-        const formData = new FormData(formAddVehicle);
-        
-        // On transforme les paires clé/valeur en un objet JSON simple
-        const donneesFormulaire = Object.fromEntries(formData.entries());
+                const formData = new FormData(formAddVehicle);
+                const donneesFormulaire = Object.fromEntries(formData.entries());
 
-        try {
-            // 3. Envoi des données vers ta route Express (/api/auth/voitures)
-            const response = await fetch('/api/auth/voitures', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(donneesFormulaire)
+                try {
+                    const response = await fetch('/api/auth/voitures', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(donneesFormulaire)
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.message || "Une erreur est survenue lors de l'enregistrement");
+                    }
+
+                    console.log("Données enregistrées :", result.data);
+                    alert(result.message);
+
+                    formAddVehicle.reset();
+
+                    if (addVehicleModalEl) {
+                        const modalInstance = bootstrap.Modal.getOrCreateInstance(addVehicleModalEl);
+                        modalInstance.hide();
+                    }
+
+                    if (typeof chargerDonneesInitiales === 'function') {
+                        await chargerDonneesInitiales();
+                    }
+
+                } catch (err) {
+                    console.error("Erreur d'envoi fetch :", err.message);
+                    alert("Impossible d'enregistrer le véhicule : " + err.message);
+                }
             });
-
-            const result = await response.json();
-
-            // 4. Si le serveur répond avec une erreur
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || "Une erreur est survenue lors de l'enregistrement");
-            }
-
-            // 5. Succès !
-            console.log("Données enregistrées :", result.data);
-            alert(result.message);
-
-            // Réinitialisation des champs du formulaire
-            formAddVehicle.reset();
-
-            // Fermeture automatique du modal Bootstrap
-            if (addVehicleModalEl) {
-                const modalInstance = bootstrap.Modal.getOrCreateInstance(addVehicleModalEl);
-                modalInstance.hide();
-            }
-
-            // Optionnel : Recharger la liste de tes voitures sans recharger la page
-            if (typeof chargerDonneesInitiales === 'function') {
-                await chargerDonneesInitiales();
-            }
-
-        } catch (err) {
-            console.error("Erreur d'envoi fetch :", err.message);
-            alert("Impossible d'enregistrer le véhicule : " + err.message);
         }
-    });
-}
-//fttttttttttttttttttttttttttttttt
-const formAddPublication = document.getElementById('formAddPublication');
-const addPublicationModalEl = document.getElementById('addPublicationModal'); // ID de ton modal de publication
+        const formAddPublication = document.getElementById('formAddPublication');
+        const addPublicationModalEl = document.getElementById('addPublicationModal'); 
 
-if (formAddPublication) {
-    formAddPublication.addEventListener('submit', async function(e) {
-        e.preventDefault();
+        if (formAddPublication) {
+            formAddPublication.addEventListener('submit', async function(e) {
+                e.preventDefault();
 
-        const formData = new FormData(formAddPublication);
-        const donneesFormulaire = Object.fromEntries(formData.entries());
+                const formData = new FormData(formAddPublication);
+                const donneesFormulaire = Object.fromEntries(formData.entries());
 
-        try {
-            const response = await fetch('/api/auth/Publication', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(donneesFormulaire)
+                try {
+                    const response = await fetch('/api/auth/Publication', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(donneesFormulaire)
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.message || "Une erreur est survenue");
+                    }
+
+                    alert(result.message);
+                    formAddPublication.reset();
+
+                    if (addPublicationModalEl) {
+                        const modalInstance = bootstrap.Modal.getOrCreateInstance(addPublicationModalEl);
+                        modalInstance.hide();
+                    }
+
+                    if (typeof chargerPublications === 'function') {
+                        await chargerPublications();
+                    }
+
+                } catch (err) {
+                    console.error("Erreur fetch publication :", err.message);
+                    alert("Impossible de publier : " + err.message);
+                }
             });
-
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || "Une erreur est survenue");
-            }
-
-            alert(result.message);
-            formAddPublication.reset();
-
-            // Fermeture du modal
-            if (addPublicationModalEl) {
-                const modalInstance = bootstrap.Modal.getOrCreateInstance(addPublicationModalEl);
-                modalInstance.hide();
-            }
-
-            // Rafraîchir l'affichage de tes publications publiques
-            if (typeof chargerPublications === 'function') {
-                await chargerPublications();
-            }
-
-        } catch (err) {
-            console.error("Erreur fetch publication :", err.message);
-            alert("Impossible de publier : " + err.message);
-        }
-    });
-}
-
-async function annulerReservation(idReservation) {
-    const confirmation = confirm("Êtes-vous sûr de vouloir annuler cette publication ? Cette action est irréversible.");
-    if (!confirmation) return;
-
-    try {
-        // Envoi des données vers le contrôleur via fetch
-        const response = await fetch(`/api/auth/Annulation`, {
-            method: 'POST', // ou DELETE selon tes routes
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: idReservation }) // Envoi de l'ID dans le corps de la requête
-        });
-
-        const resultat = await response.json();
-
-        if (!response.ok) {
-            throw new Error(resultat.message || "Une erreur est survenue.");
         }
 
-        alert("La publication a bien été annulée.");
+        async function annulerReservation(idReservation) {
+            const confirmation = confirm("Êtes-vous sûr de vouloir annuler cette publication ? Cette action est irréversible.");
+            if (!confirmation) return;
 
-        // Rafraîchir l'affichage global
-        if (typeof chargerPublications === 'function') {
-            await chargerPublications();
+            try {
+                const response = await fetch(`/api/auth/Annulation`, {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: idReservation }) 
+                });
+
+                const resultat = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(resultat.message || "Une erreur est survenue.");
+                }
+
+                alert("La publication a bien été annulée.");
+
+                if (typeof chargerPublications === 'function') {
+                    await chargerPublications();
+                }
+
+            } catch (err) {
+                console.error("Erreur lors de l'envoi fetch :", err.message);
+                alert("Impossible d'annuler : " + err.message);
+            }
         }
-
-    } catch (err) {
-        console.error("Erreur lors de l'envoi fetch :", err.message);
-        alert("Impossible d'annuler : " + err.message);
-    }
-}
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
         const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
@@ -2171,16 +2140,6 @@ async function annulerReservation(idReservation) {
 
         async function chargerPublications() {
             try {
-                // On cible la table 'Reservation' et on imbrique les colonnes de la table 'Voiture'
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
                 const { data, error } = await supabaseClient
                     .from('Reservation')
                     .select(`
@@ -2192,9 +2151,6 @@ async function annulerReservation(idReservation) {
                 if (error) throw error;
                 window.currentReservations = data;
 
-                // On envoie les données reçues à notre fonction de génération
-                //incefbfhbhe hzbffahzfaaaaaaaaaaaaaaaaahzdavvvvvvvvv
-                ////nzdajnnnnnnnnnnnnnnnnnnnnnn
                 genererPublicationsPublic(data || []);
                 genererPublicationsSpecial(data || []);
                 genererPublicationsPrive(data || []);
@@ -2363,904 +2319,780 @@ async function annulerReservation(idReservation) {
         }
 
         function genererTableauVoituresPrive(voitures) {
-    const tbody = document.getElementById('liste-voitures-prive-body');
-    if (!tbody) return;
+            const tbody = document.getElementById('liste-voitures-prive-body');
+            if (!tbody) return;
 
-    tbody.innerHTML = ''; // Évite les doublons lors du rafraîchissement
+            tbody.innerHTML = '';
 
-    // 1. Filtrer uniquement sur la gamme "Privé"
-    const voituresPrivees = voitures.filter(v => v.Statut === 'Privé' || v.Statut === 'Prive');
+            const voituresPrivees = voitures.filter(v => v.Statut === 'Privé' || v.Statut === 'Prive');
 
-    voituresPrivees.forEach(voiture => {
-        const id = voiture.id;
-        const marque = voiture.Marque || "Inconnu";
-        const immatriculation = voiture.Immatriculation || "N/A";
-        const etats = voiture.Etats || "Disponible"; // Lié à la Présence (ex: En gare, En route...)
-        
-        // Attributs spécifiques au Privé
-        const proprietaire = voiture.Proprietaire || "Non défini";
-        const delai = voiture.Delai || "N/A";
-        const numero = voiture.Numero || "N/A";
+            voituresPrivees.forEach(voiture => {
+                const id = voiture.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const etats = voiture.Etats || "Disponible";
+                const proprietaire = voiture.Proprietaire || "Non défini";
+                const delai = voiture.Delai || "N/A";
+                const numero = voiture.Numero || "N/A";
+                const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
 
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-                //jg gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-        // Récupération de la réservation liée
-        const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
+                let destination = "Aucune";
+                let reservationTexte = "Disponible";
 
-        let destination = "Aucune";
-        let reservationTexte = "Disponible";
+                if (reservation) {
+                    destination = reservation.Destination || "Non définie";
+                    reservationTexte = "Réserver"; 
+                }
 
-        if (reservation) {
-            destination = reservation.Destination || "Non définie";
-            reservationTexte = "Réserver"; 
-        }
+                const row = document.createElement('tr');
+                row.className = "clickable-row";
+                row.style.cursor = "pointer";
 
-        // 2. Création de la ligne <tr>
-        const row = document.createElement('tr');
-        row.className = "clickable-row";
-        row.style.cursor = "pointer";
+                row.setAttribute('data-id', id);
+                row.setAttribute('data-marque', marque);
+                row.setAttribute('data-gamme', "Privé");
+                row.setAttribute('data-immat', immatriculation);
+                row.setAttribute('data-Propri', proprietaire);
+                row.setAttribute('data-Presence', etats); 
+                row.setAttribute('data-occupe', reservationTexte);
+                row.setAttribute('data-Delait', delai);
+                row.setAttribute('data-Num', numero);
+                if (reservation) {
+                    row.setAttribute('data-depart', reservation.Depart || "");
+                    row.setAttribute('data-destination', destination);
+                }
 
-        // 3. Injection des attributs data-* attendus par ton écouteur de clic
-        row.setAttribute('data-id', id);
-        row.setAttribute('data-marque', marque);
-        row.setAttribute('data-gamme', "Privé");
-        row.setAttribute('data-immat', immatriculation);
-        row.setAttribute('data-Propri', proprietaire);
-        row.setAttribute('data-Presence', etats); // "Presence" liée à l'Etat du véhicule
-        row.setAttribute('data-occupe', reservationTexte);
-        row.setAttribute('data-Delait', delai);
-        row.setAttribute('data-Num', numero);
-        if (reservation) {
-            row.setAttribute('data-depart', reservation.Depart || "");
-            row.setAttribute('data-destination', destination);
-        }
+                const badgeReservationClass = reservationTexte === "Réserver" 
+                    ? "badge bg-warning-subtle text-warning" 
+                    : "badge bg-success-subtle text-success";
 
-        // 4. Choix du style de badge
-        // Badge Réservation
-        const badgeReservationClass = reservationTexte === "Réserver" 
-            ? "badge bg-warning-subtle text-warning" 
-            : "badge bg-success-subtle text-success";
+                let badgePresenceClass = "badge bg-success-subtle text-success";
+                if (etats === "En panne") {
+                    badgePresenceClass = "badge bg-danger-subtle text-danger";
+                } else if (etats === "En route") {
+                    badgePresenceClass = "badge bg-primary-subtle text-primary";
+                }
 
-        // Badge Présence (Etat de la voiture)
-        let badgePresenceClass = "badge bg-success-subtle text-success";
-        if (etats === "En panne") {
-            badgePresenceClass = "badge bg-danger-subtle text-danger";
-        } else if (etats === "En route") {
-            badgePresenceClass = "badge bg-primary-subtle text-primary";
-        }
-
-        // 5. Code HTML interne de la ligne
-        row.innerHTML = `
-            <td class="ps-4 py-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
-                        <i class="fas fa-bus"></i>
-                    </div>
-                    <div>
-                        <h6 class="m-0 fw-semibold">${marque}</h6>
-                        <small class="text-secondary">Privé</small>
-                    </div>
-                </div>
-            </td>
-            <td class="fw-medium">${immatriculation}</td>
-            <td>${destination}</td>
-            <td class="text-center">
-                <span class="${badgeReservationClass} rounded-pill px-3 py-1 fw-semibold">${reservationTexte}</span>
-            </td>
-            <td class="text-center">
-                <span class="${badgePresenceClass} rounded-pill px-3 py-1 fw-semibold">${etats}</span>
-            </td>
-        `;
-
-        tbody.appendChild(row);
-    });
-}
-
-function genererPublicationsPublic(reservations) {
-    const containerPublic = document.getElementById('PublicP');
-    if (!containerPublic) return;
-
-    containerPublic.innerHTML = ''; // Vide le conteneur avant d'ajouter les élémentsbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-    //jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
-
-    // 1. Filtrer les réservations pour ne garder que celles dont la voiture est de gamme "Public"
-    const reservationsPublic = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Public');
-
-    if (reservationsPublic.length === 0) {
-        containerPublic.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication active pour le moment.</div>`;
-        return;
-    }
-
-    // 2. Parcourir chaque réservation pour injecter le HTML
-    reservationsPublic.forEach(reservation => {
-        const voiture = reservation.Voiture;
-        
-        const idReservation = reservation.id;
-        const marque = voiture.Marque || "Inconnu";
-        const immatriculation = voiture.Immatriculation || "N/A";
-        const depart = reservation.Depart || "Non défini";
-        const destination = reservation.Destination || "Non définie";
-        const heure = reservation.Heure || "--:--";
-        const Date = reservation.Date;
-
-        // 3. Création du bloc de carte de publication
-        const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
-        card.setAttribute('data-reservation-id', idReservation);
-
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <h6 class="m-0 fw-bold text-body">${marque}</h6>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
-                        <small class="text-secondary fw-medium">Public</small><br>
-                        <small class="text-secondary fw-medium">${Date}</small>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
-                        <span class="fw-semibold text-body small">${depart}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
-                        <span class="fw-semibold text-primary small">${destination}</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
-                        <i class="fa-regular fa-clock text-warning"></i>
-                        <span>${heure}</span>
-                    </div>
-                </div>
-
-                <div>
-                    <button class="btn btn-sm btn-outline-danger rounded-3 px-3 py-2 fw-medium d-flex align-items-center gap-2 btn-annuler-pub" onclick="annulerReservation(${idReservation})">
-                        <i class="fa-regular fa-circle-xmark"></i>
-                        <span>Annuler</span>
-                    </button>
-                </div>
-            </div>
-        `;
-
-        containerPublic.appendChild(card);
-    });
-}
-
-function genererPublicationsSpecial(reservations) {
-    const containerSpecial = document.getElementById('SpecialP');
-    if (!containerSpecial) return;
-
-    containerSpecial.innerHTML = ''; // Vide le contenu statique/d'exemple
-
-    // 1. Filtrer les réservations pour ne garder que la gamme "Spécial"
-    const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Special');
-
-    if (reservationsSpecial.length === 0) {
-        containerSpecial.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication spéciale active pour le moment.</div>`;
-        return;
-    }
-
-    // 2. Parcourir chaque réservation "Spécial" et générer le HTMLjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
-    //nnnnnnnnnnnnnnnnnnnnnnnnnnnhybbbyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-    reservationsSpecial.forEach(reservation => {
-        const voiture = reservation.Voiture;
-        
-        const idReservation = reservation.id;
-        const marque = voiture.Marque || "Inconnu";
-        const immatriculation = voiture.Immatriculation || "N/A";
-        const depart = reservation.Depart || "Non défini";
-        const destination = reservation.Destination || "Non définie";
-        const heure = reservation.Heure || "--:--";
-
-        // 3. Création du bloc de carte
-        const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
-        card.setAttribute('data-reservation-id', idReservation);
-
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <h6 class="m-0 fw-bold text-body">${marque}</h6>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
-                        <small class="text-secondary fw-medium">Spécial</small>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
-                        <span class="fw-semibold text-body small">${depart}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
-                        <span class="fw-semibold text-primary small">${destination}</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
-                        <i class="fa-regular fa-clock text-warning"></i>
-                        <span>${heure}</span>
-                    </div>
-                </div>
-
-                <div>
-                    <button class="btn btn-sm btn-outline-danger rounded-3 px-3 py-2 fw-medium d-flex align-items-center gap-2 btn-annuler-pub" onclick="annulerReservation(${idReservation})">
-                        <i class="fa-regular fa-circle-xmark"></i>
-                        <span>Annuler</span>
-                    </button>
-                </div>
-            </div>
-        `;
-
-        containerSpecial.appendChild(card);
-    });
-}
-
-function genererPublicationsPrive(reservations) {
-    const containerPrive = document.getElementById('PriveP');
-    if (!containerPrive) return;
-
-    containerPrive.innerHTML = ''; // Vide le contenu statique (le Mazda E2200 d'exemple)
-
-    // 1. Filtrer les réservations pour ne garder que la gamme "Privé"
-    const reservationsPrive = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Privé');
-
-    if (reservationsPrive.length === 0) {
-        containerPrive.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication privée active pour le moment.</div>`;
-        return;
-    }
-
-    // 2. Parcourir et générer les cartes privées
-    reservationsPrive.forEach(reservation => {
-        const voiture = reservation.Voiture;
-        
-        const idReservation = reservation.id;
-        const marque = voiture.Marque || "Inconnu";
-        const immatriculation = voiture.Immatriculation || "N/A";
-
-        // 3. Création de l'élément HTML
-        const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
-        card.setAttribute('data-reservation-id', idReservation);
-
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <h6 class="m-0 fw-bold text-body">${marque}</h6>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
-                        <small class="text-secondary fw-medium">Privé</small>
-                    </div>
-                </div>
-
-                <div>
-                    <button class="btn btn-sm btn-outline-danger rounded-3 px-3 py-2 fw-medium d-flex align-items-center gap-2 btn-annuler-pub" onclick="annulerReservation(${idReservation})">
-                        <i class="fa-regular fa-circle-xmark"></i>
-                        <span>Annuler</span>
-                    </button>
-                </div>
-            </div>
-        `;
-
-        containerPrive.appendChild(card);
-    });
-}
-
-async function preparerModalPassagers(idReservation) {
-    const modalBody = document.querySelector('#passengersListModal .modal-body');
-    if (!modalBody) return;
-
-    // 1. Afficher un indicateur de chargement (Spinner)
-    modalBody.innerHTML = `
-        <div class="text-center py-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Chargement...</span>
-            </div>
-            <p class="text-secondary mt-2 small">Récupération de la liste des passagers...</p>
-        </div>
-    `;
-
-    try {
-        // REMPLACE 'NomDeTaTableActuelle' par le vrai nom de la table visible sur ta capture d'écran
-        const nomTableLiaison = 'Reservations'; 
-
-        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
-        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
-        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
-        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
-        // 2. ÉTAPE 1 : Récupérer la ligne correspondant à la réservation
-        const { data: ligneReservation, error: errorLigne } = await supabaseClient
-            .from('Place')
-            .select('*') // Récupère toutes les colonnes (N_27, N_28, etc.)
-            .eq('ID_Reservation', idReservation)
-            .maybeSingle(); // Récupère un seul objet ou null
-
-        if (errorLigne) throw errorLigne;
-
-        // Si la réservation n'existe pas ou n'a pas de données
-        if (!ligneReservation) {
-            modalBody.innerHTML = `<div class="text-center text-secondary py-3">Aucune donnée trouvée pour cette réservation.</div>`;
-            return;
-        }
-
-        // Extraire dynamiquement tous les noms/pseudos des colonnes qui commencent par "N_" et qui ne sont pas NULL
-        const listeNoms = Object.keys(ligneReservation)
-            .filter(cle => cle.startsWith('N_') && ligneReservation[cle] !== null)
-            .map(cle => ligneReservation[cle].trim());
-
-        // Si aucune colonne N_xx ne contient de passager
-        if (listeNoms.length === 0) {
-            modalBody.innerHTML = `<div class="text-center text-secondary py-3">Aucun passager enregistré pour cette réservation.</div>`;
-            return;
-        }
-
-        // 3. ÉTAPE 2 : Chercher ces noms dans la table 'Passagers'
-        // On cherche si la valeur correspond soit au Nom, soit au Pseudo
-        const { data: passagers, error: errorPassagers } = await supabaseClient
-            .from('Passagers')
-            .select('Nom, Pseudo, Telephone')
-            .or(`Nom.in.(${listeNoms.map(n => `"${n}"`).join(',')}),Pseudo.in.(${listeNoms.map(n => `"${n}"`).join(',')})`);
-
-        if (errorPassagers) throw errorPassagers;
-
-        // 4. Si aucun profil passager correspondant n'est trouvé dans la table Passagers
-        if (!passagers || passagers.length === 0) {
-            modalBody.innerHTML = `<div class="text-center text-secondary py-3">Les passagers ont été trouvés mais leurs profils détaillés sont introuvables.</div>`;
-            return;
-        }
-
-        // 5. Générer le code HTML de la liste des passagers
-        let htmlContent = '<div class="list-group list-group-flush">';
-        
-        passagers.forEach(passager => {
-            const nom = passager.Nom || "Nom non renseigné";
-            const pseudo = passager.Pseudo ? `@${passager.Pseudo}` : "";
-            const telephone = passager.Telephone || "Aucun numéro";
-
-            htmlContent += `
-                <div class="list-group-item px-0 py-3 d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 2.8rem; height: 2.8rem;">
-                            ${nom.charAt(0).toUpperCase()}
+                row.innerHTML = `
+                    <td class="ps-4 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="fas fa-bus"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 fw-semibold">${marque}</h6>
+                                <small class="text-secondary">Privé</small>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="m-0 fw-bold text-body">${nom} <small class="text-muted fw-normal ms-1">${pseudo}</small></h6>
-                            <small class="text-secondary"><i class="fa-solid fa-phone me-1 text-danger small"></i> ${telephone}</small>
-                        </div>
-                    </div>
-                    <a href="tel:${telephone}" class="btn btn-sm btn-outline-primary rounded-pill px-3 ${passager.Telephone ? '' : 'disabled'}">
-                        <i class="fa-solid fa-phone"></i> Appeler
-                    </a>
-                </div>
-            `;
-        });
+                    </td>
+                    <td class="fw-medium">${immatriculation}</td>
+                    <td>${destination}</td>
+                    <td class="text-center">
+                        <span class="${badgeReservationClass} rounded-pill px-3 py-1 fw-semibold">${reservationTexte}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="${badgePresenceClass} rounded-pill px-3 py-1 fw-semibold">${etats}</span>
+                    </td>
+                `;
 
-        htmlContent += '</div>';
-        modalBody.innerHTML = htmlContent;
+                tbody.appendChild(row);
+            });
+        }
 
-    } catch (err) {
-        console.error("Erreur complète :", err);
-        modalBody.innerHTML = `
-            <div class="text-center text-danger py-3">
-                <i class="fa-solid fa-circle-exclamation fs-4 mb-2"></i>
-                <p class="m-0 small">Une erreur est survenue lors du chargement des données.</p>
-            </div>
-        `;
-    }
-}
+        function genererPublicationsPublic(reservations) {
+            const containerPublic = document.getElementById('PublicP');
+            if (!containerPublic) return;
 
-function genererPassagersPublic(reservations) {
-    const containerPassager = document.getElementById('PublicPa');
-    if (!containerPassager) return;
+            containerPublic.innerHTML = ''; 
 
-    containerPassager.innerHTML = ''; // Vide l'exemple statique
+            const reservationsPublic = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Public');
 
-    // 1. Filtrer pour exclure les véhicules "Privé"
-    const reservationsPassager = reservations.filter(res => res.Voiture && res.Voiture.Statut == 'Public');
-
-    if (reservationsPassager.length === 0) {
-        containerPassager.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation de passagers en cours.</div>`;
-        return;
-    }
-
-    // 2. Générer les cartes de suivi des passagers
-    reservationsPassager.forEach(reservation => {
-        const voiture = reservation.Voiture;
-        
-        // Récupération directe des colonnes de la table Reservation
-        const totalPlaces = reservation.Nb_Place || 0;
-        const placesOccupees = reservation.Nb_NonLibre || 0;
-        
-        // Calcul des places libres : Total - Occupées
-        const placesLibres = totalPlaces - placesOccupees; 
-
-        const idReservation = reservation.id;
-        const marque = voiture.Marque || "Inconnu";
-        const immatriculation = voiture.Immatriculation || "N/A";
-        const statut = voiture.Statut || "Public";
-        const depart = reservation.Depart || "Non défini";
-        const destination = reservation.Destination || "Non définie";
-        const heure = reservation.Heure || "--:--";
-
-        // 3. Création du HTML
-        const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item mb-3";
-        card.style.cursor = "pointer";
-        card.setAttribute('data-bs-toggle', 'modal');
-        card.setAttribute('data-bs-target', '#passengersListModal');
-        card.setAttribute('data-reservation-id', idReservation);
-        
-        // 🟢 On rend la fonction async pour aller chercher les infos dans la table Passagers au clic
-        // 🟢 On rend la fonction async pour aller chercher les infos dans la table Passagers au clic
-        card.addEventListener('click', async () => {
-            // A. Remplir les informations du véhicule en haut du modal
-            const modalTitleInfo = document.getElementById('modalVehicleInfo');
-            if (modalTitleInfo) {
-                modalTitleInfo.innerText = `${marque} — ${immatriculation}`;
+            if (reservationsPublic.length === 0) {
+                containerPublic.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication active pour le moment.</div>`;
+                return;
             }
 
-            // B. Sélectionner et vider le conteneur interne du modal
-            const containerModal = document.getElementById('modalPassengersContainer');
-            if (containerModal) {
-                containerModal.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm" role="status"></div> Chargement...</div>`;
+            reservationsPublic.forEach(reservation => {
+                const voiture = reservation.Voiture;
+                
+                const idReservation = reservation.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const depart = reservation.Depart || "Non défini";
+                const destination = reservation.Destination || "Non définie";
+                const heure = reservation.Heure || "--:--";
+                const Date = reservation.Date;
 
-                // Sécurité s'il n'y a pas de table Place liée
-                if (!reservation.Place || reservation.Place.length === 0) {
-                    containerModal.innerHTML = `<div class="text-center text-secondary py-4">Aucun passager enregistré à bord.</div>`;
+                const card = document.createElement('div');
+                card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
+                card.setAttribute('data-reservation-id', idReservation);
+
+                card.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                <i class="fas fa-bus fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                                <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
+                                <small class="text-secondary fw-medium">Public</small><br>
+                                <small class="text-secondary fw-medium">${Date}</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
+                                <span class="fw-semibold text-body small">${depart}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                                <span class="fw-semibold text-primary small">${destination}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                                <i class="fa-regular fa-clock text-warning"></i>
+                                <span>${heure}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-sm btn-outline-danger rounded-3 px-3 py-2 fw-medium d-flex align-items-center gap-2 btn-annuler-pub" onclick="annulerReservation(${idReservation})">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                <span>Annuler</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                containerPublic.appendChild(card);
+            });
+        }
+
+        function genererPublicationsSpecial(reservations) {
+            const containerSpecial = document.getElementById('SpecialP');
+            if (!containerSpecial) return;
+
+            containerSpecial.innerHTML = ''; 
+            const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Special');
+
+            if (reservationsSpecial.length === 0) {
+                containerSpecial.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication spéciale active pour le moment.</div>`;
+                return;
+            }
+
+            reservationsSpecial.forEach(reservation => {
+                const voiture = reservation.Voiture;
+                
+                const idReservation = reservation.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const depart = reservation.Depart || "Non défini";
+                const destination = reservation.Destination || "Non définie";
+                const heure = reservation.Heure || "--:--";
+
+                // 3. Création du bloc de carte
+                const card = document.createElement('div');
+                card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
+                card.setAttribute('data-reservation-id', idReservation);
+
+                card.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                <i class="fas fa-bus fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                                <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
+                                <small class="text-secondary fw-medium">Spécial</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
+                                <span class="fw-semibold text-body small">${depart}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                                <span class="fw-semibold text-primary small">${destination}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                                <i class="fa-regular fa-clock text-warning"></i>
+                                <span>${heure}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-sm btn-outline-danger rounded-3 px-3 py-2 fw-medium d-flex align-items-center gap-2 btn-annuler-pub" onclick="annulerReservation(${idReservation})">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                <span>Annuler</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                containerSpecial.appendChild(card);
+            });
+        }
+
+        function genererPublicationsPrive(reservations) {
+            const containerPrive = document.getElementById('PriveP');
+            if (!containerPrive) return;
+
+            containerPrive.innerHTML = '';
+            const reservationsPrive = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Privé');
+
+            if (reservationsPrive.length === 0) {
+                containerPrive.innerHTML = `<div class="text-center text-secondary py-3">Aucune publication privée active pour le moment.</div>`;
+                return;
+            }
+
+            reservationsPrive.forEach(reservation => {
+                const voiture = reservation.Voiture;
+                
+                const idReservation = reservation.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+
+                const card = document.createElement('div');
+                card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
+                card.setAttribute('data-reservation-id', idReservation);
+
+                card.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                <i class="fas fa-bus fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                                <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
+                                <small class="text-secondary fw-medium">Privé</small>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-sm btn-outline-danger rounded-3 px-3 py-2 fw-medium d-flex align-items-center gap-2 btn-annuler-pub" onclick="annulerReservation(${idReservation})">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                <span>Annuler</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                containerPrive.appendChild(card);
+            });
+        }
+
+        async function preparerModalPassagers(idReservation) {
+            const modalBody = document.querySelector('#passengersListModal .modal-body');
+            if (!modalBody) return;
+
+            modalBody.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    <p class="text-secondary mt-2 small">Récupération de la liste des passagers...</p>
+                </div>
+            `;
+
+            try {
+                const nomTableLiaison = 'Reservations'; 
+
+                const { data: ligneReservation, error: errorLigne } = await supabaseClient
+                    .from('Place')
+                    .select('*') 
+                    .eq('ID_Reservation', idReservation)
+                    .maybeSingle();
+
+                if (errorLigne) throw errorLigne;
+
+                if (!ligneReservation) {
+                    modalBody.innerHTML = `<div class="text-center text-secondary py-3">Aucune donnée trouvée pour cette réservation.</div>`;
                     return;
                 }
 
-                const dataPlace = reservation.Place[0]; // Ligne associée dans la table Place
-                console.log(dataPlace);
-                
-                // C. Filtrer et trier les colonnes N_1, N_2... de la table Place
-                const clesPlaces = Object.keys(dataPlace)
-                    .filter(key => key.startsWith('N_'))
-                    .sort((a, b) => parseInt(a.replace('N_', '')) - parseInt(b.replace('N_', '')));
+                const listeNoms = Object.keys(ligneReservation)
+                    .filter(cle => cle.startsWith('N_') && ligneReservation[cle] !== null)
+                    .map(cle => ligneReservation[cle].trim());
 
-                // Récupérer la liste de tous les noms présents dans cette réservation pour faire une seule requête groupée
-                const nomsAObtenir = clesPlaces
-                    .map(cle => dataPlace[cle])
-                    .filter(nom => nom && nom.trim() !== '');
-
-                let listePassagersDetails = [];
-                
-                // 🟢 Requête Supabase : Récupérer les téléphones correspondants dans la table Passagers
-                if (nomsAObtenir.length > 0) {
-                    const { data: passagers, error } = await supabaseClient
-                        .from('Passagers')
-                        .select('Nom, Pseudo, Telephone')
-                        .or(`Nom.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')}),Pseudo.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')})`);
-                    
-                    if (!error && passagers) {
-                        listePassagersDetails = passagers;
-                    }
+                if (listeNoms.length === 0) {
+                    modalBody.innerHTML = `<div class="text-center text-secondary py-3">Aucun passager enregistré pour cette réservation.</div>`;
+                    return;
                 }
 
-                containerModal.innerHTML = ''; // Enlever le spinner de chargement
-                let passagersTrouves = false;
+                const { data: passagers, error: errorPassagers } = await supabaseClient
+                    .from('Passagers')
+                    .select('Nom, Pseudo, Telephone')
+                    .or(`Nom.in.(${listeNoms.map(n => `"${n}"`).join(',')}),Pseudo.in.(${listeNoms.map(n => `"${n}"`).join(',')})`);
 
-                // D. Générer le HTML de chaque passager présent
-                clesPlaces.forEach(cle => {
-                    const valeurPlace = dataPlace[cle]; // Peut être un Nom ou un Pseudo selon ce que tu stockes
+                if (errorPassagers) throw errorPassagers;
 
-                    if (valeurPlace && valeurPlace.trim() !== '') {
-                        passagersTrouves = true;
+                if (!passagers || passagers.length === 0) {
+                    modalBody.innerHTML = `<div class="text-center text-secondary py-3">Les passagers ont été trouvés mais leurs profils détaillés sont introuvables.</div>`;
+                    return;
+                }
 
-                        // Formater le numéro de place (ex: N_4 -> 04)
-                        const numeroPlaceRaw = cle.replace('N_', '');
-                        const numeroPlaceFormate = numeroPlaceRaw.padStart(2, '0');
+                let htmlContent = '<div class="list-group list-group-flush">';
+                
+                passagers.forEach(passager => {
+                    const nom = passager.Nom || "Nom non renseigné";
+                    const pseudo = passager.Pseudo ? `@${passager.Pseudo}` : "";
+                    const telephone = passager.Telephone || "Aucun numéro";
 
-                        // Trouver la correspondance dans les détails récupérés (soit par le Nom, soit par le Pseudo)
-                        const infoPassager = listePassagersDetails.find(p => p.Nom === valeurPlace);
-                        const telephonePassager = infoPassager ? infoPassager.Telephone : "Non renseigné";
-
-                        const itemPassager = document.createElement('div');
-                        itemPassager.className = "card border-0 shadow-sm p-3 mb-2 bg-body rounded-3 border-start border-primary border-3";
-
-                        itemPassager.innerHTML = `
-                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
-                                         style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem; background-color: var(--color-primary) !important;">
-                                        ${numeroPlaceFormate}
-                                    </div>
-                                    <div>
-                                        <h6 class="m-0 fw-bold text-body">${valeurPlace}</h6>
-                                        <div class="d-flex flex-column gap-1 mt-1 text-secondary" style="font-size: 0.8rem;">
-                                            <span><i class="fa-solid fa-phone me-1 text-muted"></i> Tél : ${telephonePassager || 'Aucun'}</span>
-                                        </div>
-                                    </div>
+                    htmlContent += `
+                        <div class="list-group-item px-0 py-3 d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 2.8rem; height: 2.8rem;">
+                                    ${nom.charAt(0).toUpperCase()}
                                 </div>
-                                <div class="text-end">
-                                    <small class="text-secondary fw-semibold">Statut : <span class="text-success">Confirmé</span></small>
+                                <div>
+                                    <h6 class="m-0 fw-bold text-body">${nom} <small class="text-muted fw-normal ms-1">${pseudo}</small></h6>
+                                    <small class="text-secondary"><i class="fa-solid fa-phone me-1 text-danger small"></i> ${telephone}</small>
                                 </div>
                             </div>
-                        `;
-                        containerModal.appendChild(itemPassager);
+                            <a href="tel:${telephone}" class="btn btn-sm btn-outline-primary rounded-pill px-3 ${passager.Telephone ? '' : 'disabled'}">
+                                <i class="fa-solid fa-phone"></i> Appeler
+                            </a>
+                        </div>
+                    `;
+                });
+
+                htmlContent += '</div>';
+                modalBody.innerHTML = htmlContent;
+
+            } catch (err) {
+                console.error("Erreur complète :", err);
+                modalBody.innerHTML = `
+                    <div class="text-center text-danger py-3">
+                        <i class="fa-solid fa-circle-exclamation fs-4 mb-2"></i>
+                        <p class="m-0 small">Une erreur est survenue lors du chargement des données.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function genererPassagersPublic(reservations) {
+            const containerPassager = document.getElementById('PublicPa');
+            if (!containerPassager) return;
+
+            containerPassager.innerHTML = ''; 
+            const reservationsPassager = reservations.filter(res => res.Voiture && res.Voiture.Statut == 'Public');
+
+            if (reservationsPassager.length === 0) {
+                containerPassager.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation de passagers en cours.</div>`;
+                return;
+            }
+            reservationsPassager.forEach(reservation => {
+                const voiture = reservation.Voiture;
+                const totalPlaces = reservation.Nb_Place || 0;
+                const placesOccupees = reservation.Nb_NonLibre || 0;
+                const placesLibres = totalPlaces - placesOccupees; 
+                const idReservation = reservation.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const statut = voiture.Statut || "Public";
+                const depart = reservation.Depart || "Non défini";
+                const destination = reservation.Destination || "Non définie";
+                const heure = reservation.Heure || "--:--";
+
+                const card = document.createElement('div');
+                card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item mb-3";
+                card.style.cursor = "pointer";
+                card.setAttribute('data-bs-toggle', 'modal');
+                card.setAttribute('data-bs-target', '#passengersListModal');
+                card.setAttribute('data-reservation-id', idReservation);
+                
+                card.addEventListener('click', async () => {
+                    const modalTitleInfo = document.getElementById('modalVehicleInfo');
+                    if (modalTitleInfo) {
+                        modalTitleInfo.innerText = `${marque} — ${immatriculation}`;
+                    }
+
+                    const containerModal = document.getElementById('modalPassengersContainer');
+                    if (containerModal) {
+                        containerModal.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm" role="status"></div> Chargement...</div>`;
+
+                        if (!reservation.Place || reservation.Place.length === 0) {
+                            containerModal.innerHTML = `<div class="text-center text-secondary py-4">Aucun passager enregistré à bord.</div>`;
+                            return;
+                        }
+
+                        const dataPlace = reservation.Place[0]; 
+                        console.log(dataPlace);
+                        
+                        const clesPlaces = Object.keys(dataPlace)
+                            .filter(key => key.startsWith('N_'))
+                            .sort((a, b) => parseInt(a.replace('N_', '')) - parseInt(b.replace('N_', '')));
+
+                        const nomsAObtenir = clesPlaces
+                            .map(cle => dataPlace[cle])
+                            .filter(nom => nom && nom.trim() !== '');
+
+                        let listePassagersDetails = [];
+                        
+                        if (nomsAObtenir.length > 0) {
+                            const { data: passagers, error } = await supabaseClient
+                                .from('Passagers')
+                                .select('Nom, Pseudo, Telephone')
+                                .or(`Nom.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')}),Pseudo.in.(${nomsAObtenir.map(n => `"${n}"`).join(',')})`);
+                            
+                            if (!error && passagers) {
+                                listePassagersDetails = passagers;
+                            }
+                        }
+
+                        containerModal.innerHTML = ''; 
+                        let passagersTrouves = false;
+
+                        clesPlaces.forEach(cle => {
+                            const valeurPlace = dataPlace[cle];
+
+                            if (valeurPlace && valeurPlace.trim() !== '') {
+                                passagersTrouves = true;
+
+                                const numeroPlaceRaw = cle.replace('N_', '');
+                                const numeroPlaceFormate = numeroPlaceRaw.padStart(2, '0');
+                                const infoPassager = listePassagersDetails.find(p => p.Nom === valeurPlace);
+                                const telephonePassager = infoPassager ? infoPassager.Telephone : "Non renseigné";
+                                const itemPassager = document.createElement('div');
+                                itemPassager.className = "card border-0 shadow-sm p-3 mb-2 bg-body rounded-3 border-start border-primary border-3";
+                                itemPassager.innerHTML = `
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
+                                                style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem; background-color: var(--color-primary) !important;">
+                                                ${numeroPlaceFormate}
+                                            </div>
+                                            <div>
+                                                <h6 class="m-0 fw-bold text-body">${valeurPlace}</h6>
+                                                <div class="d-flex flex-column gap-1 mt-1 text-secondary" style="font-size: 0.8rem;">
+                                                    <span><i class="fa-solid fa-phone me-1 text-muted"></i> Tél : ${telephonePassager || 'Aucun'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-secondary fw-semibold">Statut : <span class="text-success">Confirmé</span></small>
+                                        </div>
+                                    </div>
+                                `;
+                                containerModal.appendChild(itemPassager);
+                            }
+                        });
+
+                        if (!passagersTrouves) {
+                            containerModal.innerHTML = `<div class="text-center text-secondary py-4">Aucun passager à bord pour le moment.</div>`;
+                        }
                     }
                 });
 
-                // Si aucune colonne N_x ne contenait de nom
-                if (!passagersTrouves) {
-                    containerModal.innerHTML = `<div class="text-center text-secondary py-4">Aucun passager à bord pour le moment.</div>`;
-                }
-            }
-        });
-
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <div class="d-flex align-items-center gap-2">
-                            <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                card.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                <i class="fas fa-bus fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                                </div>
+                                <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
+                                <small class="text-secondary fw-medium">${statut}</small>
+                            </div>
                         </div>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
-                        <small class="text-secondary fw-medium">${statut}</small>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
-                        <span class="fw-semibold text-body small">${depart}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
-                        <span class="fw-semibold text-primary small">${destination}</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
-                        <i class="fa-regular fa-clock text-warning"></i>
-                        <span>${heure}</span>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center gap-3">
-                    <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
-                        <div class="text-center px-2 border-end">
-                            <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">${placesLibres}</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
+                        
+                        <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
+                                <span class="fw-semibold text-body small">${depart}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                                <span class="fw-semibold text-primary small">${destination}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                                <i class="fa-regular fa-clock text-warning"></i>
+                                <span>${heure}</span>
+                            </div>
                         </div>
-                        <div class="text-center px-2">
-                            <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">${placesOccupees}</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
+                                <div class="text-center px-2 border-end">
+                                    <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">${placesLibres}</span>
+                                    <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
+                                </div>
+                                <div class="text-center px-2">
+                                    <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">${placesOccupees}</span>
+                                    <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-secondary small"></i>
                         </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-secondary small"></i>
-                </div>
-            </div>
-        `;
-
-        containerPassager.appendChild(card);
-    });
-}
-function genererPassagersSpecial(reservations) {
-    const containerPassagerSpecial = document.getElementById('SpecialPa');
-    if (!containerPassagerSpecial) return;
-
-    containerPassagerSpecial.innerHTML = ''; // On vide le conteneur statique
-
-    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
-    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
-    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
-    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
-    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
-    // 1. Filtrer pour ne garder que les véhicules de statut "Spécial"
-    const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Special');
-
-    if (reservationsSpecial.length === 0) {
-        containerPassagerSpecial.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation spéciale en cours.</div>`;
-        return;
-    }
-
-    // 2. Générer les cartes de suivi des passagers Spécial
-    reservationsSpecial.forEach(reservation => {
-        const voiture = reservation.Voiture;
-        
-        // Récupération des colonnes de la réservation
-        const totalPlaces = reservation.Nb_Place || 0;
-        const placesOccupees = reservation.Nb_NonLibre || 0;
-        const placesLibres = totalPlaces - placesOccupees;
-
-        const idReservation = reservation.id;
-        const marque = voiture.Marque || "Inconnu";
-        const immatriculation = voiture.Immatriculation || "N/A";
-        const depart = reservation.Depart || "Non défini";
-        const destination = reservation.Destination || "Non définie";
-        const heure = reservation.Heure || "--:--";
-
-        // 3. Création de la carte HTML
-        const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item mb-3"; // Ajout d'un petit mb-3 pour l'espace
-        card.style.cursor = "pointer";
-        card.setAttribute('data-bs-toggle', 'modal');
-        card.setAttribute('data-bs-target', '#passengersListModal');
-        card.setAttribute('data-reservation-id', idReservation);
-        
-        // C'est ici qu'on prépare l'affichage des passagers au clic
-        card.addEventListener('click', () => {
-            if (typeof preparerModalPassagers === 'function') {
-                preparerModalPassagers(idReservation);
-            }
-        });
-
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <h6 class="m-0 fw-bold text-body">${marque}</h6>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
-                        <small class="text-secondary fw-medium">Spécial</small>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
-                        <span class="fw-semibold text-body small">${depart}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
-                        <span class="fw-semibold text-primary small">${destination}</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
-                        <i class="fa-regular fa-clock text-warning"></i>
-                        <span>${heure}</span>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center gap-3">
-                    <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
-                        <div class="text-center px-2 border-end">
-                            <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">${placesLibres}</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
-                        </div>
-                        <div class="text-center px-2">
-                            <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">${placesOccupees}</span>
-                            <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-secondary small"></i>
-                </div>
-            </div>
-        `;
-
-        containerPassagerSpecial.appendChild(card);
-    });
-}
-function genererPassagersPrive(reservations) {
-    const containerPassagerPrive = document.getElementById('PrivePa');
-    if (!containerPassagerPrive) return;
-
-    containerPassagerPrive.innerHTML = ''; // Vide l'exemple statique du Mazda E2200
-
-    // 1. Filtrer pour ne garder que les véhicules de statut "Privé"
-    const reservationsPrive = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Privé');
-
-    if (reservationsPrive.length === 0) {
-        containerPassagerPrive.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation privée en cours.</div>`;
-        return;
-    }
-
-    // 2. Générer les cartes de suivi privées
-    reservationsPrive.forEach(reservation => {
-        const voiture = reservation.Voiture;
-        
-        // Récupérer la ligne liée dans la table "Place"
-        const placeDetails = reservation.Place ? reservation.Place[0] : null;
-
-        // Extraction des données de "Place" d'après ta base de données
-        const proprio = placeDetails && placeDetails.NomPrivé ? placeDetails.NomPrivé : "Non spécifié";
-        const numero = placeDetails && placeDetails.NumePrivé ? placeDetails.NumePrivé : "Non spécifié";
-        const dureeRestante = placeDetails && placeDetails.Duree ? placeDetails.Duree : "--";
-
-        const idReservation = reservation.id;
-        const marque = voiture.Marque || "Inconnu";
-        const immatriculation = voiture.Immatriculation || "N/A";
-
-        // 3. Création du HTML dynamique
-        const card = document.createElement('div');
-        card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item";
-        
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
-                        <i class="fas fa-bus fs-5"></i>
-                    </div>
-                    <div>
-                        <div class="d-flex align-items-center gap-2">
-                            <h6 class="m-0 fw-bold text-body">${marque}</h6>
-                            <span class="badge bg-danger-subtle text-danger rounded-pill px-2 py-0.5 small fw-semibold" style="font-size: 0.7rem;">Privé</span>
-                        </div>
-                        <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
-                    <div class="d-flex align-items-center justify-content-between gap-3">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-user me-1 text-success"></i> Proprio :</small>
-                        <span class="fw-semibold text-body small">${proprio}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
-                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-phone me-1 text-danger"></i> Numéro :</small>
-                        <span class="fw-semibold text-primary small">${numero}</span>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center gap-2 bg-body px-3 py-2 rounded-3 border text-center" style="min-width: 110px;">
-                    <div class="w-100">
-                        <span class="d-block text-warning fw-bold m-0" style="font-size: 1.1rem;"><i class="fa-regular fa-hourglass-half me-1"></i> ${dureeRestante}</span>
-                        <small class="text-secondary" style="font-size: 0.7rem;">Délai restant</small>
-                    </div>
-                </div>
-
-            </div>
-        `;
-
-        containerPassagerPrive.appendChild(card);
-    });
-}
-
-async function chargerDerniersVoyages() {
-    const container = document.getElementById('recentTripsContainer');
-    if (!container) return;
-
-    try {
-        // 1. Récupérer les 2 derniers voyages triés par date/création décroissante
-        // REMPLACE 'Reservations' par le nom exact de ta table de trajets
-        const { data: voyages, error } = await supabaseClient
-            .from('Reservation') 
-            .select('*') // Prends les colonnes nécessaires (ex: Depart, Destination, Heure, etc.)
-            .order('created_at', { ascending: false }) // Trie du plus récent au plus ancien
-            .limit(2); // Récupère uniquement les deux derniers
-
-        if (error) throw error;
-
-        // 2. Si l'historique est vide
-        if (!voyages || voyages.length === 0) {
-            container.innerHTML = `<div class="text-center text-secondary py-3 small">Aucun voyage récent.</div>`;
-            return;
-        }
-        let htmlContent = '';
-
-        voyages.forEach((voyage, index) => {
-            // Exemple de données (adapte avec tes vraies colonnes Supabase)
-            const titre = `${voyage.Depart || 'Privé'} → ${voyage.Destination || ''}`;
-            const horaire = voyage.Heure || "Horaire non précisé
-            ; 
-            
-            // Alternance de style ou d'icône selon l'index (0 pour le 1er, 1 pour le 2e)
-            const iconBg = index === 0 ? 'bg-success' : 'bg-danger';
-            const iconClass = index === 0 ? 'fas fa-bus' : 'fas fa-bus';
-
-            htmlContent += `
-                <div class="card border-0 shadow-sm p-3 mb-2 bg-body-tertiary rounded-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="${iconBg} text-white rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
-                            <i class="${iconClass}"></i>
-                        </div>
-                        <div>
-                            <h3 class="m-0 fs-6 fw-semibold text-body">${titre}</h3>
-                            <small class="text-secondary">${horaire}</small>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-
-        // 4. Injecter les cartes dans le conteneur
-        container.innerHTML = htmlContent;
-
-    } catch (err) {
-        console.error("Erreur lors du chargement de l'historique :", err);
-        container.innerHTML = `<div class="text-center text-danger py-3 small">Impossible de charger l'historique.</div>`;
-    }
-}
-
-// Appelle la fonction au chargement de la page
-        
-document.addEventListener("DOMContentLoaded", () => {
-    chargerDonneesInitiales();
-    chargerDonneesReservations();
-    chargerPublications();
-    connecterAuTempsReel();
-    chargerDerniersVoyages();
-    
-    // Initialisation de la gestion de la déconnexion
-    initialiserDeconnexion();
-});
-
-function initialiserDeconnexion() {
-    const confirmBtn = document.getElementById('confirmLogout');
-    const cancelBtn = document.getElementById('cancelLogout');
-    const deconnexionSection = document.getElementById('deconnexion');
-
-    // 1. Bouton "Se déconnecter"
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', async () => {
-            try {
-                // Indicateur de chargement sur le bouton
-                confirmBtn.disabled = true;
-                confirmBtn.innerHTML = `
-                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Déconnexion...
                 `;
 
-                // Déconnexion de la session Supabase
-                const { error } = await supabaseClient.auth.signOut();
+                containerPassager.appendChild(card);
+            });
+        }
+        function genererPassagersSpecial(reservations) {
+            const containerPassagerSpecial = document.getElementById('SpecialPa');
+            if (!containerPassagerSpecial) return;
+
+            containerPassagerSpecial.innerHTML = '';
+            const reservationsSpecial = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Special');
+
+            if (reservationsSpecial.length === 0) {
+                containerPassagerSpecial.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation spéciale en cours.</div>`;
+                return;
+            }
+
+            reservationsSpecial.forEach(reservation => {
+                const voiture = reservation.Voiture;
+                const totalPlaces = reservation.Nb_Place || 0;
+                const placesOccupees = reservation.Nb_NonLibre || 0;
+                const placesLibres = totalPlaces - placesOccupees;
+                const idReservation = reservation.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const depart = reservation.Depart || "Non défini";
+                const destination = reservation.Destination || "Non définie";
+                const heure = reservation.Heure || "--:--";
+                const card = document.createElement('div');
+                card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item mb-3"; 
+                card.style.cursor = "pointer";
+                card.setAttribute('data-bs-toggle', 'modal');
+                card.setAttribute('data-bs-target', '#passengersListModal');
+                card.setAttribute('data-reservation-id', idReservation);
+                
+                card.addEventListener('click', () => {
+                    if (typeof preparerModalPassagers === 'function') {
+                        preparerModalPassagers(idReservation);
+                    }
+                });
+
+                card.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                <i class="fas fa-bus fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                                <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small><br>
+                                <small class="text-secondary fw-medium">Spécial</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-circle-dot me-1 text-success"></i> Départ :</small>
+                                <span class="fw-semibold text-body small">${depart}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Dest :</small>
+                                <span class="fw-semibold text-primary small">${destination}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 border-top pt-1 mt-1 justify-content-center text-secondary" style="font-size: 0.75rem;">
+                                <i class="fa-regular fa-clock text-warning"></i>
+                                <span>${heure}</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex gap-2 bg-body p-2 rounded-3 border align-items-center">
+                                <div class="text-center px-2 border-end">
+                                    <span class="d-block text-success fw-bold m-0" style="font-size: 1.1rem;">${placesLibres}</span>
+                                    <small class="text-secondary" style="font-size: 0.7rem;">Libres</small>
+                                </div>
+                                <div class="text-center px-2">
+                                    <span class="d-block text-danger fw-bold m-0" style="font-size: 1.1rem;">${placesOccupees}</span>
+                                    <small class="text-secondary" style="font-size: 0.7rem;">Occupés</small>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-secondary small"></i>
+                        </div>
+                    </div>
+                `;
+
+                containerPassagerSpecial.appendChild(card);
+            });
+        }
+        function genererPassagersPrive(reservations) {
+            const containerPassagerPrive = document.getElementById('PrivePa');
+            if (!containerPassagerPrive) return;
+
+            containerPassagerPrive.innerHTML = ''; 
+            const reservationsPrive = reservations.filter(res => res.Voiture && res.Voiture.Statut === 'Privé');
+
+            if (reservationsPrive.length === 0) {
+                containerPassagerPrive.innerHTML = `<div class="text-center text-secondary py-3">Aucune réservation privée en cours.</div>`;
+                return;
+            }
+
+            reservationsPrive.forEach(reservation => {
+                const voiture = reservation.Voiture;
+                const placeDetails = reservation.Place ? reservation.Place[0] : null;
+                const proprio = placeDetails && placeDetails.NomPrivé ? placeDetails.NomPrivé : "Non spécifié";
+                const numero = placeDetails && placeDetails.NumePrivé ? placeDetails.NumePrivé : "Non spécifié";
+                const dureeRestante = placeDetails && placeDetails.Duree ? placeDetails.Duree : "--";
+                const idReservation = reservation.id;
+                const marque = voiture.Marque || "Inconnu";
+                const immatriculation = voiture.Immatriculation || "N/A";
+                const card = document.createElement('div');
+                card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-passager-item";
+                
+                card.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.7rem; height: 2.7rem;">
+                                <i class="fas fa-bus fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <h6 class="m-0 fw-bold text-body">${marque}</h6>
+                                    <span class="badge bg-danger-subtle text-danger rounded-pill px-2 py-0.5 small fw-semibold" style="font-size: 0.7rem;">Privé</span>
+                                </div>
+                                <small class="text-secondary fw-medium">Immatriculation : <span class="text-body">${immatriculation}</span></small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-column gap-1 bg-body px-3 py-2 rounded-3 border" style="min-width: 180px;">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-user me-1 text-success"></i> Proprio :</small>
+                                <span class="fw-semibold text-body small">${proprio}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between gap-3 border-top pt-1 mt-1">
+                                <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-solid fa-phone me-1 text-danger"></i> Numéro :</small>
+                                <span class="fw-semibold text-primary small">${numero}</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 bg-body px-3 py-2 rounded-3 border text-center" style="min-width: 110px;">
+                            <div class="w-100">
+                                <span class="d-block text-warning fw-bold m-0" style="font-size: 1.1rem;"><i class="fa-regular fa-hourglass-half me-1"></i> ${dureeRestante}</span>
+                                <small class="text-secondary" style="font-size: 0.7rem;">Délai restant</small>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+
+                containerPassagerPrive.appendChild(card);
+            });
+        }
+
+        async function chargerDerniersVoyages() {
+            const container = document.getElementById('recentTripsContainer');
+            if (!container) return;
+
+            try {
+                const { data: voyages, error } = await supabaseClient
+                    .from('Reservation') 
+                    .select('*')
+                    .order('created_at', { ascending: false }) 
+                    .limit(2);
                 if (error) throw error;
 
-                // Nettoyage du stockage local
-                localStorage.clear();
-                sessionStorage.clear();
+                if (!voyages || voyages.length === 0) {
+                    container.innerHTML = `<div class="text-center text-secondary py-3 small">Aucun voyage récent.</div>`;
+                    return;
+                }
+                let htmlContent = '';
 
-                // Redirection vers la page de connexion
-                window.location.href = 'login.html'; // 👈 Ajuste le nom si ta page s'appelle index.html ou conn.html
+                voyages.forEach((voyage, index) => {
+                    const titre = `${voyage.Depart || 'Privé'} → ${voyage.Destination || ''}`;
+                    const horaire = voyage.Heure || "Horaire non précisé"; 
+                    const iconBg = index === 0 ? 'bg-success' : 'bg-danger';
+                    const iconClass = index === 0 ? 'fas fa-bus' : 'fas fa-bus';
+
+                    htmlContent += `
+                        <div class="card border-0 shadow-sm p-3 mb-2 bg-body-tertiary rounded-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="${iconBg} text-white rounded p-2 d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
+                                    <i class="${iconClass}"></i>
+                                </div>
+                                <div>
+                                    <h3 class="m-0 fs-6 fw-semibold text-body">${titre}</h3>
+                                    <small class="text-secondary">${horaire}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = htmlContent;
 
             } catch (err) {
-                console.error("Erreur de déconnexion :", err);
-                alert("Impossible de vous déconnecter. Veuillez réessayer.");
+                console.error("Erreur lors du chargement de l'historique :", err);
+                container.innerHTML = `<div class="text-center text-danger py-3 small">Impossible de charger l'historique.</div>`;
+            }
+        }
+
                 
-                // Réinitialisation en cas d'erreur
-                confirmBtn.disabled = false;
-                confirmBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-2"></i>Se déconnecter`;
-            }
+        document.addEventListener("DOMContentLoaded", () => {
+            chargerDonneesInitiales();
+            chargerDonneesReservations();
+            chargerPublications();
+            connecterAuTempsReel();
+            chargerDerniersVoyages();
+            initialiserDeconnexion();
         });
-    }
 
-    // 2. Bouton "Annuler"
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            // Masquer la vue de confirmation
-            if (deconnexionSection) {
-                deconnexionSection.style.display = 'none';
+        function initialiserDeconnexion() {
+            const confirmBtn = document.getElementById('confirmLogout');
+            const cancelBtn = document.getElementById('cancelLogout');
+            const deconnexionSection = document.getElementById('deconnexion');
+
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', async () => {
+                    try {
+                        confirmBtn.disabled = true;
+                        confirmBtn.innerHTML = `
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Déconnexion...
+                        `;
+
+                        const { error } = await supabaseClient.auth.signOut();
+                        if (error) throw error;
+
+                        localStorage.clear();
+                        sessionStorage.clear();
+
+                        window.location.href = '/'; 
+
+                    } catch (err) {
+                        console.error("Erreur de déconnexion :", err);
+                        alert("Impossible de vous déconnecter. Veuillez réessayer.");
+                        
+                        confirmBtn.disabled = false;
+                        confirmBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-2"></i>Se déconnecter`;
+                    }
+                });
             }
 
-            // Optionnel : réafficher le bloc principal s'il a un ID particulier (ex: #accueil)
-            const mainContent = document.getElementById('mainContent');
-            if (mainContent) {
-                mainContent.style.display = 'block';
-            }
-        });
-    }
-}
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    if (deconnexionSection) {
+                        deconnexionSection.style.display = 'none';
+                    }
 
-        //jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjvgjvvvvvvvvvvvvvvvvvvvvvv,hhvsfbg
-        //jbcbchbbche
-        //jbcbchbbche
-        //jbcbchbbche
-        //jbcbchbbche
-        //jbcbchbbche
-        //jbcbchbbche
-        //bzdzbadzabhbda
-        //bzxbzayabdyhcayv
-        // On récupère les deux parents stables
+                    const mainContent = document.getElementById('mainContent');
+                    if (mainContent) {
+                        mainContent.style.display = 'block';
+                    }
+                });
+            }
+        }
+
         const tbodyPublic = document.getElementById('liste-voitures-body');
         const tbodySpecial = document.getElementById('liste-voitures-special-body');
         const tbodyPrive = document.getElementById('liste-voitures-prive-body');
 
-        // Fonction unique pour traiter le clic (évite de répéter le code)
         function gererClicLigne(event) {
             const row = event.target.closest('.clickable-row');
             
@@ -3319,12 +3151,10 @@ function initialiserDeconnexion() {
             }
         }
 
-        // 🟢 On applique l'écouteur sur le tableau Public
         if (tbodyPublic) {
             tbodyPublic.addEventListener('click', gererClicLigne);
         }
 
-        // 🟢 On applique EXACTEMENT le même écouteur sur le tableau Spécial !
         if (tbodySpecial) {
             tbodySpecial.addEventListener('click', gererClicLigne);
         }
@@ -3333,17 +3163,6 @@ function initialiserDeconnexion() {
             tbodyPrive.addEventListener('click', gererClicLigne);
         }
 
-        ///
-        //hbcbczcjsnckjanjcnakznc
-//inzandjendnjendné
-//hbcbczcjsnckjanjcnakznc
-//inzandjendnjendné
-//kz,kdn"ndu"ndunéz//hbcbczcjsnckjanjcnakznc
-//inzandjendnjendné
-//kz,kdn"ndu"ndunéz//hbcbczcjsnckjanjcnakznc
-//inzandjendnjendné
-//kz,kdn"ndu"ndunéz
-//kz,kdn"ndu"ndunéz
     </script>
 </body>
 
