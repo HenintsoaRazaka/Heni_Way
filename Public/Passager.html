@@ -845,6 +845,12 @@
             const placesRestantes = item.Nb_Libre ?? item.Nb_Place ?? 0;
             const placesFormatees = String(placesRestantes).padStart(2, '0');
 
+            // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
+            // Formatage date/heure
             const dateObj = new Date(item.created_at);
             const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
             const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -853,7 +859,7 @@
             const typeVoyage = (item.Statut || (item.Depart ? 'Public' : 'Prive')).toLowerCase();
 
             // Génération du template de la carte
-            if (typeVoyage.includes('Public')) {
+            if (typeVoyage.includes('public')) {
                 htmlPublic += `
                     <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div class="d-flex align-items-center gap-3">
@@ -875,7 +881,7 @@
                         </div>
                     </div>
                 `;
-            } else if (typeVoyage.includes('Special') || typeVoyage.includes('spécial')) {
+            } else if (typeVoyage.includes('Special') || typeVoyage.includes('Spécial')) {
                 htmlSpecial += `
                     <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div class="d-flex align-items-center gap-3">
