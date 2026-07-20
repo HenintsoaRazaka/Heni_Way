@@ -806,7 +806,7 @@
                 Destination,
                 Nb_Place,
                 Nb_Libre,
-                Type,
+                Etat,
                 created_at,
                 Voiture (
                     Marque,
@@ -816,12 +816,6 @@
             .order('created_at', { ascending: false });
 
         if (error) throw error;
-
-        // Variables pour accumuler le HTML de chaque onglet
-        // Variables pour accumuler le HTML de chaque onglet
-        // Variables pour accumuler le HTML de chaque onglet
-        // Variables pour accumuler le HTML de chaque onglet
-        // Variables pour accumuler le HTML de chaque onglet
         let htmlPublic = '';
         let htmlSpecial = '';
         let htmlPrive = '';
