@@ -1011,9 +1011,14 @@ function obtenirUtilisateurConnecte() {
 
             if (userObj) {
                 // Extraction du nom / metadata Supabase
+                // Extraction du nom / metadata Supabase
+                // Extraction du nom / metadata Supabase
+                // Extraction du nom / metadata Supabase
+                // Extraction du nom / metadata Supabase
+                // Extraction du nom / metadata Supabase
                 const metadata = userObj.user_metadata || userObj.app_metadata || {};
                 const nom = metadata.full_name || metadata.nom_complet || 
-                            `${metadata.nom || ''} ${metadata.prenom || ''}`.trim() || 
+                            `${metadata.Nom || ''} ${metadata.prenom || ''}`.trim() || 
                             userObj.email || userObj.name || "Passager";
 
                 const telephone = metadata.phone || metadata.telephone || userObj.phone || "";
