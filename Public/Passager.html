@@ -1397,7 +1397,7 @@ async function chargerReservationEnCours() {
             // Recherche du nom dans n'importe quelle colonne N_1 à N_27
             for (const place of places) {
                 const estTrouve = Object.keys(place).some(key => {
-                    return key.startsWith('N_') && place[key] && place[key].trim().toLowerCase() === nomUtilisateur.toLowerCase();
+                    return key.startsWith('N_') && place[key] && place[key].trim().toLowerCase() === nomUtilisateur.trim().toLowerCase();
                 });
 
                 if (estTrouve && place.Reservation) {
@@ -1408,10 +1408,6 @@ async function chargerReservationEnCours() {
         }
 
         // -------------------------------------------------------------
-        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
-        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
-        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
-        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
         // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
         // -------------------------------------------------------------
         if (!reservationTrouvee) {
@@ -1500,4 +1496,16 @@ function afficherWidgetVide(container, titre, message) {
 // Listenersc
 // Listenersc
 document.addEventListener("DOMContentLoaded", () => {
-    if (typeof chargerPublicationsDansOnglets === 'function')
+    if (typeof chargerPublicationsDansOnglets === 'function') {
+        chargerPublicationsDansOnglets();
+    }
+
+    const btnValider = document.getElementById('btnValiderSiege');
+    if (btnValider) {
+        btnValider.addEventListener('click', validerEtEnvoyerReservation);
+    }
+    chargerReservationEnCours();
+});
+    </script>
+</body>
+</html>
