@@ -798,6 +798,10 @@
 
     try {
         // 1. Requete Supabase avec jointure sur la table Voiture
+        // 1. Requete Supabase avec jointure sur la table Voiture
+        // 1. Requete Supabase avec jointure sur la table Voiture
+        // 1. Requete Supabase avec jointure sur la table Voiture
+        // 1. Requete Supabase avec jointure sur la table Voiture
         const { data: reservations, error } = await supabaseClient
             .from('Reservation')
             .select(`
@@ -810,7 +814,7 @@
                 created_at,
                 Voiture (
                     Marque,
-                    Immatriculation
+                    Immatriculation,
                     Statut
                 )
             `)
