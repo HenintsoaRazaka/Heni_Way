@@ -477,7 +477,7 @@
                 <p class="opacity-60 small mb-4">Voulez-vous vraiment quitter votre espace HeniWay Voyageur ?</p>
                 
                 <div class="d-flex flex-column gap-2">
-                    <button class="btn btn-danger w-100 rounded-3 py-2 fw-semibold" onclick="window.location.href='login.html'">Confirmer la déconnexion</button>
+                    <button class="btn btn-danger w-100 rounded-3 py-2 fw-semibold" onclick="window.location.href='/'">Confirmer la déconnexion</button>
                     <button class="btn btn-outline-secondary text-secondary-subtle border-secondary-subtle w-100 rounded-3" id="cancelLogoutBtn">Annuler</button>
                 </div>
             </div>
@@ -952,9 +952,18 @@ let siegesSelectionnesActuels = [];
 /**
  * Récupère les infos de l'utilisateur connecté depuis le navigateur
  */
+ /**
+ * Récupère les infos de l'utilisateur connecté depuis le navigateur
+ */
+ /**
+ * Récupère les infos de l'utilisateur connecté depuis le navigateur
+ */
+ /**
+ * Récupère les infos de l'utilisateur connecté depuis le navigateur
+ */
 function obtenirUtilisateurConnecte() {
     try {
-        const rawUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+        const rawUser = localStorage.getItem('Token_HeniWay') || sessionStorage.getItem('Token_HeniWay');
         if (rawUser) {
             const user = JSON.parse(rawUser);
             return {
