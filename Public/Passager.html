@@ -1354,10 +1354,149 @@ async function validerEtEnvoyerReservation() {
     }
 }
 
+async function chargerReservationEnCours() {
+    const containerWidget = document.querySelector('.glass-panel');
+    if (!containerWidget) return;
+
+    const nomUtilisateur = obtenirNomUtilisateurHeniway();
+
+    if (!nomUtilisateur) {
+        // Aucun utilisateur identifié
+        afficherWidgetVide(containerWidget, "Bonjour 👋", "Connectez-vous pour voir vos réservations.");
+        return;
+    }
+
+    try {
+        let reservationTrouvee = null;
+
+        // -------------------------------------------------------------
+        // 1. RECHERCHE DANS LA TABLE 'Place' (Public / Spécial)
+        // -------------------------------------------------------------
+        // On récupère toutes les places et leurs réservations liées
+        const { data: places, error: placeError } = await supabaseClient
+            .from('Place')
+            .select(`
+                *,
+                Reservation (
+                    id,
+                    Depart,
+                    Destination,
+                    Etat,
+                    created_at,
+                    Voiture ( Marque, Immatriculation )
+                )
+            `);
+
+        if (placeError) throw placeError;
+
+        if (places && places.length > 0) {
+            // Recherche du nom dans n'importe quelle colonne N_1 à N_27
+            for (const place of places) {
+                const estTrouve = Object.keys(place).some(key => {
+                    return key.startsWith('N_') && place[key] && place[key].trim().toLowerCase() === nomUtilisateur.trim().toLowerCase();
+                });
+
+                if (estTrouve && place.Reservation) {
+                    reservationTrouvee = place.Reservation;
+                    break;
+                }
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
+        // -------------------------------------------------------------
+        if (!reservationTrouvee) {
+            const { data: resPrivee, error: priveeError } = await supabaseClient
+                .from('Reservation')
+                .select(`
+                    id,
+                    Depart,
+                    Destination,
+                    Etat,
+                    created_at,
+                    Voiture ( Marque, Immatriculation )
+                `)
+                .ilike('NomPrive', nomUtilisateur)
+                .maybeSingle();
+
+            if (!priveeError && resPrivee) {
+                reservationTrouvee = resPrivee;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 3. MISE À JOUR DU DOM DYNAMIQUE
+        // -------------------------------------------------------------
+        if (reservationTrouvee) {
+            const depart = reservationTrouvee.Depart || "Départ non précisé";
+            const destination = reservationTrouvee.Destination || "Destination non précisée";
+            const etat = reservationTrouvee.Etat || "En attente du chauffeur";
+            const idRes = reservationTrouvee.id;
+
+            containerWidget.innerHTML = `
+                <div>
+                    <h4 class="fw-bold m-0" style="font-size: 1.25rem;">Bonjour, ${nomUtilisateur} 👋</h4>
+                    <small class="opacity-60">Prêt pour votre prochain départ ?</small>
+                </div>
+                
+                <div class="p-3 border-start border-warning border-3 rounded-end-4 rounded-start-4 d-flex align-items-center gap-3" style="background: rgba(var(--bs-warning-rgb), 0.08); border: 1px solid var(--glass-border);">
+                    <div class="spinner-border text-warning flex-shrink-0" role="status" style="width: 1.8rem; height: 1.8rem; border-width: 0.22em;">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    
+                    <div class="w-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-warning-emphasis fw-semibold text-uppercase opacity-75" style="font-size: 0.7rem; letter-spacing: 0.5px;">Réservation en cours</small>
+                            <button type="button" class="btn btn-sm btn-link text-danger p-1 border border-danger-subtle text-decoration-none p-0 fw-medium" onclick="annulerReservationEnCours(${idRes})" style="font-size: 0.75rem;">
+                                <i class="fa-solid fa-xmark me-1"></i>Annuler
+                            </button>                               
+                        </div>
+                        <span class="fw-bold d-block mt-1" style="font-size: 0.95rem;">${depart} ➔ ${destination}</span>
+                        <small class="text-secondary small d-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                            <i class="fa-regular fa-clock"></i> ${etat}
+                        </small>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Aucune réservation active trouvée pour ce nom
+            afficherWidgetVide(containerWidget, `Bonjour, ${nomUtilisateur} 👋`, "Aucune réservation en cours.");
+        }
+
+    } catch (err) {
+        console.error("Erreur chargement réservation en cours :", err);
+        afficherWidgetVide(containerWidget, `Bonjour, ${nomUtilisateur} 👋`, "Impossible de charger la réservation.");
+    }
+}
+
+/**
+ * Affichage HTML quand il n'y a pas de réservation active
+ */
+function afficherWidgetVide(container, titre, message) {
+    container.innerHTML = `
+        <div>
+            <h4 class="fw-bold m-0" style="font-size: 1.25rem;">${titre}</h4>
+            <small class="opacity-60">Prêt pour votre prochain départ ?</small>
+        </div>
+        <div class="p-3 border border-secondary-subtle rounded-4 text-center bg-body-tertiary">
+            <small class="text-secondary d-block">${message}</small>
+        </div>
+    `;
+}
+
 // Listeners
 document.addEventListener("DOMContentLoaded", () => {
     if (typeof chargerPublicationsDansOnglets === 'function') {
         chargerPublicationsDansOnglets();
     }
 
-    const btnV
+    const btnValider = document.getElementById('btnValiderSiege');
+    if (btnValider) {
+        btnValider.addEventListener('click', validerEtEnvoyerReservation);
+    }
+   chargerReservationEnCours();
+});
+    </script>
+</body>
+</html>
