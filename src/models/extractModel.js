@@ -25,15 +25,10 @@ const extraction = {
         if (fetchError) throw fetchError;
 
         if (reservation && reservation.ID_Voiture) {
-            // 2. Mettre à jour l'état de la voiture en 'Disponible'
-            // 2. Mettre à jour l'état de la voiture en 'Disponible'
-            // 2. Mettre à jour l'état de la voiture en 'Disponible'
-            // 2. Mettre à jour l'état de la voiture en 'Disponible'
-            // 2. Mettre à jour l'état de la voiture en 'Disponible'
-            // 2. Mettre à jour l'état de la voiture en 'Disponible'
+
             const { error: vehicleError } = await subabase.supabaseService
                 .from('Voiture')
-                .update({ Etats: 'Disponible' }) // Modifie la colonne 'Etats' de ta table Voiture
+                .update({ Etats: 'Disponible' }) 
                 .eq('id', reservation.ID_Voiture);
 
             if (vehicleError) throw vehicleError;

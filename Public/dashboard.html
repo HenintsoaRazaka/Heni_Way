@@ -623,7 +623,6 @@
                                         <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-semibold">Réserver</span>
                                     </td>
                                     <td class="text-center">
-                                        <!-- "Disponible", "En route", "En attente" -->
                                         <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-semibold">En gare</span> 
                                     </td>
                                 </tr>
@@ -817,7 +816,6 @@
             </main>
 
             <main class="col-12 col-md-8 col-xl-7 mt-6" style="margin-top: 6rem; display: none;" id="Passager">
-
                 <div class="card border-0 shadow-sm p-3 mb-4 bg-body-tertiary rounded-4">
                     <div class="row g-2 align-items-center">
                         <div class="col-12">
@@ -1526,10 +1524,10 @@
                 });
             });
         });
+
         const vehicleModal = new bootstrap.Modal(document.getElementById('vehicleDetailModalPublic'));
         const vehicleModalSpecial = new bootstrap.Modal(document.getElementById('vehicleDetailModalSpecial'));
         const vehicleModalPrive = new bootstrap.Modal(document.getElementById('vehicleDetailModalPrive'));
-
         const vehicleStatusSelect = document.getElementById('vehicleStatus');
         const vehicleChauffeurInput = document.getElementById('vehicleChauffeur');
         const pubTabLinks = document.querySelectorAll('#pubNav .tab-link');
@@ -1566,7 +1564,6 @@
 
         const pubStatusSelect = document.getElementById('pubStatus');
         const dynamicPubFields = document.getElementById('dynamicPubFields');
-
         const pubDepartInput = document.getElementById('pubDepart');
         const pubDestInput = document.getElementById('pubDestination');
         const pubHeureInput = document.getElementById('pubHeure');
@@ -1861,7 +1858,6 @@
             const voituresSpecial = listeVoitures.filter(v => v.Statut === 'Special');
             const totalSpecial = voituresSpecial.length;
             const perimetre = 226;
-
             const specialReserves = voituresSpecial.filter(v => v.Etats === 'Réservé');
             const countReserves = specialReserves.length;
 
@@ -1928,7 +1924,6 @@
             const voituresPrive = listeVoitures.filter(v => v.Statut === 'Privé');
             const totalPrive = voituresPrive.length;
             const perimetre = 226;
-
             const priveReserves = voituresPrive.filter(v => v.Etats === 'Réservé');
             const countReserves = priveReserves.length;
 
@@ -2254,7 +2249,6 @@
                 const immatriculation = voiture.Immatriculation || "N/A";
                 const etats = voiture.Etats || "Disponible"; 
                 const chauffeur = voiture.Couleur || "Blanc"; 
-
                 const reservation = (voiture.Reservation && voiture.Reservation.length > 0) ? voiture.Reservation[0] : null;
 
                 let destination = "Aucune";
@@ -2414,7 +2408,6 @@
 
             reservationsPublic.forEach(reservation => {
                 const voiture = reservation.Voiture;
-                
                 const idReservation = reservation.id;
                 const marque = voiture.Marque || "Inconnu";
                 const immatriculation = voiture.Immatriculation || "N/A";
@@ -2422,7 +2415,6 @@
                 const destination = reservation.Destination || "Non définie";
                 const heure = reservation.Heure || "--:--";
                 const Date = reservation.Date;
-
                 const card = document.createElement('div');
                 card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
                 card.setAttribute('data-reservation-id', idReservation);
@@ -2491,7 +2483,6 @@
                 const destination = reservation.Destination || "Non définie";
                 const heure = reservation.Heure || "--:--";
 
-                // 3. Création du bloc de carte
                 const card = document.createElement('div');
                 card.className = "card border-0 shadow-sm p-3 bg-body-tertiary rounded-4 row-pub-item";
                 card.setAttribute('data-reservation-id', idReservation);
@@ -3032,7 +3023,6 @@
                 container.innerHTML = `<div class="text-center text-danger py-3 small">Impossible de charger l'historique.</div>`;
             }
         }
-
                 
         document.addEventListener("DOMContentLoaded", () => {
             chargerDonneesInitiales();

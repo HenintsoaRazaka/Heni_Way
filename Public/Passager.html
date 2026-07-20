@@ -286,56 +286,6 @@
                 </div>
 
                 <div class="col-lg-8">
-    <div class="glass-panel d-flex flex-column gap-4">
-        
-        <!-- BARRE DE RECHERCHE -->
-        <div class="p-3 rounded-4" style="background: rgba(0,0,0,0.05); border: 1px solid var(--glass-border);">
-            <form id="searchTripForm">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-0 opacity-70"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" class="form-control search-bar-input rounded-3" placeholder="Rechercher un trajet, une destination, un axe...">
-                </div>
-            </form>
-        </div>
-
-        <!-- ONGLET DE NAVIGATION (Inchangé) -->
-        <ul class="nav nav-pills gap-2 p-1 rounded-4" style="background: rgba(0, 0, 0, 0.15); border: 1px solid var(--glass-border);">
-            <li class="nav-item flex-fill text-center">
-                <button class="nav-link active w-100 rounded-3 small fw-medium text-reset" data-target="PubPublic">Public</button>
-            </li>
-            <li class="nav-item flex-fill text-center">
-                <button class="nav-link w-100 rounded-3 small fw-medium text-reset" data-target="PubSpecial">Spécial</button>
-            </li>
-            <li class="nav-item flex-fill text-center">
-                <button class="nav-link w-100 rounded-3 small fw-medium text-reset" data-target="PubPrive">Privé</button>
-            </li>
-        </ul>
-
-        <!-- TITRE -->
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold m-0" style="font-size: 1rem; opacity: 0.85;">Offres de voyage disponibles</h5>
-            <span class="badge rounded-pill px-3 py-1 text-white" style="background: var(--bleu-ocean);">Actif</span>
-        </div>
-
-        <!-- CONTENEUR PUBLIC -->
-        <div id="PubPublic" class="d-flex flex-column gap-3" style="display:block">
-            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
-        </div>
-
-        <!-- CONTENEUR SPÉCIAL -->
-        <div id="PubSpecial" class="d-flex flex-column gap-3" style="display:none !important">
-            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
-        </div>
-
-        <!-- CONTENEUR PRIVÉ -->
-        <div id="PubPrive" class="d-flex flex-column gap-3" style="display:none !important">
-            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
-        </div>
-
-    </div>
-</div>
-
-                <!-- <div class="col-lg-8">
                     <div class="glass-panel d-flex flex-column gap-4">
                         
                         <div class="p-3 rounded-4" style="background: rgba(0,0,0,0.05); border: 1px solid var(--glass-border);">
@@ -364,72 +314,20 @@
                             <span class="badge rounded-pill px-3 py-1 text-white" style="background: var(--bleu-ocean);">Actif</span>
                         </div>
 
-                        <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubPublic" style="display:block">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
-                                <div>
-                                    <h6 class="m-0 fw-bold">Mercedes Sprinter</h6>
-                                    <small class="opacity-60">Immatriculation : 1245 TAB</small>
-                                </div>
-                            </div>
-                            
-                            <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                                <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span>
-                                <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small>
-                                <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
-                            </div>
-
-                            <div class="d-flex align-items-center">
-                                <button onclick="ouvrirModalSieges()" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
-                                    <i class="fa-solid fa-plus me-1"></i> Ajouter
-                                </button>
-                            </div>
+                        <div id="PubPublic" class="d-flex flex-column gap-3" style="display:block">
+                            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
                         </div>
 
-                        <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubSpecial" style="display:none !important">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
-                                <div>
-                                    <h6 class="m-0 fw-bold">Mercedes Sprinter</h6>
-                                    <small class="opacity-60">Immatriculation : 1245 TAB</small>
-                                </div>
-                            </div>
-                            
-                            <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                                <span class="d-block fw-semibold small">Antananarivo ➔ Mahajanga</span>
-                                <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>12 Juillet 2026 à 08:00</small>
-                                <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
-                            </div>
-
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-sm px-4 py-2 rounded-3 fw-medium" style="background-color: var(--vert-neon);">
-                                    <i class="fa-solid fa-plus me-1"></i> Ajouter
-                                </button>
-                            </div>
+                        <div id="PubSpecial" class="d-flex flex-column gap-3" style="display:none !important">
+                            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
                         </div>
 
-                        <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3" id="PubPrive" style="display:none !important">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
-                                <div>
-                                    <h6 class="m-0 fw-bold">Mercedes Sprinter</h6>
-                                    <small class="opacity-60">Immatriculation : 1245 TAB</small>
-                                </div>
-                            </div>
-                            
-                            <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                                <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>05 places restantes</small>
-                            </div>
-
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-sm px-4 py-2 rounded-3 fw-medium" style="background-color: var(--vert-neon);">
-                                    <i class="fa-solid fa-plus me-1"></i> Ajouter
-                                </button>
-                            </div>
+                        <div id="PubPrive" class="d-flex flex-column gap-3" style="display:none !important">
+                            <div class="text-center py-3 text-secondary small"><div class="spinner-border spinner-border-sm text-primary"></div> Chargement...</div>
                         </div>
 
                     </div>
-                </div> -->
+                </div>
             </div>
         </main>
 
@@ -649,30 +547,302 @@
                 maModale.show();
             }
         }
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+        const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      /*  const donneesSiegesExemple = [
-            { numero: 1, statut: 1 }, { numero: 2, statut: 0 }, { numero: 3, statut: 0 }, { numero: 4, statut: 1 },
-            { numero: 5, statut: 0 }, { numero: 6, statut: 0 }, { numero: 7, statut: 1 }, { numero: 8, statut: 0 },
-            { numero: 9, statut: 0 }, { numero: 10, statut: 0 }, { numero: 11, statut: 0 }, { numero: 12, statut: 0 },
-            { numero: 13, statut: 1 }, { numero: 14, statut: 0 }, { numero: 15, statut: 0 }, { numero: 16, statut: 0 },
-            { numero: 17, statut: 1 }, { numero: 18, statut: 0 }, { numero: 19, statut: 0 }, { numero: 20, statut: 0 },
-            { numero: 21, statut: 1 }, { numero: 22, statut: 0 }, { numero: 23, statut: 0 }, { numero: 24, statut: 0 },
-            { numero: 25, statut: 1 }, { numero: 26, statut: 0 }, { numero: 27, statut: 0 }
-        ];
+        async function chargerPublicationsDansOnglets() {
+            const elPublic = document.getElementById('PubPublic');
+            const elSpecial = document.getElementById('PubSpecial');
+            const elPrive = document.getElementById('PubPrive');
 
-        let siegeSelectionneActuel = null;
+            try {
+                const { data: reservations, error } = await supabaseClient
+                    .from('Reservation')
+                    .select(`
+                        id,
+                        Depart,
+                        Destination,
+                        Nb_Place,
+                        Nb_Libre,
+                        Etat,
+                        created_at,
+                        Voiture (
+                            Marque,
+                            Immatriculation,
+                            Statut
+                        )
+                    `)
+                    .order('created_at', { ascending: false });
 
-        function ouvrirModalSieges() {
-            const modaleElement = document.getElementById('seatSelectionModal');
-            if (modaleElement) {
-                genererPlanDesSieges(donneesSiegesExemple);
-                
-                const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
-                instanceModale.show();
+                console.log(reservations);
+
+                if (error) throw error;
+                let htmlPublic = '';
+                let htmlSpecial = '';
+                let htmlPrive = '';
+
+                if (!reservations || reservations.length === 0) {
+                    const emptyMsg = `<div class="text-center text-secondary py-3 small">Aucune offre disponible.</div>`;
+                    if (elPublic) elPublic.innerHTML = emptyMsg;
+                    if (elSpecial) elSpecial.innerHTML = emptyMsg;
+                    if (elPrive) elPrive.innerHTML = emptyMsg;
+                    return;
+                }
+
+                reservations.forEach(item => {
+                    const voiture = item.Voiture || {};
+                    const nomVehicule = voiture.Nom || "Mercedes Sprinter";
+                    const immat = voiture.Immatriculation || "Non renseignée";
+                    const depart = item.Depart || "Non précisé";
+                    const destination = item.Destination || "Non précisée";
+                    const placesRestantes = item.Nb_Libre ?? item.Nb_Place ?? 0;
+                    const placesFormatees = String(placesRestantes).padStart(2, '0');
+                    const dateObj = new Date(item.created_at);
+                    const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+                    const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    const statutBrut = voiture.Statut || item.Statut || (item.Depart ? 'Public' : 'Prive');
+                    const typeVoyage = statutBrut
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .toLowerCase();
+
+                    if (typeVoyage.includes('public')) {
+                        htmlPublic += `
+                            <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                                    <div>
+                                        <h6 class="m-0 fw-bold">${nomVehicule}</h6>
+                                        <small class="opacity-60">Immatriculation : ${immat}</small>
+                                    </div>
+                                </div>
+                                <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                                    <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
+                                    <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}</small>
+                                    <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                                        <i class="fa-solid fa-plus me-1"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else if (typeVoyage.includes('special')) {
+                        htmlSpecial += `
+                            <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                                    <div>
+                                        <h6 class="m-0 fw-bold">${nomVehicule}</h6>
+                                        <small class="opacity-60">Immatriculation : ${immat}</small>
+                                    </div>
+                                </div>
+                                <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                                    <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
+                                    <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}</small>
+                                    <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                                        <i class="fa-solid fa-plus me-1"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        htmlPrive += `
+                            <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
+                                    <div>
+                                        <h6 class="m-0 fw-bold">${nomVehicule}</h6>
+                                        <small class="opacity-60">Immatriculation : ${immat}</small>
+                                    </div>
+                                </div>
+                                <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
+                                    <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button onclick="reserverOffrePrivee(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
+                                        <i class="fa-solid fa-plus me-1"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (elPublic) elPublic.innerHTML = htmlPublic || `<div class="text-center text-secondary py-3 small">Aucune offre publique.</div>`;
+                if (elSpecial) elSpecial.innerHTML = htmlSpecial || `<div class="text-center text-secondary py-3 small">Aucune offre spéciale.</div>`;
+                if (elPrive) elPrive.innerHTML = htmlPrive || `<div class="text-center text-secondary py-3 small">Aucune offre privée.</div>`;
+
+            } catch (err) {
+                console.error("Erreur lors de la récupération :", err);
+                const errMsg = `<div class="text-center text-danger py-3 small">Erreur de chargement des données.</div>`;
+                if (elPublic) elPublic.innerHTML = errMsg;
+                if (elSpecial) elSpecial.innerHTML = errMsg;
+                if (elPrive) elPrive.innerHTML = errMsg;
+            }
+
+        }
+
+        let reservationIdActuelle = null;
+        let siegesSelectionnesActuels = [];
+
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                console.error("Erreur lors du décodage du JWT", e);
+                return null;
             }
         }
 
-        let siegesSelectionnesActuels = [];
+        function obtenirUtilisateurConnecte() {
+            try {
+                const rawUser = localStorage.getItem('Token_HeniWay');
+
+                if (rawUser) {
+                    let userObj = null;
+
+                    if (typeof rawUser === 'string' && rawUser.trim().startsWith('ey')) {
+                        userObj = parseJwt(rawUser);
+                    } else {
+                        try {
+                            const parsed = JSON.parse(rawUser);
+                            if (parsed.access_token) {
+                                userObj = parseJwt(parsed.access_token) || parsed.user;
+                            } else if (parsed.user) {
+                                userObj = parsed.user;
+                            } else {
+                                userObj = parsed;
+                            }
+                        } catch (e) {
+                            console.warn("Échec du parse JSON, tentative en tant que chaîne brute");
+                        }
+                    }
+
+                    if (userObj) {
+                        const metadata = userObj.user_metadata || userObj.app_metadata || {};
+                        const nom = metadata.full_name || metadata.nom_complet || 
+                                    `${metadata.Nom || ''} ${metadata.prenom || ''}`.trim() || 
+                                    userObj.email || userObj.name || "Passager";
+
+                        const telephone = metadata.phone || metadata.telephone || userObj.phone || "";
+
+                        return { nom, telephone };
+                    }
+                }
+            } catch (e) {
+                console.warn("Impossible de lire les infos utilisateur depuis le stockage local", e);
+            }
+
+            return { nom: "Passager", telephone: "" };
+        }
+
+        async function reserverOffrePrivee(reservationId, btnElement) {
+            const confirmation = confirm("Voulez-vous réserver ce véhicule complet en privé ?");
+            if (!confirmation) return;
+
+            let originalText = '';
+            if (btnElement) {
+                btnElement.disabled = true;
+                originalText = btnElement.innerHTML;
+                btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Réservation...`;
+            }
+
+            try {
+                const user = await obtenirUtilisateurConnecte();
+
+                const { data: resData, error: fetchErr } = await supabaseClient
+                    .from('Reservation')
+                    .select('Nb_Place')
+                    .eq('id', reservationId)
+                    .single();
+
+                if (fetchErr) throw fetchErr;
+
+                const totalPlaces = resData?.Nb_Place || 27;
+
+                const { error: updateError } = await supabaseClient
+                    .from('Reservation')
+                    .update({
+                        NomPrive: user.nom,
+                        NumPrive: user.telephone,
+                        Etat: 'Réservé',
+                        Nb_Libre: 0,
+                        Nb_NonLibre: totalPlaces
+                    })
+                    .eq('id', reservationId);
+
+                if (updateError) throw updateError;
+
+                alert(`Véhicule réservé avec succès en privé au nom de ${user.nom} !`);
+
+                if (typeof chargerPublicationsDansOnglets === 'function') {
+                    await chargerPublicationsDansOnglets();
+                }
+
+            } catch (err) {
+                console.error("Erreur lors de la réservation privée :", err);
+                alert("Une erreur est survenue lors de la réservation.");
+
+                if (btnElement) {
+                    btnElement.disabled = false;
+                    btnElement.innerHTML = originalText;
+                }
+            }
+        }
+
+        async function ouvrirModalSieges(reservationId) {
+            reservationIdActuelle = reservationId;
+            const modaleElement = document.getElementById('seatSelectionModal');
+            
+            if (!modaleElement) return;
+
+            const listeSieges = await chargerEtatSieges(reservationId);
+            genererPlanDesSieges(listeSieges);
+
+            const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
+            instanceModale.show();
+        }
+
+        async function chargerEtatSieges(reservationId) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('Place')
+                    .select('*')
+                    .eq('ID_Reservation', reservationId)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                const listeComplete = [];
+                for (let i = 1; i <= 27; i++) {
+                    const nomColonne = `N_${i}`;
+                    const occupant = data ? data[nomColonne] : null;
+
+                    listeComplete.push({
+                        numero: i,
+                        statut: (occupant !== null && occupant !== undefined && occupant.trim() !== '') ? 1 : 0
+                    });
+                }
+                return listeComplete;
+
+            } catch (err) {
+                console.error("Erreur lors de la récupération des places :", err);
+                return Array.from({ length: 27 }, (_, index) => ({ numero: index + 1, statut: 0 }));
+            }
+        }
 
         function genererPlanDesSieges(listeSieges) {
             const slot1 = document.getElementById('slot-siege-1');
@@ -681,12 +851,13 @@
             const btnValider = document.getElementById('btnValiderSiege');
             const badgeNumero = document.getElementById('selectedSeatNumber');
             
-            slot1.innerHTML = '';
-            slot2.innerHTML = '';
-            bodyRows.innerHTML = '';
+            if (slot1) slot1.innerHTML = '';
+            if (slot2) slot2.innerHTML = '';
+            if (bodyRows) bodyRows.innerHTML = '';
+            
             siegesSelectionnesActuels = [];
-            btnValider.disabled = true;
-            badgeNumero.textContent = '-';
+            if (btnValider) btnValider.disabled = true;
+            if (badgeNumero) badgeNumero.textContent = '-';
 
             function creerBoutonSiege(siege) {
                 const btnSiege = document.createElement('button');
@@ -736,13 +907,13 @@
 
             const s1 = listeSieges.find(s => s.numero === 1);
             const s2 = listeSieges.find(s => s.numero === 2);
-            if(s1) slot1.appendChild(creerBoutonSiege(s1));
-            if(s2) slot2.appendChild(creerBoutonSiege(s2));
+            if (s1 && slot1) slot1.appendChild(creerBoutonSiege(s1));
+            if (s2 && slot2) slot2.appendChild(creerBoutonSiege(s2));
 
             let indexSiege = 3;
             while (indexSiege <= 22) {
                 const row = document.createElement('div');
-                row.className = 'd-flex align-items-center';
+                row.className = 'd-flex align-items-center mb-1';
 
                 for (let i = 0; i < 2; i++) {
                     const col = document.createElement('div');
@@ -769,7 +940,7 @@
                         indexSiege++;
                     }
                 }
-                bodyRows.appendChild(row);
+                if (bodyRows) bodyRows.appendChild(row);
             }
 
             const lastRow = document.createElement('div');
@@ -783,906 +954,371 @@
                 if (s) col.appendChild(creerBoutonSiege(s));
                 lastRow.appendChild(col);
             }
-            bodyRows.appendChild(lastRow);
-        } */
-
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-        const SUPABASE_URL = "https://jzyunzjhjamoosctqoor.supabase.co"; 
-        const SUPABASE_ANON_KEY = "sb_publishable_jruqsDdFgLDoODPjkcacLA_cx_7cJdo"; 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    async function chargerPublicationsDansOnglets() {
-    const elPublic = document.getElementById('PubPublic');
-    const elSpecial = document.getElementById('PubSpecial');
-    const elPrive = document.getElementById('PubPrive');
-
-    try {
-        const { data: reservations, error } = await supabaseClient
-            .from('Reservation')
-            .select(`
-                id,
-                Depart,
-                Destination,
-                Nb_Place,
-                Nb_Libre,
-                Etat,
-                created_at,
-                Voiture (
-                    Marque,
-                    Immatriculation,
-                    Statut
-                )
-            `)
-            .order('created_at', { ascending: false });
-
-            console.log(reservations);
-
-        if (error) throw error;
-        let htmlPublic = '';
-        let htmlSpecial = '';
-        let htmlPrive = '';
-
-        if (!reservations || reservations.length === 0) {
-            const emptyMsg = `<div class="text-center text-secondary py-3 small">Aucune offre disponible.</div>`;
-            if (elPublic) elPublic.innerHTML = emptyMsg;
-            if (elSpecial) elSpecial.innerHTML = emptyMsg;
-            if (elPrive) elPrive.innerHTML = emptyMsg;
-            return;
+            if (bodyRows) bodyRows.appendChild(lastRow);
         }
 
-        // 2. Traitement et tri par type de publication
-        reservations.forEach(item => {
-            const voiture = item.Voiture || {};
-            const nomVehicule = voiture.Nom || "Mercedes Sprinter";
-            const immat = voiture.Immatriculation || "Non renseignée";
-
-            const depart = item.Depart || "Non précisé";
-            const destination = item.Destination || "Non précisée";
-
-            const placesRestantes = item.Nb_Libre ?? item.Nb_Place ?? 0;
-            const placesFormatees = String(placesRestantes).padStart(2, '0');
-
-            // Formatage date/heure
-            // Formatage date/heure
-            // Formatage date/heure
-            // Formatage date/heure
-            // Formatage date/heure
-            // Formatage date/heure
-            const dateObj = new Date(item.created_at);
-            const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-            const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-
-            // Déterminer le type (Si la colonne Type existe, sinon par défaut selon la présence de départ/destination)
-            const statutBrut = voiture.Statut || item.Statut || (item.Depart ? 'Public' : 'Prive');
-            const typeVoyage = statutBrut
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase();
-
-            // Génération du template de la carte
-            if (typeVoyage.includes('public')) {
-                htmlPublic += `
-                    <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
-                            <div>
-                                <h6 class="m-0 fw-bold">${nomVehicule}</h6>
-                                <small class="opacity-60">Immatriculation : ${immat}</small>
-                            </div>
-                        </div>
-                        <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                            <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
-                            <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}</small>
-                            <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
-                                <i class="fa-solid fa-plus me-1"></i> Ajouter
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else if (typeVoyage.includes('special')) {
-                htmlSpecial += `
-                    <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
-                            <div>
-                                <h6 class="m-0 fw-bold">${nomVehicule}</h6>
-                                <small class="opacity-60">Immatriculation : ${immat}</small>
-                            </div>
-                        </div>
-                        <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                            <span class="d-block fw-semibold small">${depart} ➔ ${destination}</span>
-                            <small class="text-warning d-block" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i>${dateFormatee} à ${heureFormatee}</small>
-                            <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <button onclick="ouvrirModalSieges(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
-                                <i class="fa-solid fa-plus me-1"></i> Ajouter
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                htmlPrive += `
-                    <div class="ticket-active-card p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="widget-icon text-white" style="background: var(--bleu-ocean);"><i class="fas fa-bus"></i></div>
-                            <div>
-                                <h6 class="m-0 fw-bold">${nomVehicule}</h6>
-                                <small class="opacity-60">Immatriculation : ${immat}</small>
-                            </div>
-                        </div>
-                        <div class="text-center px-4 py-2 rounded-3 border border-secondary-subtle bg-body-tertiary">
-                            <small class="text-info fw-medium d-block mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-chair me-1"></i>${placesFormatees} places restantes</small>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <button onclick="reserverOffrePrivee(${item.id})" class="btn btn-sm px-4 py-2 rounded-3 text-white fw-medium" style="background-color: var(--vert-neon);">
-                                <i class="fa-solid fa-plus me-1"></i> Ajouter
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-
-        // 3. Injection dans les 3 divs d'onglets
-        // 3. Injection dans les 3 divs d'onglets
-        // 3. Injection dans les 3 divs d'onglets
-        // 3. Injection dans les 3 divs d'onglets
-        // 3. Injection dans les 3 divs d'onglets
-        if (elPublic) elPublic.innerHTML = htmlPublic || `<div class="text-center text-secondary py-3 small">Aucune offre publique.</div>`;
-        if (elSpecial) elSpecial.innerHTML = htmlSpecial || `<div class="text-center text-secondary py-3 small">Aucune offre spéciale.</div>`;
-        if (elPrive) elPrive.innerHTML = htmlPrive || `<div class="text-center text-secondary py-3 small">Aucune offre privée.</div>`;
-
-    } catch (err) {
-        console.error("Erreur lors de la récupération :", err);
-        const errMsg = `<div class="text-center text-danger py-3 small">Erreur de chargement des données.</div>`;
-        if (elPublic) elPublic.innerHTML = errMsg;
-        if (elSpecial) elSpecial.innerHTML = errMsg;
-        if (elPrive) elPrive.innerHTML = errMsg;
-    }
-
-}
-
-let reservationIdActuelle = null;
-let siegesSelectionnesActuels = [];
-
-/**
- * Récupère les infos de l'utilisateur connecté depuis le navigateur
- */
- /**
- * Récupère les infos de l'utilisateur connecté depuis le navigateur
- */
- /**
- * Récupère les infos de l'utilisateur connecté depuis le navigateur
- */
- /**
- * Récupère les infos de l'utilisateur connecté depuis le navigateur
- */
-/**
- * Décode la partie Payload d'un Token JWT
- */
-function parseJwt(token) {
-    try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        return JSON.parse(jsonPayload);
-    } catch (e) {
-        console.error("Erreur lors du décodage du JWT", e);
-        return null;
-    }
-}
-
-/**
- * Récupère les infos de l'utilisateur connecté depuis le stockage local (Gère JWT et JSON)
- */
-function obtenirUtilisateurConnecte() {
-    try {
-        const rawUser = localStorage.getItem('Token_HeniWay');
-
-        if (rawUser) {
-            let userObj = null;
-
-            // Si c'est un token JWT (commence par "ey")
-            if (typeof rawUser === 'string' && rawUser.trim().startsWith('ey')) {
-                userObj = parseJwt(rawUser);
-            } else {
-                // Sinon on essaie un JSON.parse classique
-                try {
-                    const parsed = JSON.parse(rawUser);
-                    // Si le JSON parsé contient lui-même un access_token ou user
-                    if (parsed.access_token) {
-                        userObj = parseJwt(parsed.access_token) || parsed.user;
-                    } else if (parsed.user) {
-                        userObj = parsed.user;
-                    } else {
-                        userObj = parsed;
-                    }
-                } catch (e) {
-                    console.warn("Échec du parse JSON, tentative en tant que chaîne brute");
-                }
+        async function validerEtEnvoyerReservation() {
+            if (!reservationIdActuelle || siegesSelectionnesActuels.length === 0) {
+                alert("Veuillez sélectionner au moins un siège.");
+                return;
             }
 
-            if (userObj) {
-                // Extraction du nom / metadata Supabase
-                // Extraction du nom / metadata Supabase
-                // Extraction du nom / metadata Supabase
-                // Extraction du nom / metadata Supabase
-                // Extraction du nom / metadata Supabase
-                // Extraction du nom / metadata Supabase
-                const metadata = userObj.user_metadata || userObj.app_metadata || {};
-                const nom = metadata.full_name || metadata.nom_complet || 
-                            `${metadata.Nom || ''} ${metadata.prenom || ''}`.trim() || 
-                            userObj.email || userObj.name || "Passager";
+            const btnValider = document.getElementById('btnValiderSiege');
+            if (btnValider) btnValider.disabled = true;
 
-                const telephone = metadata.phone || metadata.telephone || userObj.phone || "";
+            try {
+                const user = obtenirUtilisateurConnecte();
+                const nbSiegesChoisis = siegesSelectionnesActuels.length;
 
-                return { nom, telephone };
-            }
-        }
-    } catch (e) {
-        console.warn("Impossible de lire les infos utilisateur depuis le stockage local", e);
-    }
-
-    return { nom: "Passager", telephone: "" };
-}
-// ==========================================
-// 1. FLUX PRIVÉ (Direct sans modale)
-// ==========================================
-
-/**
- * Réserve directement une offre Privée sans ouvrir la modale de sièges
- * @param {number|string} reservationId 
- */
-/**
- * Gestion de la réservation privée sans modale (avec blocage du bouton)
- * @param {number|string} reservationId 
- * @param {HTMLElement} btnElement - Passer 'this' dans le onclick HTML
- */
-async function reserverOffrePrivee(reservationId, btnElement) {
-    // 1. Demande de confirmation
-    const confirmation = confirm("Voulez-vous réserver ce véhicule complet en privé ?");
-    if (!confirmation) return;
-
-    // 2. Blocage immédiat du bouton pour éviter les multi-clics
-    let originalText = '';
-    if (btnElement) {
-        btnElement.disabled = true;
-        originalText = btnElement.innerHTML;
-        btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Réservation...`;
-    }
-
-    try {
-        // Récupération des infos de l'utilisateur connecté
-        const user = await obtenirUtilisateurConnecte();
-
-        // A. Récupération de la capacité max du véhicule
-        const { data: resData, error: fetchErr } = await supabaseClient
-            .from('Reservation')
-            .select('Nb_Place')
-            .eq('id', reservationId)
-            .single();
-
-        if (fetchErr) throw fetchErr;
-
-        const totalPlaces = resData?.Nb_Place || 27;
-
-        // B. Update dans la table 'Reservation'
-        const { error: updateError } = await supabaseClient
-            .from('Reservation')
-            .update({
-                NomPrive: user.nom,
-                NumPrive: user.telephone,
-                Etat: 'Réservé',
-                Nb_Libre: 0,
-                Nb_NonLibre: totalPlaces
-            })
-            .eq('id', reservationId);
-
-        if (updateError) throw updateError;
-
-        alert(`Véhicule réservé avec succès en privé au nom de ${user.nom} !`);
-
-        // C. Rafraîchissement des cartes
-        if (typeof chargerPublicationsDansOnglets === 'function') {
-            await chargerPublicationsDansOnglets();
-        }
-
-    } catch (err) {
-        console.error("Erreur lors de la réservation privée :", err);
-        alert("Une erreur est survenue lors de la réservation.");
-        
-        // Déblocage du bouton en cas d'échec
-        // Déblocage du bouton en cas d'échec
-        // Déblocage du bouton en cas d'échec
-        // Déblocage du bouton en cas d'échec
-        // Déblocage du bouton en cas d'échec
-        if (btnElement) {
-            btnElement.disabled = false;
-            btnElement.innerHTML = originalText;
-        }
-    }
-}
-
-
-// ==========================================
-// 2. FLUX PUBLIC & SPÉCIAL (Avec modale)
-// ==========================================
-
-/**
- * Ouvre la modale pour Public et Spécial
- */
-async function ouvrirModalSieges(reservationId) {
-    reservationIdActuelle = reservationId;
-    const modaleElement = document.getElementById('seatSelectionModal');
-    
-    if (!modaleElement) return;
-
-    const listeSieges = await chargerEtatSieges(reservationId);
-    genererPlanDesSieges(listeSieges);
-
-    const instanceModale = bootstrap.Modal.getOrCreateInstance(modaleElement);
-    instanceModale.show();
-}
-
-/**
- * Récupère l'état des sièges dans la table 'Place'
- */
-async function chargerEtatSieges(reservationId) {
-    try {
-        const { data, error } = await supabaseClient
-            .from('Place')
-            .select('*')
-            .eq('ID_Reservation', reservationId)
-            .maybeSingle();
-
-        if (error) throw error;
-
-        const listeComplete = [];
-        for (let i = 1; i <= 27; i++) {
-            const nomColonne = `N_${i}`;
-            const occupant = data ? data[nomColonne] : null;
-
-            listeComplete.push({
-                numero: i,
-                statut: (occupant !== null && occupant !== undefined && occupant.trim() !== '') ? 1 : 0
-            });
-        }
-        return listeComplete;
-
-    } catch (err) {
-        console.error("Erreur lors de la récupération des places :", err);
-        return Array.from({ length: 27 }, (_, index) => ({ numero: index + 1, statut: 0 }));
-    }
-}
-
-/**
- * Rendu visuel du Sprinter
- */
-function genererPlanDesSieges(listeSieges) {
-    const slot1 = document.getElementById('slot-siege-1');
-    const slot2 = document.getElementById('slot-siege-2');
-    const bodyRows = document.getElementById('sprinterBodyRows');
-    const btnValider = document.getElementById('btnValiderSiege');
-    const badgeNumero = document.getElementById('selectedSeatNumber');
-    
-    if (slot1) slot1.innerHTML = '';
-    if (slot2) slot2.innerHTML = '';
-    if (bodyRows) bodyRows.innerHTML = '';
-    
-    siegesSelectionnesActuels = [];
-    if (btnValider) btnValider.disabled = true;
-    if (badgeNumero) badgeNumero.textContent = '-';
-
-    function creerBoutonSiege(siege) {
-        const btnSiege = document.createElement('button');
-        btnSiege.type = 'button';
-        btnSiege.className = 'btn d-flex flex-column align-items-center justify-content-center p-1 rounded-3';
-        btnSiege.style.width = '45px';
-        btnSiege.style.height = '45px';
-        btnSiege.style.transition = 'all 0.2s';
-        
-        btnSiege.innerHTML = `
-            <i class="fa-solid fa-chair" style="font-size: 0.9rem;"></i>
-            <span style="font-size: 0.6rem; font-weight: 600; margin-top: 1px;">${siege.numero.toString().padStart(2, '0')}</span>
-        `;
-
-        if (siege.statut === 1) {
-            btnSiege.disabled = true; 
-            btnSiege.classList.add('btn-danger', 'opacity-25');
-            btnSiege.style.cursor = 'not-allowed';
-        } else {
-            btnSiege.classList.add('btn-outline-secondary', 'text-white-50');
-
-            btnSiege.addEventListener('click', () => {
-                const index = siegesSelectionnesActuels.indexOf(siege.numero);
-                if (index > -1) {
-                    siegesSelectionnesActuels.splice(index, 1);
-                    btnSiege.style.background = '';
-                    btnSiege.classList.remove('text-dark');
-                } else {
-                    siegesSelectionnesActuels.push(siege.numero);
-                    btnSiege.style.background = 'var(--bleu-ocean)';
-                    btnSiege.classList.add('text-dark');
-                }
-
-                siegesSelectionnesActuels.sort((a, b) => a - b);
-
-                if (siegesSelectionnesActuels.length > 0) {
-                    badgeNumero.textContent = siegesSelectionnesActuels.map(n => n.toString().padStart(2, '0')).join(', ');
-                    btnValider.disabled = false;
-                } else {
-                    badgeNumero.textContent = '-';
-                    btnValider.disabled = true;
-                }
-            });
-        }
-        return btnSiege;
-    }
-
-    // Devant
-    const s1 = listeSieges.find(s => s.numero === 1);
-    const s2 = listeSieges.find(s => s.numero === 2);
-    if (s1 && slot1) slot1.appendChild(creerBoutonSiege(s1));
-    if (s2 && slot2) slot2.appendChild(creerBoutonSiege(s2));
-
-    // Milieu (3 à 22)
-    let indexSiege = 3;
-    while (indexSiege <= 22) {
-        const row = document.createElement('div');
-        row.className = 'd-flex align-items-center mb-1';
-
-        for (let i = 0; i < 2; i++) {
-            const col = document.createElement('div');
-            col.style.width = '20%';
-            col.className = 'd-flex justify-content-center';
-            const s = listeSieges.find(s => s.numero === indexSiege);
-            if (s) col.appendChild(creerBoutonSiege(s));
-            row.appendChild(col);
-            indexSiege++;
-        }
-
-        const couloir = document.createElement('div');
-        couloir.style.width = '20%';
-        row.appendChild(couloir);
-
-        for (let i = 0; i < 2; i++) {
-            if (indexSiege <= 22) {
-                const col = document.createElement('div');
-                col.style.width = '20%';
-                col.className = 'd-flex justify-content-center';
-                const s = listeSieges.find(s => s.numero === indexSiege);
-                if (s) col.appendChild(creerBoutonSiege(s));
-                row.appendChild(col);
-                indexSiege++;
-            }
-        }
-        if (bodyRows) bodyRows.appendChild(row);
-    }
-
-    // Arrière (23 à 27)
-    const lastRow = document.createElement('div');
-    lastRow.className = 'd-flex align-items-center mt-1';
-    
-    for (let n = 23; n <= 27; n++) {
-        const col = document.createElement('div');
-        col.style.width = '20%';
-        col.className = 'd-flex justify-content-center';
-        const s = listeSieges.find(s => s.numero === n);
-        if (s) col.appendChild(creerBoutonSiege(s));
-        lastRow.appendChild(col);
-    }
-    if (bodyRows) bodyRows.appendChild(lastRow);
-}
-
-/**
- * Validation de la modale pour Public & Spécial
- */
-async function validerEtEnvoyerReservation() {
-    if (!reservationIdActuelle || siegesSelectionnesActuels.length === 0) {
-        alert("Veuillez sélectionner au moins un siège.");
-        return;
-    }
-
-    const btnValider = document.getElementById('btnValiderSiege');
-    if (btnValider) btnValider.disabled = true;
-
-    try {
-        const user = obtenirUtilisateurConnecte();
-        const nbSiegesChoisis = siegesSelectionnesActuels.length;
-
-        // 1. Update de la table 'Place' avec le NOM du passager
-        const updatePayload = {};
-        siegesSelectionnesActuels.forEach(num => {
-            updatePayload[`N_${num}`] = user.nom;
-        });
-
-        const { error: placeError } = await supabaseClient
-            .from('Place')
-            .update(updatePayload)
-            .eq('ID_Reservation', reservationIdActuelle);
-
-        if (placeError) throw placeError;
-
-        // 2. Update de 'Reservation' (Nb_Libre et Nb_NonLibre)
-        const { data: resData, error: fetchError } = await supabaseClient
-            .from('Reservation')
-            .select('Nb_Libre, Nb_NonLibre, Nb_Place')
-            .eq('id', reservationIdActuelle)
-            .single();
-
-        if (fetchError) throw fetchError;
-
-        const totalPlaces = resData.Nb_Place || 27;
-        const nbLibreActuel = resData.Nb_Libre ?? totalPlaces;
-        const nbNonLibreActuel = resData.Nb_NonLibre ?? 0;
-
-        const { error: updateResError } = await supabaseClient
-            .from('Reservation')
-            .update({ 
-                Nb_Libre: Math.max(0, nbLibreActuel - nbSiegesChoisis),
-                Nb_NonLibre: nbNonLibreActuel + nbSiegesChoisis 
-            })
-            .eq('id', reservationIdActuelle);
-
-        if (updateResError) throw updateResError;
-
-        // 3. Fermeture modale
-        const modaleElement = document.getElementById('seatSelectionModal');
-        if (modaleElement) {
-            const instanceModale = bootstrap.Modal.getInstance(modaleElement);
-            if (instanceModale) instanceModale.hide();
-        }
-
-        if (typeof chargerPublicationsDansOnglets === 'function') {
-            await chargerPublicationsDansOnglets();
-        }
-
-        alert(`Siège(s) réservé(s) avec succès pour ${user.nom} !`);
-
-    } catch (err) {
-        console.error("Erreur validation :", err);
-        alert("Une erreur est survenue lors de l'enregistrement.");
-    } finally {
-        if (btnValider) btnValider.disabled = false;
-    }
-}
-
-async function chargerReservationEnCours() {
-    const containerWidget = document.querySelector('.glass-panel');
-    if (!containerWidget) return;
-
-    let nomUtilisateur = obtenirUtilisateurConnecte();
-    nomUtilisateur = nomUtilisateur.nom;
-
-    if (!nomUtilisateur) {
-        afficherWidgetVide(containerWidget, "Bonjour 👋", "Connectez-vous pour voir vos réservations.");
-        return;
-    }
-
-    try {
-        let reservationTrouvee = null;
-        const { data: places, error: placeError } = await supabaseClient
-            .from('Place')
-            .select(`
-                *,
-                Reservation (
-                    id,
-                    Depart,
-                    Destination,
-                    Etat,
-                    created_at,
-                    Voiture ( Marque, Immatriculation )
-                )
-            `);
-
-        if (placeError) throw placeError;
-
-        if (places && places.length > 0) {
-            // Recherche du nom dans n'importe quelle colonne N_1 à N_27
-            for (const place of places) {
-                const estTrouve = Object.keys(place).some(key => {
-                    return key.startsWith('N_') && place[key] && place[key].trim().toLowerCase() === nomUtilisateur.trim().toLowerCase();
+                const updatePayload = {};
+                siegesSelectionnesActuels.forEach(num => {
+                    updatePayload[`N_${num}`] = user.nom;
                 });
 
-                if (estTrouve && place.Reservation) {
-                    reservationTrouvee = place.Reservation;
-                    break;
+                const { error: placeError } = await supabaseClient
+                    .from('Place')
+                    .update(updatePayload)
+                    .eq('ID_Reservation', reservationIdActuelle);
+
+                if (placeError) throw placeError;
+
+                const { data: resData, error: fetchError } = await supabaseClient
+                    .from('Reservation')
+                    .select('Nb_Libre, Nb_NonLibre, Nb_Place')
+                    .eq('id', reservationIdActuelle)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                const totalPlaces = resData.Nb_Place || 27;
+                const nbLibreActuel = resData.Nb_Libre ?? totalPlaces;
+                const nbNonLibreActuel = resData.Nb_NonLibre ?? 0;
+
+                const { error: updateResError } = await supabaseClient
+                    .from('Reservation')
+                    .update({ 
+                        Nb_Libre: Math.max(0, nbLibreActuel - nbSiegesChoisis),
+                        Nb_NonLibre: nbNonLibreActuel + nbSiegesChoisis 
+                    })
+                    .eq('id', reservationIdActuelle);
+
+                if (updateResError) throw updateResError;
+
+                const modaleElement = document.getElementById('seatSelectionModal');
+                if (modaleElement) {
+                    const instanceModale = bootstrap.Modal.getInstance(modaleElement);
+                    if (instanceModale) instanceModale.hide();
                 }
+
+                if (typeof chargerPublicationsDansOnglets === 'function') {
+                    await chargerPublicationsDansOnglets();
+                }
+
+                alert(`Siège(s) réservé(s) avec succès pour ${user.nom} !`);
+
+            } catch (err) {
+                console.error("Erreur validation :", err);
+                alert("Une erreur est survenue lors de l'enregistrement.");
+            } finally {
+                if (btnValider) btnValider.disabled = false;
             }
         }
 
-        // -------------------------------------------------------------
-        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
-        // -------------------------------------------------------------
-        if (!reservationTrouvee) {
-            const { data: resPrivee, error: priveeError } = await supabaseClient
-                .from('Reservation')
-                .select(`
-                    id,
-                    Depart,
-                    Destination,
-                    Etat,
-                    created_at,
-                    Voiture ( Marque, Immatriculation )
-                `)
-                .ilike('NomPrive', nomUtilisateur)
-                .maybeSingle();
+        async function chargerReservationEnCours() {
+            const containerWidget = document.querySelector('.glass-panel');
+            if (!containerWidget) return;
 
-            if (!priveeError && resPrivee) {
-                reservationTrouvee = resPrivee;
+            let nomUtilisateur = obtenirUtilisateurConnecte();
+            nomUtilisateur = nomUtilisateur.nom;
+
+            if (!nomUtilisateur) {
+                afficherWidgetVide(containerWidget, "Bonjour 👋", "Connectez-vous pour voir vos réservations.");
+                return;
+            }
+
+            try {
+                let reservationTrouvee = null;
+                const { data: places, error: placeError } = await supabaseClient
+                    .from('Place')
+                    .select(`
+                        *,
+                        Reservation (
+                            id,
+                            Depart,
+                            Destination,
+                            Etat,
+                            created_at,
+                            Voiture ( Marque, Immatriculation )
+                        )
+                    `);
+
+                if (placeError) throw placeError;
+
+                if (places && places.length > 0) {
+                    for (const place of places) {
+                        const estTrouve = Object.keys(place).some(key => {
+                            return key.startsWith('N_') && place[key] && place[key].trim().toLowerCase() === nomUtilisateur.trim().toLowerCase();
+                        });
+
+                        if (estTrouve && place.Reservation) {
+                            reservationTrouvee = place.Reservation;
+                            break;
+                        }
+                    }
+                }
+
+                if (!reservationTrouvee) {
+                    const { data: resPrivee, error: priveeError } = await supabaseClient
+                        .from('Reservation')
+                        .select(`
+                            id,
+                            Depart,
+                            Destination,
+                            Etat,
+                            created_at,
+                            Voiture ( Marque, Immatriculation )
+                        `)
+                        .ilike('NomPrive', nomUtilisateur)
+                        .maybeSingle();
+
+                    if (!priveeError && resPrivee) {
+                        reservationTrouvee = resPrivee;
+                    }
+                }
+
+                if (reservationTrouvee) {
+                    const depart = reservationTrouvee.Depart || "Départ non précisé";
+                    const destination = reservationTrouvee.Destination || "Destination non précisée";
+                    const etat = reservationTrouvee.Etat || "En attente du chauffeur";
+                    const idRes = reservationTrouvee.id;
+
+                    containerWidget.innerHTML = `
+                        <div>
+                            <h4 class="fw-bold m-0" style="font-size: 1.25rem;">Bonjour, ${nomUtilisateur} 👋</h4>
+                            <small class="opacity-60">Prêt pour votre prochain départ ?</small>
+                        </div>
+                        
+                        <div class="p-3 border-start border-warning border-3 rounded-end-4 rounded-start-4 d-flex align-items-center gap-3" style="background: rgba(var(--bs-warning-rgb), 0.08); border: 1px solid var(--glass-border);">
+                            <div class="spinner-border text-warning flex-shrink-0" role="status" style="width: 1.8rem; height: 1.8rem; border-width: 0.22em;">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                            
+                            <div class="w-100">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-warning-emphasis fw-semibold text-uppercase opacity-75" style="font-size: 0.7rem; letter-spacing: 0.5px;">Réservation en cours</small>                              
+                                </div>
+                                <span class="fw-bold d-block mt-1" style="font-size: 0.95rem;">${depart} ➔ ${destination}</span>
+                                <small class="text-secondary small d-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                                    <i class="fa-regular fa-clock"></i> ${etat}
+                                </small>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    afficherWidgetVide(containerWidget, `Bonjour, ${nomUtilisateur} 👋`, "Aucune réservation en cours.");
+                }
+
+            } catch (err) {
+                console.error("Erreur chargement réservation en cours :", err);
+                afficherWidgetVide(containerWidget, `Bonjour, ${nomUtilisateur} 👋`, "Impossible de charger la réservation.");
             }
         }
 
-        // -------------------------------------------------------------
-        // 3. MISE À JOUR DU DOM DYNAMIQUE
-        // -------------------------------------------------------------
-        if (reservationTrouvee) {
-            const depart = reservationTrouvee.Depart || "Départ non précisé";
-            const destination = reservationTrouvee.Destination || "Destination non précisée";
-            const etat = reservationTrouvee.Etat || "En attente du chauffeur";
-            const idRes = reservationTrouvee.id;
-
-            containerWidget.innerHTML = `
+        function afficherWidgetVide(container, titre, message) {
+            container.innerHTML = `
                 <div>
-                    <h4 class="fw-bold m-0" style="font-size: 1.25rem;">Bonjour, ${nomUtilisateur} 👋</h4>
+                    <h4 class="fw-bold m-0" style="font-size: 1.25rem;">${titre}</h4>
                     <small class="opacity-60">Prêt pour votre prochain départ ?</small>
                 </div>
-                
-                <div class="p-3 border-start border-warning border-3 rounded-end-4 rounded-start-4 d-flex align-items-center gap-3" style="background: rgba(var(--bs-warning-rgb), 0.08); border: 1px solid var(--glass-border);">
-                    <div class="spinner-border text-warning flex-shrink-0" role="status" style="width: 1.8rem; height: 1.8rem; border-width: 0.22em;">
-                        <span class="visually-hidden">Chargement...</span>
-                    </div>
-                    
-                    <div class="w-100">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-warning-emphasis fw-semibold text-uppercase opacity-75" style="font-size: 0.7rem; letter-spacing: 0.5px;">Réservation en cours</small>                              
-                        </div>
-                        <span class="fw-bold d-block mt-1" style="font-size: 0.95rem;">${depart} ➔ ${destination}</span>
-                        <small class="text-secondary small d-flex align-items-center gap-1" style="font-size: 0.75rem;">
-                            <i class="fa-regular fa-clock"></i> ${etat}
-                        </small>
-                    </div>
+                <div class="p-3 border border-secondary-subtle rounded-4 text-center bg-body-tertiary">
+                    <small class="text-secondary d-block">${message}</small>
                 </div>
             `;
-        } else {
-            // Aucune réservation active trouvée pour ce nom
-            afficherWidgetVide(containerWidget, `Bonjour, ${nomUtilisateur} 👋`, "Aucune réservation en cours.");
         }
 
-    } catch (err) {
-        console.error("Erreur chargement réservation en cours :", err);
-        afficherWidgetVide(containerWidget, `Bonjour, ${nomUtilisateur} 👋`, "Impossible de charger la réservation.");
-    }
-}
+        async function chargerHistoriqueDeplacements() {
+            const tbody = document.querySelector('#screenHistorique tbody');
+            if (!tbody) return;
 
-/**
- * Affichage HTML quand il n'y a pas de réservation active
- */
-function afficherWidgetVide(container, titre, message) {
-    container.innerHTML = `
-        <div>
-            <h4 class="fw-bold m-0" style="font-size: 1.25rem;">${titre}</h4>
-            <small class="opacity-60">Prêt pour votre prochain départ ?</small>
-        </div>
-        <div class="p-3 border border-secondary-subtle rounded-4 text-center bg-body-tertiary">
-            <small class="text-secondary d-block">${message}</small>
-        </div>
-    `;
-}
+            let nomUtilisateur = obtenirUtilisateurConnecte();
+            nomUtilisateur = nomUtilisateur.nom;
 
-
-/**
- * Charge l'historique global des déplacements de l'utilisateur
- */
-async function chargerHistoriqueDeplacements() {
-    const tbody = document.querySelector('#screenHistorique tbody');
-    if (!tbody) return;
-
-    let nomUtilisateur = obtenirUtilisateurConnecte();
-    nomUtilisateur = nomUtilisateur.nom;
-
-    if (!nomUtilisateur) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="text-center py-4 opacity-50 small">
-                    Veuillez vous connecter pour voir votre historique.
-                </td>
-            </tr>`;
-        return;
-    }
-
-    try {
-        const nomCible = String(nomUtilisateur).trim().toLowerCase();
-        let reservationsAssociees = [];
-
-        // 1. RECHERCHE DANS LA TABLE 'Place' (Public & Spécial)
-        const { data: places, error: placeError } = await supabaseClient
-            .from('Place')
-            .select(`
-                *,
-                Reservation (
-                    id,
-                    Depart,
-                    Destination,
-                    Date,
-                    Etat,
-                    created_at,
-                    Voiture ( Marque, Immatriculation )
-                )
-            `);
-
-        if (placeError) throw placeError;
-
-        if (places && places.length > 0) {
-            places.forEach(place => {
-                const estPresent = Object.keys(place).some(key => {
-                    return key.startsWith('N_') && 
-                           place[key] && 
-                           String(place[key]).trim().toLowerCase() === nomCible;
-                });
-
-                if (estPresent && place.Reservation) {
-                    reservationsAssociees.push(place.Reservation);
-                }
-            });
-        }
-
-        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
-        const { data: resPrivees, error: priveeError } = await supabaseClient
-            .from('Reservation')
-            .select(`
-                id,
-                Depart,
-                Destination,
-                Date,
-                Etat,
-                created_at,
-                Voiture ( Marque, Immatriculation )
-            `)
-            .ilike('NomPrive', nomUtilisateur);
-
-        if (!priveeError && resPrivees && resPrivees.length > 0) {
-            resPrivees.forEach(res => {
-                // Évite les doublons si déjà présent
-                if (!reservationsAssociees.some(r => r.id === res.id)) {
-                    reservationsAssociees.push(res);
-                }
-            });
-        }
-
-        // 3. AFFICHAGE DANS LE TABLEAU HTML
-        if (reservationsAssociees.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="4" class="text-center py-4 opacity-50 small">
-                        <i class="fa-solid fa-folder-open mb-2 d-block fs-5"></i>
-                        Aucun déplacement trouvé dans votre historique.
-                    </td>
-                </tr>`;
-            return;
-        }
-
-        // Tri par date décroissante (plus récent au plus ancien)
-        reservationsAssociees.sort((a, b) => new Date(b.created_at || b.Date) - new Date(a.created_at || a.Date));
-
-        tbody.innerHTML = reservationsAssociees.map(res => {
-            const marque = res.Voiture?.Marque || "Véhicule";
-            const immat = res.Voiture?.Immatriculation || "---";
-            const trajet = `${res.Depart || 'Dép.'} ➔ ${res.Destination || 'Dest.'}`;
-            const dateEmbarquement = res.Date || (res.created_at ? new Date(res.created_at).toLocaleDateString('fr-FR') : "Date inconnue");
-            
-            // Gestion du badge de statut
-            const etatTxt = res.Etat || "Terminé";
-            let badgeClass = "bg-secondary-subtle text-secondary";
-            
-            if (etatTxt.toLowerCase().includes('réservé') || etatTxt.toLowerCase().includes('en cours')) {
-                badgeClass = "bg-warning-subtle text-warning";
-            } else if (etatTxt.toLowerCase().includes('terminé') || etatTxt.toLowerCase().includes('effectué')) {
-                badgeClass = "bg-success-subtle text-success";
-            } else if (etatTxt.toLowerCase().includes('annulé')) {
-                badgeClass = "bg-danger-subtle text-danger";
+            if (!nomUtilisateur) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center py-4 opacity-50 small">
+                            Veuillez vous connecter pour voir votre historique.
+                        </td>
+                    </tr>`;
+                return;
             }
 
-            return `
-                <tr class="opacity-75">
-                    <td class="py-3">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fa-solid fa-bus opacity-50"></i>
-                            <div>
-                                <span class="d-block fw-semibold small">${marque}</span>
-                                <small class="opacity-50" style="font-size: 0.75rem;">${immat}</small>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="small">${trajet}</td>
-                    <td class="small opacity-70">${dateEmbarquement}</td>
-                    <td class="text-end">
-                        <span class="badge ${badgeClass} rounded-pill px-3">${etatTxt}</span>
-                    </td>
-                </tr>
-            `;
-        }).join('');
+            try {
+                const nomCible = String(nomUtilisateur).trim().toLowerCase();
+                let reservationsAssociees = [];
 
-    } catch (err) {
-        console.error("Erreur chargement historique :", err);
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="text-center py-4 text-danger small">
-                    Erreur lors de la récupération de l'historique.
-                </td>
-            </tr>`;
-    }
-}
+                const { data: places, error: placeError } = await supabaseClient
+                    .from('Place')
+                    .select(`
+                        *,
+                        Reservation (
+                            id,
+                            Depart,
+                            Destination,
+                            Date,
+                            Etat,
+                            created_at,
+                            Voiture ( Marque, Immatriculation )
+                        )
+                    `);
 
-function confirmerDeconnexion() {
-    try {
-        // 1. Nettoyage des tokens et données de session
-        localStorage.removeItem('Token_Heniway');
-        sessionStorage.removeItem('Token_Heniway');
-        localStorage.removeItem('user');
-        sessionStorage.removeItem('user');
+                if (placeError) throw placeError;
 
-        // 2. Déconnexion Supabase Auth (si utilisé)
-        if (typeof supabaseClient !== 'undefined' && supabaseClient.auth) {
-            supabaseClient.auth.signOut();
+                if (places && places.length > 0) {
+                    places.forEach(place => {
+                        const estPresent = Object.keys(place).some(key => {
+                            return key.startsWith('N_') && 
+                                place[key] && 
+                                String(place[key]).trim().toLowerCase() === nomCible;
+                        });
+
+                        if (estPresent && place.Reservation) {
+                            reservationsAssociees.push(place.Reservation);
+                        }
+                    });
+                }
+
+                const { data: resPrivees, error: priveeError } = await supabaseClient
+                    .from('Reservation')
+                    .select(`
+                        id,
+                        Depart,
+                        Destination,
+                        Date,
+                        Etat,
+                        created_at,
+                        Voiture ( Marque, Immatriculation )
+                    `)
+                    .ilike('NomPrive', nomUtilisateur);
+
+                if (!priveeError && resPrivees && resPrivees.length > 0) {
+                    resPrivees.forEach(res => {
+                        if (!reservationsAssociees.some(r => r.id === res.id)) {
+                            reservationsAssociees.push(res);
+                        }
+                    });
+                }
+
+                if (reservationsAssociees.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center py-4 opacity-50 small">
+                                <i class="fa-solid fa-folder-open mb-2 d-block fs-5"></i>
+                                Aucun déplacement trouvé dans votre historique.
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                reservationsAssociees.sort((a, b) => new Date(b.created_at || b.Date) - new Date(a.created_at || a.Date));
+
+                tbody.innerHTML = reservationsAssociees.map(res => {
+                    const marque = res.Voiture?.Marque || "Véhicule";
+                    const immat = res.Voiture?.Immatriculation || "---";
+                    const trajet = `${res.Depart || 'Dép.'} ➔ ${res.Destination || 'Dest.'}`;
+                    const dateEmbarquement = res.Date || (res.created_at ? new Date(res.created_at).toLocaleDateString('fr-FR') : "Date inconnue");
+                    
+                    const etatTxt = res.Etat || "Terminé";
+                    let badgeClass = "bg-secondary-subtle text-secondary";
+                    
+                    if (etatTxt.toLowerCase().includes('réservé') || etatTxt.toLowerCase().includes('en cours')) {
+                        badgeClass = "bg-warning-subtle text-warning";
+                    } else if (etatTxt.toLowerCase().includes('terminé') || etatTxt.toLowerCase().includes('effectué')) {
+                        badgeClass = "bg-success-subtle text-success";
+                    } else if (etatTxt.toLowerCase().includes('annulé')) {
+                        badgeClass = "bg-danger-subtle text-danger";
+                    }
+
+                    return `
+                        <tr class="opacity-75">
+                            <td class="py-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-bus opacity-50"></i>
+                                    <div>
+                                        <span class="d-block fw-semibold small">${marque}</span>
+                                        <small class="opacity-50" style="font-size: 0.75rem;">${immat}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="small">${trajet}</td>
+                            <td class="small opacity-70">${dateEmbarquement}</td>
+                            <td class="text-end">
+                                <span class="badge ${badgeClass} rounded-pill px-3">${etatTxt}</span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error("Erreur chargement historique :", err);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-danger small">
+                            Erreur lors de la récupération de l'historique.
+                        </td>
+                    </tr>`;
+            }
         }
 
-    } catch (err) {
-        console.error("Erreur lors de la suppression de la session :", err);
-    } finally {
-        // 3. Redirection vers la page d'accueil / connexion
-        window.location.href = '/';
-    }
-}
+        function confirmerDeconnexion() {
+            try {
+                localStorage.removeItem('Token_Heniway');
+                sessionStorage.removeItem('Token_Heniway');
+                localStorage.removeItem('user');
+                sessionStorage.removeItem('user');
 
-/**
- * Annule la déconnexion et réaffiche le premier écran (ex: la liste des trajets)
- */
-function annulerDeconnexion() {
-    const screenDeconnexion = document.getElementById('screenDeconnexion');
-    if (screenDeconnexion) {
-        screenDeconnexion.style.display = 'none';
-    }
+                if (typeof supabaseClient !== 'undefined' && supabaseClient.auth) {
+                    supabaseClient.auth.signOut();
+                }
 
-    // Si tu as une fonction pour basculer d'écran (ex: afficherEcran('screenPublication'))
-    if (typeof afficherEcran === 'function') {
-        afficherEcran('screenPublication'); 
-    } else {
-        // Repli : réaffiche le premier écran disponible si présent
-        const ecranPrincipal = document.querySelector('.app-screen:not(#screenDeconnexion)');
-        if (ecranPrincipal) ecranPrincipal.style.display = 'block';
-    }
-}
-// Listenersc
-// Listenersc
-// Listenersc
-// Listenersc
-// Listenersc
-// Listenersc
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof chargerPublicationsDansOnglets === 'function') {
-        chargerPublicationsDansOnglets();
-    }
+            } catch (err) {
+                console.error("Erreur lors de la suppression de la session :", err);
+            } finally {
+                window.location.href = '/';
+            }
+        }
 
-    const btnValider = document.getElementById('btnValiderSiege');
-    if (btnValider) {
-        btnValider.addEventListener('click', validerEtEnvoyerReservation);
-    }
-    chargerReservationEnCours();
-    chargerHistoriqueDeplacements();
+        function annulerDeconnexion() {
+            const screenDeconnexion = document.getElementById('screenDeconnexion');
+            if (screenDeconnexion) {
+                screenDeconnexion.style.display = 'none';
+            }
 
-    const btnAnnuler = document.getElementById('cancelLogoutBtn');
-    if (btnAnnuler) {
-        btnAnnuler.addEventListener('click', annulerDeconnexion);
-    }
-});
+            if (typeof afficherEcran === 'function') {
+                afficherEcran('screenPublication'); 
+            } else {
+                const ecranPrincipal = document.querySelector('.app-screen:not(#screenDeconnexion)');
+                if (ecranPrincipal) ecranPrincipal.style.display = 'block';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof chargerPublicationsDansOnglets === 'function') {
+                chargerPublicationsDansOnglets();
+            }
+
+            const btnValider = document.getElementById('btnValiderSiege');
+            if (btnValider) {
+                btnValider.addEventListener('click', validerEtEnvoyerReservation);
+            }
+            chargerReservationEnCours();
+            chargerHistoriqueDeplacements();
+
+            const btnAnnuler = document.getElementById('cancelLogoutBtn');
+            if (btnAnnuler) {
+                btnAnnuler.addEventListener('click', annulerDeconnexion);
+            }
+        });
     </script>
 </body>
 </html>
