@@ -1477,6 +1477,189 @@ function afficherWidgetVide(container, titre, message) {
     `;
 }
 
+
+/**
+ * Charge l'historique global des déplacements de l'utilisateur
+ */
+async function chargerHistoriqueDeplacements() {
+    const tbody = document.querySelector('#screenHistorique tbody');
+    if (!tbody) return;
+
+    let nomUtilisateur = obtenirUtilisateurConnecte();
+    nomUtilisateur = nomUtilisateur.nom;
+
+    if (!nomUtilisateur) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center py-4 opacity-50 small">
+                    Veuillez vous connecter pour voir votre historique.
+                </td>
+            </tr>`;
+        return;
+    }
+
+    try {
+        const nomCible = String(nomUtilisateur).trim().toLowerCase();
+        let reservationsAssociees = [];
+
+        // 1. RECHERCHE DANS LA TABLE 'Place' (Public & Spécial)
+        const { data: places, error: placeError } = await supabaseClient
+            .from('Place')
+            .select(`
+                *,
+                Reservation (
+                    id,
+                    Depart,
+                    Destination,
+                    Date,
+                    Etat,
+                    created_at,
+                    Voiture ( Marque, Immatriculation )
+                )
+            `);
+
+        if (placeError) throw placeError;
+
+        if (places && places.length > 0) {
+            places.forEach(place => {
+                const estPresent = Object.keys(place).some(key => {
+                    return key.startsWith('N_') && 
+                           place[key] && 
+                           String(place[key]).trim().toLowerCase() === nomCible;
+                });
+
+                if (estPresent && place.Reservation) {
+                    reservationsAssociees.push(place.Reservation);
+                }
+            });
+        }
+
+        // 2. RECHERCHE DANS LA TABLE 'Reservation' (Privé via NomPrive)
+        const { data: resPrivees, error: priveeError } = await supabaseClient
+            .from('Reservation')
+            .select(`
+                id,
+                Depart,
+                Destination,
+                Date,
+                Etat,
+                created_at,
+                Voiture ( Marque, Immatriculation )
+            `)
+            .ilike('NomPrive', nomUtilisateur);
+
+        if (!priveeError && resPrivees && resPrivees.length > 0) {
+            resPrivees.forEach(res => {
+                // Évite les doublons si déjà présent
+                if (!reservationsAssociees.some(r => r.id === res.id)) {
+                    reservationsAssociees.push(res);
+                }
+            });
+        }
+
+        // 3. AFFICHAGE DANS LE TABLEAU HTML
+        if (reservationsAssociees.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center py-4 opacity-50 small">
+                        <i class="fa-solid fa-folder-open mb-2 d-block fs-5"></i>
+                        Aucun déplacement trouvé dans votre historique.
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        // Tri par date décroissante (plus récent au plus ancien)
+        reservationsAssociees.sort((a, b) => new Date(b.created_at || b.Date) - new Date(a.created_at || a.Date));
+
+        tbody.innerHTML = reservationsAssociees.map(res => {
+            const marque = res.Voiture?.Marque || "Véhicule";
+            const immat = res.Voiture?.Immatriculation || "---";
+            const trajet = `${res.Depart || 'Dép.'} ➔ ${res.Destination || 'Dest.'}`;
+            const dateEmbarquement = res.Date || (res.created_at ? new Date(res.created_at).toLocaleDateString('fr-FR') : "Date inconnue");
+            
+            // Gestion du badge de statut
+            const etatTxt = res.Etat || "Terminé";
+            let badgeClass = "bg-secondary-subtle text-secondary";
+            
+            if (etatTxt.toLowerCase().includes('réservé') || etatTxt.toLowerCase().includes('en cours')) {
+                badgeClass = "bg-warning-subtle text-warning";
+            } else if (etatTxt.toLowerCase().includes('terminé') || etatTxt.toLowerCase().includes('effectué')) {
+                badgeClass = "bg-success-subtle text-success";
+            } else if (etatTxt.toLowerCase().includes('annulé')) {
+                badgeClass = "bg-danger-subtle text-danger";
+            }
+
+            return `
+                <tr class="opacity-75">
+                    <td class="py-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-bus opacity-50"></i>
+                            <div>
+                                <span class="d-block fw-semibold small">${marque}</span>
+                                <small class="opacity-50" style="font-size: 0.75rem;">${immat}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="small">${trajet}</td>
+                    <td class="small opacity-70">${dateEmbarquement}</td>
+                    <td class="text-end">
+                        <span class="badge ${badgeClass} rounded-pill px-3">${etatTxt}</span>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+    } catch (err) {
+        console.error("Erreur chargement historique :", err);
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center py-4 text-danger small">
+                    Erreur lors de la récupération de l'historique.
+                </td>
+            </tr>`;
+    }
+}
+
+function confirmerDeconnexion() {
+    try {
+        // 1. Nettoyage des tokens et données de session
+        localStorage.removeItem('Token_Heniway');
+        sessionStorage.removeItem('Token_Heniway');
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
+
+        // 2. Déconnexion Supabase Auth (si utilisé)
+        if (typeof supabaseClient !== 'undefined' && supabaseClient.auth) {
+            supabaseClient.auth.signOut();
+        }
+
+    } catch (err) {
+        console.error("Erreur lors de la suppression de la session :", err);
+    } finally {
+        // 3. Redirection vers la page d'accueil / connexion
+        window.location.href = '/';
+    }
+}
+
+/**
+ * Annule la déconnexion et réaffiche le premier écran (ex: la liste des trajets)
+ */
+function annulerDeconnexion() {
+    const screenDeconnexion = document.getElementById('screenDeconnexion');
+    if (screenDeconnexion) {
+        screenDeconnexion.style.display = 'none';
+    }
+
+    // Si tu as une fonction pour basculer d'écran (ex: afficherEcran('screenPublication'))
+    if (typeof afficherEcran === 'function') {
+        afficherEcran('screenPublication'); 
+    } else {
+        // Repli : réaffiche le premier écran disponible si présent
+        const ecranPrincipal = document.querySelector('.app-screen:not(#screenDeconnexion)');
+        if (ecranPrincipal) ecranPrincipal.style.display = 'block';
+    }
+}
 // Listenersc
 // Listenersc
 // Listenersc
@@ -1493,6 +1676,12 @@ document.addEventListener("DOMContentLoaded", () => {
         btnValider.addEventListener('click', validerEtEnvoyerReservation);
     }
     chargerReservationEnCours();
+    chargerHistoriqueDeplacements();
+
+    const btnAnnuler = document.getElementById('cancelLogoutBtn');
+    if (btnAnnuler) {
+        btnAnnuler.addEventListener('click', annulerDeconnexion);
+    }
 });
     </script>
 </body>
