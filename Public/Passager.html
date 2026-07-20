@@ -1040,14 +1040,29 @@ function obtenirUtilisateurConnecte() {
  * Réserve directement une offre Privée sans ouvrir la modale de sièges
  * @param {number|string} reservationId 
  */
-async function reserverOffrePrivee(reservationId) {
-    const confirmation = confirm("Voulez-vous réserver cette offre privée ?");
+/**
+ * Gestion de la réservation privée sans modale (avec blocage du bouton)
+ * @param {number|string} reservationId 
+ * @param {HTMLElement} btnElement - Passer 'this' dans le onclick HTML
+ */
+async function reserverOffrePrivee(reservationId, btnElement) {
+    // 1. Demande de confirmation
+    const confirmation = confirm("Voulez-vous réserver ce véhicule complet en privé ?");
     if (!confirmation) return;
 
-    try {
-        const user = obtenirUtilisateurConnecte();
+    // 2. Blocage immédiat du bouton pour éviter les multi-clics
+    let originalText = '';
+    if (btnElement) {
+        btnElement.disabled = true;
+        originalText = btnElement.innerHTML;
+        btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Réservation...`;
+    }
 
-        // 1. Récupération de la capacité totale de la réservation
+    try {
+        // Récupération des infos de l'utilisateur connecté
+        const user = await obtenirUtilisateurConnecte();
+
+        // A. Récupération de la capacité max du véhicule
         const { data: resData, error: fetchErr } = await supabaseClient
             .from('Reservation')
             .select('Nb_Place')
@@ -1058,7 +1073,7 @@ async function reserverOffrePrivee(reservationId) {
 
         const totalPlaces = resData?.Nb_Place || 27;
 
-        // 2. Mise à jour directe de la ligne dans 'Reservation'
+        // B. Update dans la table 'Reservation'
         const { error: updateError } = await supabaseClient
             .from('Reservation')
             .update({
@@ -1072,16 +1087,26 @@ async function reserverOffrePrivee(reservationId) {
 
         if (updateError) throw updateError;
 
-        alert(`Offre privée réservée avec succès au nom de ${user.nom} !`);
+        alert(`Véhicule réservé avec succès en privé au nom de ${user.nom} !`);
 
-        // Rafraîchissement des onglets
+        // C. Rafraîchissement des cartes
         if (typeof chargerPublicationsDansOnglets === 'function') {
             await chargerPublicationsDansOnglets();
         }
 
     } catch (err) {
-        console.error("Erreur réservation privée :", err);
-        alert("Une erreur est survenue lors de la réservation privée.");
+        console.error("Erreur lors de la réservation privée :", err);
+        alert("Une erreur est survenue lors de la réservation.");
+        
+        // Déblocage du bouton en cas d'échec
+        // Déblocage du bouton en cas d'échec
+        // Déblocage du bouton en cas d'échec
+        // Déblocage du bouton en cas d'échec
+        // Déblocage du bouton en cas d'échec
+        if (btnElement) {
+            btnElement.disabled = false;
+            btnElement.innerHTML = originalText;
+        }
     }
 }
 
@@ -1335,11 +1360,4 @@ document.addEventListener("DOMContentLoaded", () => {
         chargerPublicationsDansOnglets();
     }
 
-    const btnValider = document.getElementById('btnValiderSiege');
-    if (btnValider) {
-        btnValider.addEventListener('click', validerEtEnvoyerReservation);
-    }
-});
-    </script>
-</body>
-</html>
+    const btnV
