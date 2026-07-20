@@ -1358,7 +1358,7 @@ async function chargerReservationEnCours() {
     const containerWidget = document.querySelector('.glass-panel');
     if (!containerWidget) return;
 
-    const nomUtilisateur = obtenirUtilisateurConnecte();
+    let nomUtilisateur = obtenirUtilisateurConnecte();
     nomUtilisateur = nomUtilisateur.nom;
 
     if (!nomUtilisateur) {
@@ -1368,11 +1368,6 @@ async function chargerReservationEnCours() {
 
     try {
         let reservationTrouvee = null;
-
-        // -------------------------------------------------------------
-        // 1. RECHERCHE DANS LA TABLE 'Place' (Public / Spécial)
-        // -------------------------------------------------------------
-        // On récupère toutes les places et leurs réservations liées
         const { data: places, error: placeError } = await supabaseClient
             .from('Place')
             .select(`
@@ -1504,4 +1499,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
     </script>
 </body>
-</html>
+</html>                                                                                                                                                                                                                                                                                                   
