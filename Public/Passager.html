@@ -961,22 +961,72 @@ let siegesSelectionnesActuels = [];
  /**
  * Récupère les infos de l'utilisateur connecté depuis le navigateur
  */
+/**
+ * Décode la partie Payload d'un Token JWT
+ */
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        console.error("Erreur lors du décodage du JWT", e);
+        return null;
+    }
+}
+
+/**
+ * Récupère les infos de l'utilisateur connecté depuis le stockage local (Gère JWT et JSON)
+ */
 function obtenirUtilisateurConnecte() {
     try {
-        const rawUser = localStorage.getItem('Token_HeniWay') || sessionStorage.getItem('Token_HeniWay');
+        const rawUser = localStorage.getItem('Token_HeniWay');
+
         if (rawUser) {
-            const user = JSON.parse(rawUser);
-            return {
-                nom: user.nom_complet || user.full_name || `${user.nom || ''} ${user.prenom || ''}`.trim() || user.email || 'Passager',
-                telephone: user.telephone || user.phone || user.num || ''
-            };
+            let userObj = null;
+
+            // Si c'est un token JWT (commence par "ey")
+            if (typeof rawUser === 'string' && rawUser.trim().startsWith('ey')) {
+                userObj = parseJwt(rawUser);
+            } else {
+                // Sinon on essaie un JSON.parse classique
+                try {
+                    const parsed = JSON.parse(rawUser);
+                    // Si le JSON parsé contient lui-même un access_token ou user
+                    if (parsed.access_token) {
+                        userObj = parseJwt(parsed.access_token) || parsed.user;
+                    } else if (parsed.user) {
+                        userObj = parsed.user;
+                    } else {
+                        userObj = parsed;
+                    }
+                } catch (e) {
+                    console.warn("Échec du parse JSON, tentative en tant que chaîne brute");
+                }
+            }
+
+            if (userObj) {
+                // Extraction du nom / metadata Supabase
+                const metadata = userObj.user_metadata || userObj.app_metadata || {};
+                const nom = metadata.full_name || metadata.nom_complet || 
+                            `${metadata.nom || ''} ${metadata.prenom || ''}`.trim() || 
+                            userObj.email || userObj.name || "Passager";
+
+                const telephone = metadata.phone || metadata.telephone || userObj.phone || "";
+
+                return { nom, telephone };
+            }
         }
     } catch (e) {
         console.warn("Impossible de lire les infos utilisateur depuis le stockage local", e);
     }
+
     return { nom: "Passager", telephone: "" };
 }
-
 // ==========================================
 // 1. FLUX PRIVÉ (Direct sans modale)
 // ==========================================
