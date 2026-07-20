@@ -799,9 +799,7 @@
     try {
         // 1. Requete Supabase avec jointure sur la table Voiture
         // 1. Requete Supabase avec jointure sur la table Voiture
-        // 1. Requete Supabase avec jointure sur la table Voiture
-        // 1. Requete Supabase avec jointure sur la table Voiture
-        // 1. Requete Supabase avec jointure sur la table Voiture
+
         const { data: reservations, error } = await supabaseClient
             .from('Reservation')
             .select(`
@@ -819,6 +817,8 @@
                 )
             `)
             .order('created_at', { ascending: false });
+
+            console.log(reservation);
 
         if (error) throw error;
         let htmlPublic = '';
